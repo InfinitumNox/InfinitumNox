@@ -3,7 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfinitumNox | AI-Assisted Developer</title>
+
+    <!-- Primary Meta Tags -->
+    <title>InfinitumNox | AI-Assisted Developer & Vibe Coder</title>
+    <meta name="title" content="InfinitumNox | AI-Assisted Developer & Vibe Coder">
+    <meta name="description" content="AI-assisted developer creating innovative apps with Claude AI and modern tools. Explore my portfolio of health tracking, wellness, and web development projects built through AI collaboration.">
+    <meta name="keywords" content="AI-assisted development, vibe coder, Claude AI, portfolio, web developer, health tracking apps, AI collaboration, innovative software">
+    <meta name="author" content="InfinitumNox">
+    <meta name="theme-color" content="#88b383">
+    <link rel="canonical" href="https://infinitumnox.com/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://infinitumnox.com/">
+    <meta property="og:title" content="InfinitumNox | AI-Assisted Developer & Vibe Coder">
+    <meta property="og:description" content="AI-assisted developer creating innovative apps with Claude AI and modern tools. Explore my portfolio of health tracking, wellness, and web development projects.">
+    <meta property="og:site_name" content="InfinitumNox Portfolio">
+    <meta property="og:locale" content="en_US">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://infinitumnox.com/">
+    <meta name="twitter:title" content="InfinitumNox | AI-Assisted Developer & Vibe Coder">
+    <meta name="twitter:description" content="AI-assisted developer creating innovative apps with Claude AI. Explore my portfolio of innovative projects built through AI collaboration.">
+
+    <!-- Robots -->
+    <meta name="robots" content="index, follow">
+
     <style>
         * {
             margin: 0;
@@ -101,7 +127,7 @@
         }
 
         /* Navigation */
-        nav {
+        header {
             position: fixed;
             top: 0;
             width: 100%;
@@ -515,21 +541,116 @@
             scroll-behavior: smooth;
         }
     </style>
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "InfinitumNox",
+        "jobTitle": "AI-Assisted Developer",
+        "description": "Vibe Coder and AI-assisted developer creating innovative applications",
+        "url": "https://infinitumnox.com",
+        "sameAs": [
+            "https://github.com/InfinitumNox"
+        ],
+        "knowsAbout": [
+            "AI-Assisted Development",
+            "Claude AI",
+            "Web Development",
+            "Health Tracking Applications",
+            "Wellness Applications",
+            "GitHub Copilot",
+            "Problem Solving"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "email": "contact@infinitumnox.com",
+            "contactType": "General Inquiries"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "InfinitumNox Portfolio",
+        "url": "https://infinitumnox.com",
+        "description": "Portfolio of AI-assisted developer InfinitumNox showcasing innovative projects built with Claude AI and modern development tools",
+        "author": {
+            "@type": "Person",
+            "name": "InfinitumNox"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://infinitumnox.com/#projects",
+            "query-input": "required name=search_term_string"
+        }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "name": "Featured Projects",
+        "description": "Portfolio projects by InfinitumNox",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "Portfolio Website",
+                    "description": "Modern portfolio website built through AI-assisted development with Claude",
+                    "applicationCategory": "WebApplication",
+                    "operatingSystem": "Web Browser"
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "Vïve",
+                    "description": "Intelligent health tracking companion with AI-assisted insights",
+                    "applicationCategory": "HealthApplication",
+                    "operatingSystem": "Web Browser"
+                }
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "item": {
+                    "@type": "SoftwareApplication",
+                    "name": "PurityPath",
+                    "description": "Mindful wellness companion with Nomi AI integration",
+                    "applicationCategory": "LifestyleApplication",
+                    "operatingSystem": "Web Browser"
+                }
+            }
+        ]
+    }
+    </script>
 </head>
 <body>
     <div class="animated-bg"></div>
 
-    <nav>
-        <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+    <header>
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="#home" aria-label="Navigate to home section">Home</a></li>
+                <li><a href="#projects" aria-label="Navigate to projects section">Projects</a></li>
+                <li><a href="#about" aria-label="Navigate to about section">About</a></li>
+                <li><a href="#contact" aria-label="Navigate to contact section">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <section id="home">
-        <h1 class="hero-title">InfinitumNox</h1>
+    <main>
+    <section id="home" aria-labelledby="hero-title">
+        <h1 id="hero-title" class="hero-title">InfinitumNox</h1>
         <p class="hero-subtitle">Developer 🎨 | Idea Person 💡 | Vibe Coder 🤖</p>
         <p class="hero-description">
             I can't write code in traditional programming languages. But I have ideas
@@ -539,14 +660,14 @@
         <a href="#projects" class="btn">See My Projects</a>
     </section>
 
-    <section id="projects">
-        <h2 class="section-header">Featured Projects</h2>
+    <section id="projects" aria-labelledby="projects-header">
+        <h2 id="projects-header" class="section-header">Featured Projects</h2>
         <div class="projects-showcase">
-            <div class="projects-grid">
+            <div class="projects-grid" role="list">
                 <!-- Portfolio Website -->
-                <div class="project-card">
+                <article class="project-card" role="listitem">
                     <div class="project-card-content">
-                        <div class="project-icon">🎨</div>
+                        <div class="project-icon" aria-hidden="true">🎨</div>
                         <h3>This Portfolio Website</h3>
                         <span class="project-status">✨ Live</span>
                         <p>The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design.</p>
@@ -560,12 +681,12 @@
                             <a href="#" class="project-link">You're here →</a>
                         </div>
                     </div>
-                </div>
+                </article>
 
                 <!-- vïve App -->
-                <div class="project-card">
+                <article class="project-card" role="listitem">
                     <div class="project-card-content">
-                        <div class="project-icon">💚</div>
+                        <div class="project-icon" aria-hidden="true">💚</div>
                         <h3>Vïve</h3>
                         <span class="project-status">🚧 Work in Progress</span>
                         <p>An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, Vïve makes health tracking intuitive and actionable.</p>
@@ -579,12 +700,12 @@
                             <a href="#" class="project-link">Coming Soon →</a>
                         </div>
                     </div>
-                </div>
+                </article>
 
                 <!-- Purity Path -->
-                <div class="project-card">
+                <article class="project-card" role="listitem">
                     <div class="project-card-content">
-                        <div class="project-icon">🌟</div>
+                        <div class="project-icon" aria-hidden="true">🌟</div>
                         <h3>PurityPath</h3>
                         <span class="project-status">🚧 In Development</span>
                         <p>A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your wellness journey.</p>
@@ -603,8 +724,8 @@
         </div>
     </section>
 
-    <section id="about">
-        <h2 class="section-header">About Me</h2>
+    <section id="about" aria-labelledby="about-header">
+        <h2 id="about-header" class="section-header">About Me</h2>
         <div class="about-content">
             <p>
                 To be honest: I can't write code in traditional programming languages. Semicolons? I forget them.
@@ -631,27 +752,28 @@
         </div>
     </section>
 
-    <section id="contact">
-        <h2 class="section-header">Get in Touch</h2>
+    <section id="contact" aria-labelledby="contact-header">
+        <h2 id="contact-header" class="section-header">Get in Touch</h2>
         <p style="text-align: center; font-size: 1.1rem; margin-bottom: 1rem;">
             Have an idea or want to collaborate? Let's talk!
         </p>
         <p style="text-align: center; font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.7;">
             <em>Note: I'm learning as I go, so please be patient.</em>
         </p>
-        <div class="social-links">
-            <a href="https://github.com/InfinitumNox" class="social-link" title="GitHub">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <div class="social-links" role="list" aria-label="Social media links">
+            <a href="https://github.com/InfinitumNox" class="social-link" aria-label="Visit InfinitumNox on GitHub" role="listitem">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="GitHub icon">
                     <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
                 </svg>
             </a>
-            <a href="mailto:contact@infinitumnox.com" class="social-link" title="Email">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+            <a href="mailto:contact@infinitumnox.com" class="social-link" aria-label="Send email to contact@infinitumnox.com" role="listitem">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" role="img" aria-label="Email icon">
                     <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
                 </svg>
             </a>
         </div>
     </section>
+    </main>
 
     <footer>
         <p>&copy; 2025 InfinitumNox. All rights reserved.</p>
