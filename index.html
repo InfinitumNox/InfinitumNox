@@ -200,82 +200,86 @@
             border-radius: 2px;
         }
 
-        /* Premium Slide Showcase */
+        /* Projects Grid Layout */
         .projects-showcase {
             width: 100%;
-            max-width: 900px;
-            position: relative;
+            max-width: 1200px;
             padding: 2rem 0;
         }
 
-        .showcase-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 20px;
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            width: 100%;
+        }
+
+        .project-card {
             background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-        }
-
-        .showcase-slides {
-            display: flex;
-            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .project-slide {
-            min-width: 100%;
-            padding: 3rem 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
-        .project-slide::before {
+        .project-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            opacity: 0.05;
+            opacity: 0;
             z-index: 0;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
-        .project-slide:nth-child(1)::before {
+        .project-card:nth-child(1)::before {
             background: var(--gradient-1);
         }
 
-        .project-slide:nth-child(2)::before {
+        .project-card:nth-child(2)::before {
+            background: var(--gradient-4);
+        }
+
+        .project-card:nth-child(3)::before {
             background: var(--gradient-2);
         }
 
-        .project-slide:nth-child(3)::before {
-            background: var(--gradient-3);
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-color);
+            box-shadow: 0 20px 50px rgba(0, 255, 255, 0.2);
         }
 
-        .project-slide-content {
+        .project-card:hover::before {
+            opacity: 0.08;
+        }
+
+        .project-card-content {
             position: relative;
             z-index: 1;
             text-align: center;
-            max-width: 700px;
-            margin: 0 auto;
         }
 
         .project-icon {
-            font-size: 4rem;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .project-slide h3 {
-            font-size: 2rem;
+            font-size: 3.5rem;
             margin-bottom: 1rem;
+            display: inline-block;
+            transition: transform 0.3s ease;
+        }
+
+        .project-card:hover .project-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .project-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
             color: var(--text-lighter);
             font-weight: 700;
         }
@@ -290,28 +294,29 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        .project-slide p {
+        .project-card p {
             color: var(--text-light);
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.7;
             opacity: 0.95;
+            min-height: 100px;
         }
 
         .project-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.8rem;
+            gap: 0.6rem;
             justify-content: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .tag {
             background: rgba(0, 255, 255, 0.15);
             color: var(--primary-color);
-            padding: 0.5rem 1.2rem;
-            border-radius: 25px;
-            font-size: 0.9rem;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
             border: 1px solid rgba(0, 255, 255, 0.4);
             font-weight: 500;
             transition: all 0.3s ease;
@@ -324,7 +329,7 @@
 
         .project-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 1rem;
             justify-content: center;
         }
 
@@ -332,7 +337,7 @@
             color: var(--primary-color);
             text-decoration: none;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
             padding: 0.5rem 1rem;
             border-radius: 8px;
@@ -341,70 +346,6 @@
         .project-link:hover {
             color: var(--secondary-color);
             background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* Navigation Controls */
-        .showcase-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 1rem;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .nav-btn {
-            pointer-events: auto;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-lighter);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: var(--primary-color);
-            transform: scale(1.1);
-        }
-
-        /* Slide Indicators */
-        .showcase-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-        }
-
-        .indicator.active {
-            background: var(--primary-color);
-            box-shadow: 0 0 15px var(--primary-color);
-            transform: scale(1.2);
-        }
-
-        .indicator:hover {
-            background: rgba(0, 255, 255, 0.5);
         }
 
         /* About Section */
@@ -497,22 +438,25 @@
                 font-size: 2rem;
             }
 
-            .project-slide {
-                padding: 2rem 1rem;
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
-            .project-slide h3 {
+            .project-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .project-card h3 {
                 font-size: 1.5rem;
+            }
+
+            .project-card p {
+                min-height: auto;
             }
 
             .project-icon {
                 font-size: 3rem;
-            }
-
-            .nav-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.2rem;
             }
         }
 
@@ -548,78 +492,63 @@
     <section id="projects">
         <h2 class="section-header">Featured Projects</h2>
         <div class="projects-showcase">
-            <div class="showcase-container">
-                <div class="showcase-slides">
-                    <!-- Portfolio Website -->
-                    <div class="project-slide">
-                        <div class="project-slide-content">
-                            <div class="project-icon">🎨</div>
-                            <h3>This Portfolio Website</h3>
-                            <span class="project-status">✨ Live</span>
-                            <p>The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design. Each element was crafted through natural language descriptions translated into clean, responsive code.</p>
-                            <div class="project-tags">
-                                <span class="tag">Claude AI</span>
-                                <span class="tag">HTML/CSS/JS</span>
-                                <span class="tag">Responsive Design</span>
-                                <span class="tag">GitHub Pages</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">You're here →</a>
-                            </div>
+            <div class="projects-grid">
+                <!-- Portfolio Website -->
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <div class="project-icon">🎨</div>
+                        <h3>This Portfolio Website</h3>
+                        <span class="project-status">✨ Live</span>
+                        <p>The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design.</p>
+                        <div class="project-tags">
+                            <span class="tag">Claude AI</span>
+                            <span class="tag">HTML/CSS/JS</span>
+                            <span class="tag">Responsive Design</span>
+                            <span class="tag">GitHub Pages</span>
                         </div>
-                    </div>
-
-                    <!-- vïve App -->
-                    <div class="project-slide">
-                        <div class="project-slide-content">
-                            <div class="project-icon">💚</div>
-                            <h3>vïve</h3>
-                            <span class="project-status">🚧 Work in Progress</span>
-                            <p>An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, vïve makes health tracking intuitive and actionable, helping you understand your body's patterns and make informed decisions about your well-being.</p>
-                            <div class="project-tags">
-                                <span class="tag">Health & Wellness</span>
-                                <span class="tag">AI Integration</span>
-                                <span class="tag">Data Visualization</span>
-                                <span class="tag">Privacy-First</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">Coming Soon →</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Purity Path -->
-                    <div class="project-slide">
-                        <div class="project-slide-content">
-                            <div class="project-icon">🌟</div>
-                            <h3>Purity Path</h3>
-                            <span class="project-status">🚧 In Development</span>
-                            <p>A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your journey toward achieving your wellness goals. Features daily check-ins, progress tracking, and encouraging insights to help you stay committed to your personal development path.</p>
-                            <div class="project-tags">
-                                <span class="tag">Personal Development</span>
-                                <span class="tag">Nomi Integration</span>
-                                <span class="tag">Goal Tracking</span>
-                                <span class="tag">Mindfulness</span>
-                            </div>
-                            <div class="project-links">
-                                <a href="#" class="project-link">In Development →</a>
-                            </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">You're here →</a>
                         </div>
                     </div>
                 </div>
 
-                <!-- Navigation Buttons -->
-                <div class="showcase-nav">
-                    <button class="nav-btn" id="prevBtn" aria-label="Previous project">‹</button>
-                    <button class="nav-btn" id="nextBtn" aria-label="Next project">›</button>
+                <!-- vïve App -->
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <div class="project-icon">💚</div>
+                        <h3>vïve</h3>
+                        <span class="project-status">🚧 Work in Progress</span>
+                        <p>An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, vïve makes health tracking intuitive and actionable.</p>
+                        <div class="project-tags">
+                            <span class="tag">Health & Wellness</span>
+                            <span class="tag">AI Integration</span>
+                            <span class="tag">Data Visualization</span>
+                            <span class="tag">Privacy-First</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">Coming Soon →</a>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Slide Indicators -->
-            <div class="showcase-indicators">
-                <span class="indicator active" data-slide="0"></span>
-                <span class="indicator" data-slide="1"></span>
-                <span class="indicator" data-slide="2"></span>
+                <!-- Purity Path -->
+                <div class="project-card">
+                    <div class="project-card-content">
+                        <div class="project-icon">🌟</div>
+                        <h3>Purity Path</h3>
+                        <span class="project-status">🚧 In Development</span>
+                        <p>A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your wellness journey.</p>
+                        <div class="project-tags">
+                            <span class="tag">Personal Development</span>
+                            <span class="tag">Nomi Integration</span>
+                            <span class="tag">Goal Tracking</span>
+                            <span class="tag">Mindfulness</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="#" class="project-link">In Development →</a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -721,129 +650,12 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.project-slide, .skill').forEach(el => {
+        document.querySelectorAll('.project-card, .skill').forEach((el, index) => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
-            el.style.transition = 'all 0.6s ease';
+            el.style.transition = `all 0.6s ease ${index * 0.1}s`;
             observer.observe(el);
         });
-
-        // Premium Carousel Functionality
-        class ProjectShowcase {
-            constructor() {
-                this.currentSlide = 0;
-                this.slides = document.querySelectorAll('.project-slide');
-                this.indicators = document.querySelectorAll('.indicator');
-                this.slidesContainer = document.querySelector('.showcase-slides');
-                this.prevBtn = document.getElementById('prevBtn');
-                this.nextBtn = document.getElementById('nextBtn');
-                this.totalSlides = this.slides.length;
-                this.autoplayInterval = null;
-                this.autoplayDelay = 5000;
-
-                this.init();
-            }
-
-            init() {
-                // Navigation buttons
-                this.prevBtn.addEventListener('click', () => this.prevSlide());
-                this.nextBtn.addEventListener('click', () => this.nextSlide());
-
-                // Indicator clicks
-                this.indicators.forEach((indicator, index) => {
-                    indicator.addEventListener('click', () => this.goToSlide(index));
-                });
-
-                // Keyboard navigation
-                document.addEventListener('keydown', (e) => {
-                    if (e.key === 'ArrowLeft') this.prevSlide();
-                    if (e.key === 'ArrowRight') this.nextSlide();
-                });
-
-                // Touch support for mobile
-                let touchStartX = 0;
-                let touchEndX = 0;
-
-                this.slidesContainer.addEventListener('touchstart', (e) => {
-                    touchStartX = e.changedTouches[0].screenX;
-                });
-
-                this.slidesContainer.addEventListener('touchend', (e) => {
-                    touchEndX = e.changedTouches[0].screenX;
-                    this.handleSwipe();
-                });
-
-                const handleSwipe = () => {
-                    if (touchEndX < touchStartX - 50) this.nextSlide();
-                    if (touchEndX > touchStartX + 50) this.prevSlide();
-                };
-
-                this.handleSwipe = handleSwipe;
-
-                // Start autoplay
-                this.startAutoplay();
-
-                // Pause autoplay on hover
-                const showcaseContainer = document.querySelector('.showcase-container');
-                showcaseContainer.addEventListener('mouseenter', () => this.stopAutoplay());
-                showcaseContainer.addEventListener('mouseleave', () => this.startAutoplay());
-            }
-
-            goToSlide(index) {
-                this.currentSlide = index;
-                this.updateSlidePosition();
-                this.updateIndicators();
-                this.resetAutoplay();
-            }
-
-            nextSlide() {
-                this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-                this.updateSlidePosition();
-                this.updateIndicators();
-                this.resetAutoplay();
-            }
-
-            prevSlide() {
-                this.currentSlide = (this.currentSlide - 1 + this.totalSlides) % this.totalSlides;
-                this.updateSlidePosition();
-                this.updateIndicators();
-                this.resetAutoplay();
-            }
-
-            updateSlidePosition() {
-                const offset = -this.currentSlide * 100;
-                this.slidesContainer.style.transform = `translateX(${offset}%)`;
-            }
-
-            updateIndicators() {
-                this.indicators.forEach((indicator, index) => {
-                    indicator.classList.toggle('active', index === this.currentSlide);
-                });
-            }
-
-            startAutoplay() {
-                this.autoplayInterval = setInterval(() => this.nextSlide(), this.autoplayDelay);
-            }
-
-            stopAutoplay() {
-                if (this.autoplayInterval) {
-                    clearInterval(this.autoplayInterval);
-                    this.autoplayInterval = null;
-                }
-            }
-
-            resetAutoplay() {
-                this.stopAutoplay();
-                this.startAutoplay();
-            }
-        }
-
-        // Initialize showcase when DOM is ready
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => new ProjectShowcase());
-        } else {
-            new ProjectShowcase();
-        }
     </script>
 </body>
 </html>
