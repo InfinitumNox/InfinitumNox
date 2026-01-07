@@ -1,2 +1,6 @@
 User-agent: *
 Disallow: /impressum.html
+Disallow: /datenschutz.html
+
+# Sitemap
+Sitemap: https://infinitumnox.com/sitemap.xml
