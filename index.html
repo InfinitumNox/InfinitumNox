@@ -540,6 +540,148 @@
         html {
             scroll-behavior: smooth;
         }
+
+        /* Cookie Banner */
+        #cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 -4px 30px rgba(136, 179, 131, 0.3);
+            border-top: 2px solid rgba(168, 197, 163, 0.3);
+            z-index: 10000;
+            display: none;
+            animation: slideUp 0.5s ease;
+        }
+
+        #cookie-banner.show {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .cookie-text p {
+            color: var(--text-dark);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .cookie-text a {
+            color: var(--primary-color);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .cookie-text a:hover {
+            color: var(--secondary-color);
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cookie-btn {
+            padding: 0.8rem 1.8rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .cookie-btn-accept {
+            background: var(--gradient-1);
+            color: var(--text-darker);
+            box-shadow: 0 4px 15px rgba(168, 197, 163, 0.3);
+        }
+
+        .cookie-btn-accept:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(136, 179, 131, 0.4);
+            background: linear-gradient(135deg, #a8c5a3 0%, #88b383 100%);
+        }
+
+        .cookie-btn-reject {
+            background: rgba(168, 197, 163, 0.15);
+            color: var(--text-dark);
+            border: 2px solid rgba(168, 197, 163, 0.3);
+        }
+
+        .cookie-btn-reject:hover {
+            background: rgba(168, 197, 163, 0.25);
+            border-color: var(--sage-green);
+            transform: translateY(-2px);
+        }
+
+        .cookie-btn-settings {
+            background: transparent;
+            color: var(--text-muted);
+            border: 2px solid rgba(168, 197, 163, 0.2);
+            padding: 0.8rem 1.5rem;
+        }
+
+        .cookie-btn-settings:hover {
+            border-color: var(--sage-green);
+            color: var(--text-dark);
+        }
+
+        @media (max-width: 768px) {
+            #cookie-banner {
+                padding: 1.5rem 1rem;
+            }
+
+            .cookie-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .cookie-text {
+                min-width: unset;
+            }
+
+            .cookie-buttons {
+                justify-content: center;
+                width: 100%;
+            }
+
+            .cookie-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
     </style>
 
     <!-- Structured Data (JSON-LD) -->
@@ -772,8 +914,8 @@
                 </svg>
             </a>
         </div>
-        <div style="margin-top: 2rem; display: flex; justify-content: center;">
-            <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="InfinitumNox" data-color="#FFDD00" data-emoji=""  data-font="Lato" data-text="Buy me a coffee" data-outline-color="#000000" data-font-color="#000000" data-coffee-color="#ffffff" ></script>
+        <div style="margin-top: 2rem; display: flex; justify-content: center;" id="bmac-container">
+            <!-- Buy Me a Coffee button will be loaded here after cookie consent -->
         </div>
     </section>
     </main>
@@ -784,9 +926,26 @@
             Code written with AI assistance. Ideas are mine. Learning every day. 🎨
         </p>
         <p style="font-size: 0.85rem; margin-top: 1rem;">
-            <a href="impressum.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease;">Impressum</a>
+            <a href="impressum.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease; margin-right: 1rem;">Impressum</a>
+            <a href="datenschutz.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease;">Datenschutz</a>
         </p>
     </footer>
+
+    <!-- Cookie Banner -->
+    <div id="cookie-banner">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <p>
+                    🍪 Diese Website verwendet Cookies, um Ihnen die beste Erfahrung zu bieten. Wir verwenden auch externe Dienste wie "Buy Me a Coffee", die Cookies setzen können.
+                    Weitere Informationen finden Sie in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.
+                </p>
+            </div>
+            <div class="cookie-buttons">
+                <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Alle akzeptieren</button>
+                <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()">Nur notwendige</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         // Smooth scroll for navigation links
@@ -824,6 +983,55 @@
             el.style.transition = `all 0.6s ease ${index * 0.1}s`;
             observer.observe(el);
         });
+
+        // Cookie Consent Management
+        const COOKIE_CONSENT_KEY = 'infinitumnox_cookie_consent';
+
+        function checkCookieConsent() {
+            const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+            if (consent === null) {
+                // No consent yet, show banner
+                document.getElementById('cookie-banner').classList.add('show');
+            } else if (consent === 'accepted') {
+                // User accepted cookies, load external scripts
+                loadExternalScripts();
+            }
+            // If consent === 'rejected', do nothing (only essential cookies)
+        }
+
+        function acceptCookies() {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'accepted');
+            document.getElementById('cookie-banner').classList.remove('show');
+            loadExternalScripts();
+        }
+
+        function rejectCookies() {
+            localStorage.setItem(COOKIE_CONSENT_KEY, 'rejected');
+            document.getElementById('cookie-banner').classList.remove('show');
+        }
+
+        function loadExternalScripts() {
+            // Load Buy Me a Coffee button
+            const bmacContainer = document.getElementById('bmac-container');
+            if (bmacContainer && !bmacContainer.querySelector('script')) {
+                const script = document.createElement('script');
+                script.type = 'text/javascript';
+                script.src = 'https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js';
+                script.setAttribute('data-name', 'bmc-button');
+                script.setAttribute('data-slug', 'InfinitumNox');
+                script.setAttribute('data-color', '#FFDD00');
+                script.setAttribute('data-emoji', '');
+                script.setAttribute('data-font', 'Lato');
+                script.setAttribute('data-text', 'Buy me a coffee');
+                script.setAttribute('data-outline-color', '#000000');
+                script.setAttribute('data-font-color', '#000000');
+                script.setAttribute('data-coffee-color', '#ffffff');
+                bmacContainer.appendChild(script);
+            }
+        }
+
+        // Check consent on page load
+        checkCookieConsent();
     </script>
 </body>
 </html>
