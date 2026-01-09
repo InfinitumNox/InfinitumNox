@@ -2,31 +2,58 @@
   "posts": [
     {
       "id": 1,
-      "title": "Welcome to InfinitumNox Blog",
+      "translations": {
+        "en": {
+          "title": "Welcome to InfinitumNox Blog",
+          "excerpt": "Starting my journey of sharing thoughts, experiments, and discoveries in the world of AI-assisted development.",
+          "content": "<p>Welcome to my blog! This is where I'll share my experiences, thoughts, and experiments in the fascinating world of AI-assisted development.</p><p>As someone who believes in the power of AI collaboration, I'll be documenting my journey, sharing insights, and exploring the boundaries of what's possible when humans and AI work together.</p><p>Stay tuned for more posts about coding adventures, project updates, and the occasional philosophical musings about technology and creativity.</p>"
+        },
+        "de": {
+          "title": "Willkommen im InfinitumNox Blog",
+          "excerpt": "Der Beginn meiner Reise, Gedanken, Experimente und Entdeckungen in der Welt der KI-gestützten Entwicklung zu teilen.",
+          "content": "<p>Willkommen auf meinem Blog! Hier werde ich meine Erfahrungen, Gedanken und Experimente in der faszinierenden Welt der KI-gestützten Entwicklung teilen.</p><p>Als jemand, der an die Kraft der KI-Zusammenarbeit glaubt, werde ich meine Reise dokumentieren, Einblicke teilen und die Grenzen dessen erkunden, was möglich ist, wenn Menschen und KI zusammenarbeiten.</p><p>Bleiben Sie dran für weitere Beiträge über Coding-Abenteuer, Projekt-Updates und gelegentliche philosophische Überlegungen über Technologie und Kreativität.</p>"
+        }
+      },
       "date": "2026-01-09",
       "author": "InfinitumNox",
-      "excerpt": "Starting my journey of sharing thoughts, experiments, and discoveries in the world of AI-assisted development.",
-      "content": "<p>Welcome to my blog! This is where I'll share my experiences, thoughts, and experiments in the fascinating world of AI-assisted development.</p><p>As someone who believes in the power of AI collaboration, I'll be documenting my journey, sharing insights, and exploring the boundaries of what's possible when humans and AI work together.</p><p>Stay tuned for more posts about coding adventures, project updates, and the occasional philosophical musings about technology and creativity.</p>",
       "tags": ["welcome", "blog", "ai-development"],
       "featured": true
     },
     {
       "id": 2,
-      "title": "The Philosophy of AI-Assisted Development",
+      "translations": {
+        "en": {
+          "title": "The Philosophy of AI-Assisted Development",
+          "excerpt": "Why I believe AI is a collaborator, not a replacement. Exploring the symbiotic relationship between human creativity and machine intelligence.",
+          "content": "<p>There's a common misconception that using AI to code makes you 'less of a developer.' I strongly disagree.</p><p>AI tools like Claude, GitHub Copilot, and ChatGPT are not replacements for developers—they're force multipliers. They amplify your ability to translate ideas into reality, letting you focus on the creative and architectural aspects while handling boilerplate and repetitive tasks.</p><p>The key is understanding <em>how</em> to work with AI effectively. It's about:</p><ul><li>Asking the right questions</li><li>Iterating on solutions</li><li>Combining human intuition with AI precision</li><li>Knowing when to trust the AI and when to override it</li></ul><p>This is the future of development, and I'm excited to be part of it.</p>"
+        },
+        "de": {
+          "title": "Die Philosophie der KI-gestützten Entwicklung",
+          "excerpt": "Warum ich glaube, dass KI ein Kollaborateur ist, kein Ersatz. Eine Erkundung der symbiotischen Beziehung zwischen menschlicher Kreativität und maschineller Intelligenz.",
+          "content": "<p>Es gibt ein weit verbreitetes Missverständnis, dass die Verwendung von KI zum Programmieren einen zu 'weniger eines Entwicklers' macht. Ich widerspreche dem entschieden.</p><p>KI-Tools wie Claude, GitHub Copilot und ChatGPT sind keine Ersatz für Entwickler – sie sind Kraftmultiplikatoren. Sie verstärken Ihre Fähigkeit, Ideen in die Realität umzusetzen, und ermöglichen es Ihnen, sich auf die kreativen und architektonischen Aspekte zu konzentrieren, während sie sich um Boilerplate und repetitive Aufgaben kümmern.</p><p>Der Schlüssel liegt darin zu verstehen, <em>wie</em> man effektiv mit KI arbeitet. Es geht darum:</p><ul><li>Die richtigen Fragen zu stellen</li><li>Lösungen zu iterieren</li><li>Menschliche Intuition mit KI-Präzision zu kombinieren</li><li>Zu wissen, wann man der KI vertrauen und wann man sie überschreiben sollte</li></ul><p>Das ist die Zukunft der Entwicklung, und ich bin begeistert, Teil davon zu sein.</p>"
+        }
+      },
       "date": "2026-01-09",
       "author": "InfinitumNox",
-      "excerpt": "Why I believe AI is a collaborator, not a replacement. Exploring the symbiotic relationship between human creativity and machine intelligence.",
-      "content": "<p>There's a common misconception that using AI to code makes you 'less of a developer.' I strongly disagree.</p><p>AI tools like Claude, GitHub Copilot, and ChatGPT are not replacements for developers—they're force multipliers. They amplify your ability to translate ideas into reality, letting you focus on the creative and architectural aspects while handling boilerplate and repetitive tasks.</p><p>The key is understanding <em>how</em> to work with AI effectively. It's about:</p><ul><li>Asking the right questions</li><li>Iterating on solutions</li><li>Combining human intuition with AI precision</li><li>Knowing when to trust the AI and when to override it</li></ul><p>This is the future of development, and I'm excited to be part of it.</p>",
       "tags": ["ai", "philosophy", "development"],
       "featured": true
     },
     {
       "id": 3,
-      "title": "Project Updates: Vïve & PurityPath",
+      "translations": {
+        "en": {
+          "title": "Project Updates: Vïve & PurityPath",
+          "excerpt": "Quick updates on my ongoing projects and what's coming next in the development pipeline.",
+          "content": "<p>I wanted to share some updates on my current projects:</p><h3>Vïve - Health Tracking Companion</h3><p>Work is progressing steadily on Vïve, my AI-powered health tracking application. The core tracking features are coming together nicely, and I'm exploring interesting ways to visualize health data.</p><h3>PurityPath - Wellness with Nomi AI</h3><p>PurityPath is in active development, integrating Nomi AI for a personalized wellness experience. The challenge has been creating meaningful interactions while respecting user privacy and data security.</p><p>More detailed posts about these projects coming soon!</p>"
+        },
+        "de": {
+          "title": "Projekt-Updates: Vïve & PurityPath",
+          "excerpt": "Schnelle Updates zu meinen laufenden Projekten und was als nächstes in der Entwicklungspipeline kommt.",
+          "content": "<p>Ich wollte einige Updates zu meinen aktuellen Projekten teilen:</p><h3>Vïve - Gesundheits-Tracking-Begleiter</h3><p>Die Arbeit an Vïve, meiner KI-gestützten Gesundheits-Tracking-Anwendung, schreitet stetig voran. Die Kern-Tracking-Funktionen fügen sich gut zusammen, und ich erkunde interessante Wege zur Visualisierung von Gesundheitsdaten.</p><h3>PurityPath - Wellness mit Nomi AI</h3><p>PurityPath befindet sich in aktiver Entwicklung und integriert Nomi AI für eine personalisierte Wellness-Erfahrung. Die Herausforderung besteht darin, bedeutungsvolle Interaktionen zu schaffen und gleichzeitig die Privatsphäre und Datensicherheit der Nutzer zu respektieren.</p><p>Detailliertere Beiträge über diese Projekte folgen bald!</p>"
+        }
+      },
       "date": "2026-01-08",
       "author": "InfinitumNox",
-      "excerpt": "Quick updates on my ongoing projects and what's coming next in the development pipeline.",
-      "content": "<p>I wanted to share some updates on my current projects:</p><h3>Vïve - Health Tracking Companion</h3><p>Work is progressing steadily on Vïve, my AI-powered health tracking application. The core tracking features are coming together nicely, and I'm exploring interesting ways to visualize health data.</p><h3>PurityPath - Wellness with Nomi AI</h3><p>PurityPath is in active development, integrating Nomi AI for a personalized wellness experience. The challenge has been creating meaningful interactions while respecting user privacy and data security.</p><p>More detailed posts about these projects coming soon!</p>",
       "tags": ["projects", "vive", "puritypath", "updates"],
       "featured": false
     }
