@@ -1004,11 +1004,16 @@
     <header>
         <nav aria-label="Main navigation">
             <ul>
-                <li><a href="#home" aria-label="Navigate to home section">Home</a></li>
-                <li><a href="#blog" aria-label="Navigate to blog section">Blog</a></li>
-                <li><a href="#projects" aria-label="Navigate to projects section">Projects</a></li>
-                <li><a href="#about" aria-label="Navigate to about section">About</a></li>
-                <li><a href="#contact" aria-label="Navigate to contact section">Contact</a></li>
+                <li><a href="#home" aria-label="Navigate to home section" data-i18n="nav.home">Home</a></li>
+                <li><a href="#blog" aria-label="Navigate to blog section" data-i18n="nav.blog">Blog</a></li>
+                <li><a href="#projects" aria-label="Navigate to projects section" data-i18n="nav.projects">Projects</a></li>
+                <li><a href="#about" aria-label="Navigate to about section" data-i18n="nav.about">About</a></li>
+                <li><a href="#contact" aria-label="Navigate to contact section" data-i18n="nav.contact">Contact</a></li>
+                <li>
+                    <button id="language-toggle" onclick="toggleLanguage()" style="background: var(--gradient-4); color: var(--star-white); border: none; padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s ease;">
+                        <span id="lang-indicator">🇩🇪 DE</span>
+                    </button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -1016,43 +1021,43 @@
     <main>
     <section id="home" aria-labelledby="hero-title">
         <h1 id="hero-title" class="hero-title">InfinitumNox</h1>
-        <p class="hero-subtitle">Thoughts from the Infinite Dark ✨</p>
-        <p class="hero-description">
+        <p class="hero-subtitle" data-i18n="hero.subtitle">Thoughts from the Infinite Dark ✨</p>
+        <p class="hero-description" data-i18n="hero.description">
             Welcome to my corner of the digital void. Here, I share thoughts, experiments,
             and discoveries from my journey through AI-assisted development.
             Join me as I explore the boundaries of what's possible when human creativity
             meets artificial intelligence.
         </p>
-        <a href="#blog" class="btn">Read the Blog</a>
+        <a href="#blog" class="btn" data-i18n="hero.cta">Read the Blog</a>
     </section>
 
     <section id="blog" aria-labelledby="blog-header">
-        <h2 id="blog-header" class="section-header">Latest Posts</h2>
-        <div class="blog-loading">Loading blog posts...</div>
+        <h2 id="blog-header" class="section-header" data-i18n="blog.header">Latest Posts</h2>
+        <div class="blog-loading" data-i18n="blog.loading">Loading blog posts...</div>
         <div class="blog-posts-grid" id="blog-posts-container">
             <!-- Blog posts will be loaded here dynamically -->
         </div>
     </section>
 
     <section id="projects" aria-labelledby="projects-header">
-        <h2 id="projects-header" class="section-header">Featured Projects</h2>
+        <h2 id="projects-header" class="section-header" data-i18n="projects.header">Featured Projects</h2>
         <div class="projects-showcase">
             <div class="projects-grid" role="list">
                 <!-- Portfolio Website -->
                 <article class="project-card" role="listitem">
                     <div class="project-card-content">
                         <div class="project-icon" aria-hidden="true">🎨</div>
-                        <h3>This Portfolio Website</h3>
-                        <span class="project-status">✨ Live</span>
-                        <p>The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design.</p>
+                        <h3 data-i18n="projects.portfolio.title">This Portfolio Website</h3>
+                        <span class="project-status" data-i18n="projects.portfolio.status">✨ Live</span>
+                        <p data-i18n="projects.portfolio.description">The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design.</p>
                         <div class="project-tags">
                             <span class="tag">Claude AI</span>
                             <span class="tag">HTML/CSS/JS</span>
-                            <span class="tag">Responsive Design</span>
+                            <span class="tag" data-i18n="projects.portfolio.tag3">Responsive Design</span>
                             <span class="tag">GitHub Pages</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link">You're here →</a>
+                            <a href="#" class="project-link" data-i18n="projects.portfolio.link">You're here →</a>
                         </div>
                     </div>
                 </article>
@@ -1062,16 +1067,16 @@
                     <div class="project-card-content">
                         <div class="project-icon" aria-hidden="true">💚</div>
                         <h3>Vïve</h3>
-                        <span class="project-status">🚧 Work in Progress</span>
-                        <p>An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, Vïve makes health tracking intuitive and actionable.</p>
+                        <span class="project-status" data-i18n="projects.vive.status">🚧 Work in Progress</span>
+                        <p data-i18n="projects.vive.description">An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, Vïve makes health tracking intuitive and actionable.</p>
                         <div class="project-tags">
-                            <span class="tag">Health & Wellness</span>
-                            <span class="tag">AI Integration</span>
-                            <span class="tag">Data Visualization</span>
-                            <span class="tag">Privacy-First</span>
+                            <span class="tag" data-i18n="projects.vive.tag1">Health & Wellness</span>
+                            <span class="tag" data-i18n="projects.vive.tag2">AI Integration</span>
+                            <span class="tag" data-i18n="projects.vive.tag3">Data Visualization</span>
+                            <span class="tag" data-i18n="projects.vive.tag4">Privacy-First</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link">Coming Soon →</a>
+                            <a href="#" class="project-link" data-i18n="projects.vive.link">Coming Soon →</a>
                         </div>
                     </div>
                 </article>
@@ -1081,58 +1086,58 @@
                     <div class="project-card-content">
                         <div class="project-icon" aria-hidden="true">🌟</div>
                         <h3>PurityPath</h3>
-                        <span class="project-status">🚧 In Development</span>
-                        <p>A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your wellness journey.</p>
+                        <span class="project-status" data-i18n="projects.puritypath.status">🚧 In Development</span>
+                        <p data-i18n="projects.puritypath.description">A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your wellness journey.</p>
                         <div class="project-tags">
-                            <span class="tag">Personal Development</span>
-                            <span class="tag">Nomi Integration</span>
-                            <span class="tag">Goal Tracking</span>
-                            <span class="tag">Mindfulness</span>
+                            <span class="tag" data-i18n="projects.puritypath.tag1">Personal Development</span>
+                            <span class="tag" data-i18n="projects.puritypath.tag2">Nomi Integration</span>
+                            <span class="tag" data-i18n="projects.puritypath.tag3">Goal Tracking</span>
+                            <span class="tag" data-i18n="projects.puritypath.tag4">Mindfulness</span>
                         </div>
                         <div class="project-links">
-                            <a href="#" class="project-link">In Development →</a>
+                            <a href="#" class="project-link" data-i18n="projects.puritypath.link">In Development →</a>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
         </div>
     </section>
 
     <section id="about" aria-labelledby="about-header">
-        <h2 id="about-header" class="section-header">About Me</h2>
+        <h2 id="about-header" class="section-header" data-i18n="about.header">About Me</h2>
         <div class="about-content">
-            <p>
+            <p data-i18n="about.paragraph1">
                 To be honest: I can't write code in traditional programming languages. Semicolons? I forget them.
                 Pointers in C++? No idea. But in 2025, I have access to tools like
                 <strong>ChatGPT and Claude that help bridge that gap.</strong>
             </p>
-            <p>
+            <p data-i18n="about.paragraph2">
                 I have ideas and use AI to help implement them. The code might not be handwritten by me,
                 but I'm trying to learn along the way. It's a different approach to creating software,
                 and I'm exploring what's possible with <strong>AI assistance</strong>.
             </p>
             <div class="skills">
-                <span class="skill">AI Prompting</span>
+                <span class="skill" data-i18n="about.skill1">AI Prompting</span>
                 <span class="skill">Claude</span>
                 <span class="skill">GitHub Copilot</span>
                 <span class="skill">Stack Overflow</span>
-                <span class="skill">Problem Solving</span>
-                <span class="skill">Idea Generation</span>
-                <span class="skill">Documentation Reading</span>
-                <span class="skill">YouTube Tutorials</span>
-                <span class="skill">Iterative Learning</span>
-                <span class="skill">AI-Assisted Development</span>
+                <span class="skill" data-i18n="about.skill5">Problem Solving</span>
+                <span class="skill" data-i18n="about.skill6">Idea Generation</span>
+                <span class="skill" data-i18n="about.skill7">Documentation Reading</span>
+                <span class="skill" data-i18n="about.skill8">YouTube Tutorials</span>
+                <span class="skill" data-i18n="about.skill9">Iterative Learning</span>
+                <span class="skill" data-i18n="about.skill10">AI-Assisted Development</span>
             </div>
         </div>
     </section>
 
     <section id="contact" aria-labelledby="contact-header">
-        <h2 id="contact-header" class="section-header">Get in Touch</h2>
-        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 1rem;">
+        <h2 id="contact-header" class="section-header" data-i18n="contact.header">Get in Touch</h2>
+        <p style="text-align: center; font-size: 1.1rem; margin-bottom: 1rem;" data-i18n="contact.text1">
             Have an idea or want to collaborate? Let's talk!
         </p>
         <p style="text-align: center; font-size: 0.9rem; margin-bottom: 1rem; opacity: 0.7;">
-            <em>Note: I'm learning as I go, so please be patient.</em>
+            <em data-i18n="contact.text2">Note: I'm learning as I go, so please be patient.</em>
         </p>
         <div class="social-links" role="list" aria-label="Social media links">
             <a href="https://github.com/InfinitumNox" class="social-link" aria-label="Visit InfinitumNox on GitHub" role="listitem">
@@ -1153,13 +1158,13 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 InfinitumNox. All rights reserved.</p>
-        <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem;">
+        <p>&copy; 2025 InfinitumNox. <span data-i18n="footer.rights">All rights reserved.</span></p>
+        <p style="font-size: 0.85rem; opacity: 0.6; margin-top: 0.5rem;" data-i18n="footer.tagline">
             Code written with AI assistance. Ideas are mine. Learning every day. 🎨
         </p>
         <p style="font-size: 0.85rem; margin-top: 1rem;">
-            <a href="impressum.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease; margin-right: 1rem;">Impressum</a>
-            <a href="datenschutz.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease;">Datenschutz</a>
+            <a href="impressum.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease; margin-right: 1rem;" data-i18n="footer.imprint">Impressum</a>
+            <a href="datenschutz.html" style="color: var(--text-muted); text-decoration: none; transition: color 0.3s ease;" data-i18n="footer.privacy">Datenschutz</a>
         </p>
     </footer>
 
@@ -1167,19 +1172,236 @@
     <div id="cookie-banner">
         <div class="cookie-content">
             <div class="cookie-text">
-                <p>
+                <p data-i18n="cookie.text">
                     🍪 Diese Website verwendet Cookies, um Ihnen die beste Erfahrung zu bieten. Wir verwenden auch externe Dienste wie "Buy Me a Coffee", die Cookies setzen können.
-                    Weitere Informationen finden Sie in unserer <a href="datenschutz.html">Datenschutzerklärung</a>.
+                    Weitere Informationen finden Sie in unserer <a href="datenschutz.html" data-i18n-link="cookie.privacyLink">Datenschutzerklärung</a>.
                 </p>
             </div>
             <div class="cookie-buttons">
-                <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()">Alle akzeptieren</button>
-                <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()">Nur notwendige</button>
+                <button class="cookie-btn cookie-btn-accept" onclick="acceptCookies()" data-i18n="cookie.acceptBtn">Alle akzeptieren</button>
+                <button class="cookie-btn cookie-btn-reject" onclick="rejectCookies()" data-i18n="cookie.rejectBtn">Nur notwendige</button>
             </div>
         </div>
     </div>
 
     <script>
+        // Language Management System
+        const LANGUAGE_KEY = 'infinitumnox_language';
+
+        const translations = {
+            de: {
+                nav: {
+                    home: "Start",
+                    blog: "Blog",
+                    projects: "Projekte",
+                    about: "Über mich",
+                    contact: "Kontakt"
+                },
+                hero: {
+                    subtitle: "Gedanken aus der unendlichen Dunkelheit ✨",
+                    description: "Willkommen in meiner Ecke der digitalen Leere. Hier teile ich Gedanken, Experimente und Entdeckungen von meiner Reise durch die KI-gestützte Entwicklung. Begleiten Sie mich, während ich die Grenzen dessen erkunde, was möglich ist, wenn menschliche Kreativität auf künstliche Intelligenz trifft.",
+                    cta: "Zum Blog"
+                },
+                blog: {
+                    header: "Neueste Beiträge",
+                    loading: "Blog-Beiträge werden geladen..."
+                },
+                projects: {
+                    header: "Ausgewählte Projekte",
+                    portfolio: {
+                        title: "Diese Portfolio-Website",
+                        status: "✨ Live",
+                        description: "Die Website, die Sie gerade betrachten. Durch KI-gestützte Entwicklung mit Claude erstellt, zeigt dieses Portfolio einen modernen Ansatz für Webdesign.",
+                        tag3: "Responsives Design",
+                        link: "Sie sind hier →"
+                    },
+                    vive: {
+                        status: "🚧 In Arbeit",
+                        description: "Ein intelligenter Gesundheits-Tracking-Begleiter, der Ihnen hilft, Ihre Wellness-Reise zu überwachen und zu verbessern. Mit KI-gestützten Einblicken macht Vïve das Gesundheitstracking intuitiv und umsetzbar.",
+                        tag1: "Gesundheit & Wellness",
+                        tag2: "KI-Integration",
+                        tag3: "Datenvisualisierung",
+                        tag4: "Privatsphäre zuerst",
+                        link: "Bald verfügbar →"
+                    },
+                    puritypath: {
+                        status: "🚧 In Entwicklung",
+                        description: "Ein achtsamer Wellness-Begleiter mit Fokus auf persönliches Wachstum und Selbstdisziplin. Integriert mit Nomi AI für unterstützende, personalisierte Anleitung auf Ihrer Wellness-Reise.",
+                        tag1: "Persönliche Entwicklung",
+                        tag2: "Nomi Integration",
+                        tag3: "Ziel-Tracking",
+                        tag4: "Achtsamkeit",
+                        link: "In Entwicklung →"
+                    }
+                },
+                about: {
+                    header: "Über mich",
+                    paragraph1: "Um ehrlich zu sein: Ich kann keinen Code in traditionellen Programmiersprachen schreiben. Semikolons? Ich vergesse sie. Pointer in C++? Keine Ahnung. Aber im Jahr 2025 habe ich Zugang zu Werkzeugen wie <strong>ChatGPT und Claude, die diese Lücke schließen helfen.</strong>",
+                    paragraph2: "Ich habe Ideen und nutze KI, um sie umzusetzen. Der Code ist vielleicht nicht von Hand geschrieben, aber ich versuche dabei zu lernen. Es ist ein anderer Ansatz zur Softwareentwicklung, und ich erkunde, was mit <strong>KI-Unterstützung</strong> möglich ist.",
+                    skill1: "KI-Prompting",
+                    skill5: "Problemlösung",
+                    skill6: "Ideenfindung",
+                    skill7: "Dokumentation lesen",
+                    skill8: "YouTube-Tutorials",
+                    skill9: "Iteratives Lernen",
+                    skill10: "KI-gestützte Entwicklung"
+                },
+                contact: {
+                    header: "Kontakt aufnehmen",
+                    text1: "Haben Sie eine Idee oder möchten zusammenarbeiten? Lassen Sie uns sprechen!",
+                    text2: "Hinweis: Ich lerne noch, also bitte haben Sie Geduld."
+                },
+                footer: {
+                    rights: "Alle Rechte vorbehalten.",
+                    tagline: "Code mit KI-Unterstützung geschrieben. Ideen sind meine. Jeden Tag dazulernen. 🎨",
+                    imprint: "Impressum",
+                    privacy: "Datenschutz"
+                },
+                cookie: {
+                    text: "🍪 Diese Website verwendet Cookies, um Ihnen die beste Erfahrung zu bieten. Wir verwenden auch externe Dienste wie \"Buy Me a Coffee\", die Cookies setzen können. Weitere Informationen finden Sie in unserer ",
+                    privacyLink: "Datenschutzerklärung",
+                    acceptBtn: "Alle akzeptieren",
+                    rejectBtn: "Nur notwendige"
+                }
+            },
+            en: {
+                nav: {
+                    home: "Home",
+                    blog: "Blog",
+                    projects: "Projects",
+                    about: "About",
+                    contact: "Contact"
+                },
+                hero: {
+                    subtitle: "Thoughts from the Infinite Dark ✨",
+                    description: "Welcome to my corner of the digital void. Here, I share thoughts, experiments, and discoveries from my journey through AI-assisted development. Join me as I explore the boundaries of what's possible when human creativity meets artificial intelligence.",
+                    cta: "Read the Blog"
+                },
+                blog: {
+                    header: "Latest Posts",
+                    loading: "Loading blog posts..."
+                },
+                projects: {
+                    header: "Featured Projects",
+                    portfolio: {
+                        title: "This Portfolio Website",
+                        status: "✨ Live",
+                        description: "The site you're looking at right now. Built through AI-assisted development with Claude, this portfolio showcases a modern approach to web design.",
+                        tag3: "Responsive Design",
+                        link: "You're here →"
+                    },
+                    vive: {
+                        status: "🚧 Work in Progress",
+                        description: "An intelligent health tracking companion that helps you monitor and improve your wellness journey. Using AI-assisted insights, Vïve makes health tracking intuitive and actionable.",
+                        tag1: "Health & Wellness",
+                        tag2: "AI Integration",
+                        tag3: "Data Visualization",
+                        tag4: "Privacy-First",
+                        link: "Coming Soon →"
+                    },
+                    puritypath: {
+                        status: "🚧 In Development",
+                        description: "A mindful wellness companion focused on personal growth and self-discipline. Integrated with Nomi AI for supportive, personalized guidance on your wellness journey.",
+                        tag1: "Personal Development",
+                        tag2: "Nomi Integration",
+                        tag3: "Goal Tracking",
+                        tag4: "Mindfulness",
+                        link: "In Development →"
+                    }
+                },
+                about: {
+                    header: "About Me",
+                    paragraph1: "To be honest: I can't write code in traditional programming languages. Semicolons? I forget them. Pointers in C++? No idea. But in 2025, I have access to tools like <strong>ChatGPT and Claude that help bridge that gap.</strong>",
+                    paragraph2: "I have ideas and use AI to help implement them. The code might not be handwritten by me, but I'm trying to learn along the way. It's a different approach to creating software, and I'm exploring what's possible with <strong>AI assistance</strong>.",
+                    skill1: "AI Prompting",
+                    skill5: "Problem Solving",
+                    skill6: "Idea Generation",
+                    skill7: "Documentation Reading",
+                    skill8: "YouTube Tutorials",
+                    skill9: "Iterative Learning",
+                    skill10: "AI-Assisted Development"
+                },
+                contact: {
+                    header: "Get in Touch",
+                    text1: "Have an idea or want to collaborate? Let's talk!",
+                    text2: "Note: I'm learning as I go, so please be patient."
+                },
+                footer: {
+                    rights: "All rights reserved.",
+                    tagline: "Code written with AI assistance. Ideas are mine. Learning every day. 🎨",
+                    imprint: "Imprint",
+                    privacy: "Privacy Policy"
+                },
+                cookie: {
+                    text: "🍪 This website uses cookies to provide you with the best experience. We also use external services like \"Buy Me a Coffee\" that may set cookies. For more information, see our ",
+                    privacyLink: "Privacy Policy",
+                    acceptBtn: "Accept All",
+                    rejectBtn: "Essential Only"
+                }
+            }
+        };
+
+        let currentLanguage = localStorage.getItem(LANGUAGE_KEY) || 'en';
+
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            localStorage.setItem(LANGUAGE_KEY, lang);
+
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                const keys = key.split('.');
+                let translation = translations[lang];
+
+                for (const k of keys) {
+                    translation = translation[k];
+                }
+
+                if (translation) {
+                    element.innerHTML = translation;
+                }
+            });
+
+            // Update special elements with nested links
+            const cookieText = document.querySelector('[data-i18n="cookie.text"]');
+            if (cookieText) {
+                const privacyLink = lang === 'de' ? 'datenschutz.html' : 'privacy-policy.html';
+                const linkText = translations[lang].cookie.privacyLink;
+                cookieText.innerHTML = translations[lang].cookie.text + `<a href="${privacyLink}">${linkText}</a>.`;
+            }
+
+            // Update language indicator
+            const langIndicator = document.getElementById('lang-indicator');
+            if (langIndicator) {
+                langIndicator.textContent = lang === 'de' ? '🇬🇧 EN' : '🇩🇪 DE';
+            }
+
+            // Update footer links
+            const imprintLink = document.querySelector('[data-i18n="footer.imprint"]');
+            const privacyLink = document.querySelector('[data-i18n="footer.privacy"]');
+
+            if (imprintLink) {
+                imprintLink.href = lang === 'de' ? 'impressum.html' : 'imprint.html';
+            }
+            if (privacyLink) {
+                privacyLink.href = lang === 'de' ? 'datenschutz.html' : 'privacy-policy.html';
+            }
+
+            // Reload blog posts to show in the new language
+            loadBlogPosts();
+        }
+
+        function toggleLanguage() {
+            const newLang = currentLanguage === 'de' ? 'en' : 'de';
+            setLanguage(newLang);
+        }
+
+        // Initialize language on page load
+        setLanguage(currentLanguage);
+
         // Smooth scroll for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -1277,6 +1499,9 @@
                     loadingElement.style.display = 'none';
                 }
 
+                // Clear existing posts
+                container.innerHTML = '';
+
                 // Sort posts by date (newest first)
                 const sortedPosts = data.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
@@ -1292,23 +1517,29 @@
                         `<span class="blog-post-tag">${tag}</span>`
                     ).join('');
 
-                    const dateFormatted = new Date(post.date).toLocaleDateString('en-US', {
+                    // Get the correct translation based on current language
+                    const translation = post.translations[currentLanguage];
+                    const locale = currentLanguage === 'de' ? 'de-DE' : 'en-US';
+
+                    const dateFormatted = new Date(post.date).toLocaleDateString(locale, {
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric'
                     });
+
+                    const readMoreText = currentLanguage === 'de' ? 'Weiterlesen →' : 'Read More →';
 
                     postElement.innerHTML = `
                         <div class="blog-post-meta">
                             <span>📅 ${dateFormatted}</span>
                             <span>✍️ ${post.author}</span>
                         </div>
-                        <h3>${post.title}</h3>
-                        <p class="blog-post-excerpt">${post.excerpt}</p>
+                        <h3>${translation.title}</h3>
+                        <p class="blog-post-excerpt">${translation.excerpt}</p>
                         <div class="blog-post-tags">
                             ${tagsHtml}
                         </div>
-                        <a href="#" class="blog-post-link" onclick="showFullPost(${post.id}); return false;">Read More →</a>
+                        <a href="#" class="blog-post-link" onclick="showFullPost(${post.id}); return false;">${readMoreText}</a>
                     `;
 
                     container.appendChild(postElement);
@@ -1322,7 +1553,10 @@
             } catch (error) {
                 console.error('Error loading blog posts:', error);
                 const container = document.getElementById('blog-posts-container');
-                container.innerHTML = '<p style="text-align: center; color: var(--text-muted);">Failed to load blog posts. Please try again later.</p>';
+                const errorMsg = currentLanguage === 'de'
+                    ? 'Fehler beim Laden der Blog-Beiträge. Bitte versuchen Sie es später erneut.'
+                    : 'Failed to load blog posts. Please try again later.';
+                container.innerHTML = `<p style="text-align: center; color: var(--text-muted);">${errorMsg}</p>`;
             }
         }
 
@@ -1350,26 +1584,32 @@
                 `<span class="blog-post-tag">${tag}</span>`
             ).join('');
 
-            const dateFormatted = new Date(post.date).toLocaleDateString('en-US', {
+            // Get the correct translation based on current language
+            const translation = post.translations[currentLanguage];
+            const locale = currentLanguage === 'de' ? 'de-DE' : 'en-US';
+
+            const dateFormatted = new Date(post.date).toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
 
+            const backButtonText = currentLanguage === 'de' ? '← Zurück zum Blog' : '← Back to Blog';
+
             container.innerHTML = `
                 <div class="blog-post-full">
-                    <button onclick="loadBlogPosts()" style="background: var(--gradient-4); color: var(--star-white); border: none; padding: 0.6rem 1.5rem; border-radius: 25px; cursor: pointer; margin-bottom: 2rem; font-weight: 600; transition: all 0.3s ease;">← Back to Blog</button>
+                    <button onclick="loadBlogPosts()" style="background: var(--gradient-4); color: var(--star-white); border: none; padding: 0.6rem 1.5rem; border-radius: 25px; cursor: pointer; margin-bottom: 2rem; font-weight: 600; transition: all 0.3s ease;">${backButtonText}</button>
                     <article class="blog-post" style="cursor: default;">
                         <div class="blog-post-meta">
                             <span>📅 ${dateFormatted}</span>
                             <span>✍️ ${post.author}</span>
                         </div>
-                        <h3>${post.title}</h3>
+                        <h3>${translation.title}</h3>
                         <div class="blog-post-tags">
                             ${tagsHtml}
                         </div>
                         <div class="blog-post-content">
-                            ${post.content}
+                            ${translation.content}
                         </div>
                     </article>
                 </div>
