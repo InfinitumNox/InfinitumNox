@@ -3,58 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InfinitumNox News</title>
-    <link rel="stylesheet" href="style.css"> <!-- Link to your CSS -->
+    <title>Professional Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>InfinitumNox News</h1>
-        <nav>
-            <ul>
-                <li><a href="#featured">Featured</a></li>
-                <li><a href="#recent">Recent Posts</a></li>
-                <li><a href="#categories">Categories</a></li>
-            </ul>
-        </nav>
+        <div class="hero">
+            <h1>Welcome to My Portfolio</h1>
+            <p>Your description goes here.</p>
+            <a href="#contact" class="cta-button">Contact Me</a>
+        </div>
     </header>
-    <main>
-        <section id="featured">
-            <h2>Featured Articles</h2>
-            <article>
-                <h3>Article Title 1</h3>
-                <p>Summary of the featured article...</p>
-            </article>
-            <article>
-                <h3>Article Title 2</h3>
-                <p>Summary of the featured article...</p>
-            </article>
-            <!-- Add more featured articles as needed -->
-        </section>
-        <section id="recent">
-            <h2>Recent Posts</h2>
-            <div class="grid">
-                <article>
-                    <h3>Recent Post Title 1</h3>
-                    <p>Summary of the recent post...</p>
-                </article>
-                <article>
-                    <h3>Recent Post Title 2</h3>
-                    <p>Summary of the recent post...</p>
-                </article>
-                <!-- Add more recent posts as needed -->
-            </div>
-        </section>
-        <aside id="categories">
-            <h2>Categories</h2>
-            <ul>
-                <li><a href="#category1">Category 1</a></li>
-                <li><a href="#category2">Category 2</a></li>
-                <!-- Add more categories as needed -->
-            </ul>
-        </aside>
-    </main>
+    <section id="about">
+        <h2>About Me</h2>
+        <p>An introduction about yourself.</p>
+    </section>
+    <section id="skills">
+        <h2>My Skills</h2>
+        <ul>
+            <li>Skill 1</li>
+            <li>Skill 2</li>
+            <li>Skill 3</li>
+        </ul>
+    </section>
+    <section id="projects">
+        <h2>Featured Projects</h2>
+        <div class="project">
+            <h3>Project Title 1</h3>
+            <p>Description of project 1.</p>
+        </div>
+        <div class="project">
+            <h3>Project Title 2</h3>
+            <p>Description of project 2.</p>
+        </div>
+    </section>
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <form action="#" method="post">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </section>
     <footer>
-        <p>&copy; 2026 InfinitumNox News</p>
+        <p>&copy; 2026 InfinitumNox. All rights reserved.</p>
     </footer>
 </body>
 </html>
