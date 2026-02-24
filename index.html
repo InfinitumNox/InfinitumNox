@@ -1,56 +1,134 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>1. März</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --dark-bg: #030303;
+            --accent-red: #660000;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: #444;
+            font-family: 'Cinzel', serif;
+            margin: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        /* Hintergrund-Vignette */
+        .vignette {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, black 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Pulsierender Schatten für die Zahlen */
+        .countdown-number {
+            font-size: clamp(2rem, 10vw, 6rem);
+            color: var(--accent-red);
+            text-shadow: 0 0 15px rgba(102, 0, 0, 0.7);
+            transition: all 0.5s ease;
+            filter: blur(0.5px);
+        }
+
+        .separator {
+            font-size: clamp(1.5rem, 8vw, 4rem);
+            opacity: 0.2;
+            padding: 0 10px;
+            color: #333;
+        }
+
+        /* Subtile Animation für die Zahlen */
+        @keyframes subtle-shift {
+            0% { transform: translateY(0); opacity: 0.8; }
+            50% { transform: translateY(-2px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.8; }
+        }
+
+        .countdown-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            animation: subtle-shift 4s infinite ease-in-out;
+        }
+
+        /* Statisches Rauschen im Hintergrund */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            opacity: 0.05;
+            z-index: 1;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="hero">
-            <h1>Welcome to My Portfolio</h1>
-            <p>Your description goes here.</p>
-            <a href="#contact" class="cta-button">Contact Me</a>
-        </div>
-    </header>
-    <section id="about">
-        <h2>About Me</h2>
-        <p>An introduction about yourself.</p>
-    </section>
-    <section id="skills">
-        <h2>My Skills</h2>
-        <ul>
-            <li>Skill 1</li>
-            <li>Skill 2</li>
-            <li>Skill 3</li>
-        </ul>
-    </section>
-    <section id="projects">
-        <h2>Featured Projects</h2>
-        <div class="project">
-            <h3>Project Title 1</h3>
-            <p>Description of project 1.</p>
-        </div>
-        <div class="project">
-            <h3>Project Title 2</h3>
-            <p>Description of project 2.</p>
-        </div>
-    </section>
-    <section id="contact">
-        <h2>Contact Me</h2>
-        <form action="#" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <label for="message">Message:</label>
-            <textarea id="message" name="message" required></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </section>
-    <footer>
-        <p>&copy; 2026 InfinitumNox. All rights reserved.</p>
-    </footer>
+
+    <div class="vignette"></div>
+    <div class="noise"></div>
+
+    <div class="countdown-container" id="timer">
+        <span id="days" class="countdown-number">00</span>
+        <span class="separator">:</span>
+        <span id="hours" class="countdown-number">00</span>
+        <span class="separator">:</span>
+        <span id="minutes" class="countdown-number">00</span>
+        <span class="separator">:</span>
+        <span id="seconds" class="countdown-number">00</span>
+    </div>
+
+    <script>
+        function updateTimer() {
+            const now = new Date();
+            let targetYear = now.getFullYear();
+            let targetDate = new Date(`March 1, ${targetYear} 00:00:00`);
+
+            // Falls der 1. März bereits vergangen ist, zähle zum nächsten Jahr
+            if (now > targetDate) {
+                targetYear++;
+                targetDate = new Date(`March 1, ${targetYear} 00:00:00`);
+            }
+
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('timer').innerHTML = "<span class='countdown-number' style='color: white; filter: none;'>00:00:00:00</span>";
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+    </script>
 </body>
 </html>
+
