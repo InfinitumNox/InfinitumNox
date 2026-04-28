@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFINITUM NOX — Mandantenportal</title>
+    <title>INFINITUM NOX</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
@@ -11,8 +11,6 @@
 
         :root {
             --bg:        #06060a;
-            --bg-panel:  #09090e;
-            --bg-form:   #0c0c13;
             --gold:      #b8952a;
             --gold-dim:  #7a6118;
             --gold-pale: #d4b86a;
@@ -21,7 +19,6 @@
             --text-head: #e8e2d0;
             --border:    #1c1a14;
             --border-hi: #2e2a1e;
-            --red-alert: #7a1a1a;
         }
 
         html, body {
@@ -32,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* Noise texture overlay */
         body::before {
             content: '';
             position: fixed;
@@ -43,358 +39,76 @@
             z-index: 0;
         }
 
-        .layout {
+        .page {
             position: relative;
             z-index: 1;
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            height: 100vh;
-        }
-
-        /* ── LEFT PANEL ── */
-        .panel-info {
-            background: var(--bg-panel);
-            border-right: 1px solid var(--border-hi);
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            padding: 52px 64px;
-            overflow-y: auto;
-            position: relative;
+            align-items: center;
+            height: 100vh;
+            padding: 60px 24px 52px;
         }
 
-        .panel-info::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 1px;
-            height: 100%;
-            background: linear-gradient(to bottom, transparent, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent);
-            opacity: 0.3;
-        }
-
-        /* Wordmark */
+        /* ── Wordmark ── */
         .wordmark {
-            display: flex;
-            align-items: baseline;
-            gap: 14px;
-            margin-bottom: 6px;
-        }
-
-        .wordmark-name {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 300;
-            font-size: 1.05rem;
-            letter-spacing: 0.35em;
+            font-size: 0.82rem;
+            letter-spacing: 0.55em;
             text-transform: uppercase;
             color: var(--gold);
+            text-align: center;
         }
 
-        .wordmark-divider {
-            width: 1px;
-            height: 14px;
-            background: var(--gold-dim);
-            opacity: 0.5;
-            align-self: center;
-        }
-
-        .wordmark-sub {
-            font-family: 'Inter', sans-serif;
-            font-weight: 300;
-            font-size: 0.6rem;
-            letter-spacing: 0.28em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-        }
-
-        .top-rule {
-            width: 38px;
+        .wordmark-rule {
+            width: 28px;
             height: 1px;
             background: var(--gold-dim);
-            margin: 28px 0 38px;
-            opacity: 0.5;
+            opacity: 0.45;
+            margin: 22px auto 0;
         }
 
-        /* Main headline */
-        .headline {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            font-size: clamp(2.4rem, 3.5vw, 3.6rem);
-            line-height: 1.12;
-            color: var(--text-head);
-            letter-spacing: -0.01em;
-            margin-bottom: 10px;
+        /* ── Spacer ── */
+        .spacer { flex: 1; }
+
+        /* ── Portal ── */
+        .portal {
+            width: 100%;
+            max-width: 340px;
         }
 
-        .headline em {
-            font-style: italic;
-            color: var(--gold-pale);
-        }
-
-        .subline {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-weight: 300;
-            font-size: 1.05rem;
-            color: var(--text-dim);
-            letter-spacing: 0.04em;
-            margin-bottom: 52px;
-        }
-
-        /* Pillars */
-        .pillars {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 0;
-            border: 1px solid var(--border-hi);
-            margin-bottom: 48px;
-        }
-
-        .pillar {
-            padding: 22px 20px;
-            border-right: 1px solid var(--border-hi);
-        }
-
-        .pillar:last-child { border-right: none; }
-
-        .pillar-label {
-            font-size: 0.55rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold-dim);
-            margin-bottom: 8px;
-        }
-
-        .pillar-value {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.55rem;
-            font-weight: 600;
-            color: var(--text-head);
-            line-height: 1;
-        }
-
-        .pillar-note {
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
-            color: var(--text-dim);
-            margin-top: 5px;
-        }
-
-        /* Content sections */
-        .section-rule {
+        .portal-label {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 22px;
+            gap: 14px;
+            margin-bottom: 36px;
         }
 
-        .section-rule::before {
-            content: '';
-            display: block;
-            width: 18px;
-            height: 1px;
-            background: var(--gold-dim);
-        }
-
-        .section-label {
-            font-size: 0.55rem;
-            letter-spacing: 0.3em;
-            text-transform: uppercase;
-            color: var(--gold-dim);
-        }
-
-        .section-rule::after {
+        .portal-label::before,
+        .portal-label::after {
             content: '';
             flex: 1;
             height: 1px;
             background: var(--border-hi);
         }
 
-        /* Practice areas */
-        .practice-list {
-            list-style: none;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px 24px;
-            margin-bottom: 48px;
-        }
-
-        .practice-list li {
-            font-size: 0.7rem;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            padding: 7px 0;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .practice-list li::before {
-            content: '';
-            display: block;
-            width: 3px;
-            height: 3px;
-            background: var(--gold-dim);
-            flex-shrink: 0;
-        }
-
-        /* Statement block */
-        .statement {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 1.15rem;
-            line-height: 1.7;
-            color: var(--text);
-            border-left: 1px solid var(--gold-dim);
-            padding-left: 22px;
-            margin-bottom: 48px;
-        }
-
-        /* Stats strip */
-        .stats-strip {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            border-top: 1px solid var(--border-hi);
-            border-bottom: 1px solid var(--border-hi);
-            margin-bottom: 48px;
-        }
-
-        .stat {
-            padding: 18px 16px;
-            border-right: 1px solid var(--border-hi);
-        }
-
-        .stat:last-child { border-right: none; }
-
-        .stat-num {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text-head);
-            display: block;
-            line-height: 1;
-        }
-
-        .stat-desc {
-            font-size: 0.55rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-            margin-top: 6px;
-            display: block;
-        }
-
-        /* Warning notice */
-        .access-notice {
-            border: 1px solid var(--red-alert);
-            background: rgba(122, 26, 26, 0.06);
-            padding: 14px 18px;
-            display: flex;
-            gap: 14px;
-            align-items: flex-start;
-            margin-bottom: 0;
-        }
-
-        .notice-icon {
-            font-size: 0.55rem;
-            letter-spacing: 0.18em;
-            text-transform: uppercase;
-            color: var(--red-alert);
-            padding-top: 2px;
-            flex-shrink: 0;
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-        }
-
-        .notice-text {
-            font-size: 0.62rem;
-            line-height: 1.7;
-            color: var(--text-dim);
-            letter-spacing: 0.04em;
-        }
-
-        /* Bottom bar */
-        .panel-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-top: 28px;
-            border-top: 1px solid var(--border);
-            margin-top: 28px;
-        }
-
-        .footer-motto {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            font-size: 0.72rem;
-            color: var(--text-dim);
-        }
-
-        .footer-id {
-            font-size: 0.52rem;
-            letter-spacing: 0.25em;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            opacity: 0.5;
-        }
-
-        /* ── RIGHT PANEL / LOGIN ── */
-        .panel-login {
-            background: var(--bg-form);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 52px 48px;
-            position: relative;
-        }
-
-        .panel-login::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--gold-dim) 40%, var(--gold-dim) 60%, transparent);
-            opacity: 0.4;
-        }
-
-        .login-eyebrow {
-            font-size: 0.52rem;
-            letter-spacing: 0.35em;
+        .portal-label span {
+            font-size: 0.5rem;
+            letter-spacing: 0.38em;
             text-transform: uppercase;
             color: var(--gold-dim);
-            margin-bottom: 10px;
+            white-space: nowrap;
         }
 
-        .login-title {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.75rem;
-            font-weight: 300;
-            color: var(--text-head);
-            letter-spacing: 0.02em;
-            margin-bottom: 6px;
-        }
-
-        .login-subtitle {
-            font-size: 0.65rem;
-            color: var(--text-dim);
-            letter-spacing: 0.1em;
-            margin-bottom: 44px;
-        }
-
-        /* Form */
+        /* ── Form ── */
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             position: relative;
         }
 
         .form-label {
             display: block;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.28em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -406,29 +120,20 @@
             background: transparent;
             border: none;
             border-bottom: 1px solid var(--border-hi);
-            padding: 10px 0 10px 2px;
+            padding: 9px 0 9px 2px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.82rem;
+            font-size: 0.8rem;
             font-weight: 300;
             color: var(--text-head);
             letter-spacing: 0.08em;
             outline: none;
-            transition: border-color 0.3s;
             caret-color: var(--gold);
+            transition: border-color 0.3s;
         }
 
         .form-input::placeholder {
             color: var(--text-dim);
-            font-size: 0.75rem;
-            opacity: 0.5;
-        }
-
-        .form-input:focus {
-            border-bottom-color: var(--gold-dim);
-        }
-
-        .form-input:focus + .focus-line {
-            transform: scaleX(1);
+            opacity: 0.4;
         }
 
         .focus-line {
@@ -447,7 +152,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin: 28px 0;
+            margin: 26px 0;
         }
 
         .form-divider::before,
@@ -458,20 +163,20 @@
             background: var(--border-hi);
         }
 
-        .form-divider-text {
-            font-size: 0.5rem;
-            letter-spacing: 0.25em;
+        .form-divider span {
+            font-size: 0.45rem;
+            letter-spacing: 0.28em;
             text-transform: uppercase;
             color: var(--text-dim);
+            opacity: 0.6;
         }
 
-        /* Token row */
         .token-row {
             display: grid;
             grid-template-columns: 1fr auto;
             gap: 12px;
             align-items: end;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
 
         .token-btn {
@@ -479,12 +184,12 @@
             border: 1px solid var(--border-hi);
             color: var(--text-dim);
             font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.18em;
             text-transform: uppercase;
-            padding: 10px 14px;
+            padding: 9px 12px;
             cursor: pointer;
-            transition: all 0.25s;
+            transition: border-color 0.25s, color 0.25s;
             white-space: nowrap;
         }
 
@@ -493,22 +198,20 @@
             color: var(--gold-pale);
         }
 
-        /* Submit button */
         .btn-submit {
             width: 100%;
             background: none;
             border: 1px solid var(--gold-dim);
             color: var(--gold-pale);
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.35em;
+            font-size: 0.55rem;
+            letter-spacing: 0.38em;
             text-transform: uppercase;
-            padding: 16px 24px;
+            padding: 15px 24px;
             cursor: pointer;
-            transition: all 0.3s;
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            transition: color 0.3s, letter-spacing 0.3s;
         }
 
         .btn-submit::before {
@@ -524,236 +227,50 @@
 
         .btn-submit:hover {
             color: var(--bg);
-            letter-spacing: 0.4em;
+            letter-spacing: 0.44em;
         }
 
         .btn-submit:hover::before {
             transform: scaleX(1);
         }
 
-        /* Links */
-        .login-links {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 44px;
-        }
-
-        .login-link {
-            font-size: 0.58rem;
-            letter-spacing: 0.14em;
-            color: var(--text-dim);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        .login-link:hover {
-            color: var(--gold-pale);
-        }
-
-        /* Security badges */
-        .security-badges {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding-top: 28px;
-            border-top: 1px solid var(--border);
-        }
-
-        .badge {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        .badge-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--gold-dim);
-            animation: pulse-dot 2.5s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .badge-text {
-            font-size: 0.52rem;
-            letter-spacing: 0.2em;
-            text-transform: uppercase;
-            color: var(--text-dim);
-        }
-
-        .badge-separator {
-            width: 1px;
-            height: 10px;
-            background: var(--border-hi);
-        }
-
-        /* Session info */
+        /* ── Session stamp ── */
         .session-info {
-            margin-top: 20px;
-            font-size: 0.52rem;
-            letter-spacing: 0.15em;
+            margin-top: 28px;
+            font-size: 0.48rem;
+            letter-spacing: 0.2em;
             color: var(--text-dim);
-            opacity: 0.4;
+            opacity: 0.35;
+            text-align: center;
         }
 
-        /* Scrollbar */
-        .panel-info::-webkit-scrollbar { width: 2px; }
-        .panel-info::-webkit-scrollbar-track { background: transparent; }
-        .panel-info::-webkit-scrollbar-thumb { background: var(--border-hi); }
-
-        /* Responsive */
-        @media (max-width: 900px) {
+        @media (max-width: 600px) {
             html, body { overflow: auto; }
-            .layout {
-                grid-template-columns: 1fr;
-                height: auto;
-                min-height: 100vh;
-            }
-            .panel-info {
-                padding: 40px 32px;
-                border-right: none;
-                border-bottom: 1px solid var(--border-hi);
-            }
-            .panel-info::after { display: none; }
-            .panel-login { padding: 40px 32px; }
-            .pillars { grid-template-columns: 1fr 1fr; }
-            .practice-list { grid-template-columns: 1fr; }
-            .stats-strip { grid-template-columns: repeat(2, 1fr); }
+            .page { height: auto; min-height: 100vh; padding: 48px 32px 44px; }
         }
     </style>
 </head>
 <body>
 
-<div class="layout">
+<div class="page">
 
-    <!-- ══════════════ LEFT: INFO PANEL ══════════════ -->
-    <aside class="panel-info">
-        <div>
+    <header>
+        <div class="wordmark">Infinitum Nox</div>
+        <div class="wordmark-rule"></div>
+    </header>
 
-            <!-- Wordmark -->
-            <div class="wordmark">
-                <span class="wordmark-name">Infinitum Nox</span>
-                <div class="wordmark-divider"></div>
-                <span class="wordmark-sub">Legal Partners</span>
-            </div>
-            <div class="top-rule"></div>
+    <div class="spacer"></div>
 
-            <!-- Headline -->
-            <h1 class="headline">
-                Recht ist keine<br>
-                <em>Verhandlungs&shy;sache.</em>
-            </h1>
-            <p class="subline">Mandanten. Strategie. Konsequenz.</p>
+    <section class="portal">
 
-            <!-- Pillars -->
-            <div class="pillars">
-                <div class="pillar">
-                    <div class="pillar-label">Bereich I</div>
-                    <div class="pillar-value">Schutz</div>
-                    <div class="pillar-note">Asset & IP Defense</div>
-                </div>
-                <div class="pillar">
-                    <div class="pillar-label">Bereich II</div>
-                    <div class="pillar-value">Vollstreckg.</div>
-                    <div class="pillar-note">Enforcement & Claims</div>
-                </div>
-                <div class="pillar">
-                    <div class="pillar-label">Bereich III</div>
-                    <div class="pillar-value">Konsequenz</div>
-                    <div class="pillar-note">Litigation & Recovery</div>
-                </div>
-            </div>
-
-            <!-- Section: Tätigkeitsbereiche -->
-            <div class="section-rule">
-                <span class="section-label">Tätigkeitsbereiche</span>
-            </div>
-
-            <ul class="practice-list">
-                <li>Corporate Litigation</li>
-                <li>Schiedsverfahren</li>
-                <li>IP & Markenschutz</li>
-                <li>Compliance & Regulierung</li>
-                <li>Strafverteidigung (Wirtschaft)</li>
-                <li>Internationale Vollstreckung</li>
-                <li>Forderungsmanagement</li>
-                <li>Vertragsdurchsetzung</li>
-                <li>Datenrecht & Digitalschutz</li>
-                <li>Gesellschaftsrecht</li>
-            </ul>
-
-            <!-- Statement -->
-            <div class="statement">
-                Wir vertreten Mandanten, die es sich nicht leisten können,
-                Zweiter zu werden. Unsere Arbeit endet nicht mit dem Urteil —
-                sie beginnt dort.
-            </div>
-
-            <!-- Stats strip -->
-            <div class="section-rule">
-                <span class="section-label">Kennzahlen</span>
-            </div>
-
-            <div class="stats-strip">
-                <div class="stat">
-                    <span class="stat-num">€ —</span>
-                    <span class="stat-desc">Streitwert, vertr.</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-num">23+</span>
-                    <span class="stat-desc">Jurisdiktionen</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-num">96%</span>
-                    <span class="stat-desc">Erfolgsquote</span>
-                </div>
-                <div class="stat">
-                    <span class="stat-num">NDA</span>
-                    <span class="stat-desc">Alle Mandate</span>
-                </div>
-            </div>
-
-            <!-- Access notice -->
-            <div class="section-rule">
-                <span class="section-label">Zugangshinweis</span>
-            </div>
-
-            <div class="access-notice">
-                <span class="notice-icon">Achtung</span>
-                <p class="notice-text">
-                    Dieses Portal ist ausschließlich autorisierten Mandanten und Kanzleipersonal
-                    zugänglich. Jeder unbefugte Zugangsversuch wird protokolliert, forensisch
-                    gesichert und strafrechtlich verfolgt. Mit dem Aufruf dieser Seite erkennen
-                    Sie die Nutzungsbedingungen und die Jurisdiktion der Bundesrepublik Deutschland
-                    sowie anwendbarer supranationaler Rechtsnormen an.
-                </p>
-            </div>
-
+        <div class="portal-label">
+            <span>Mandantenportal</span>
         </div>
-
-        <!-- Footer -->
-        <div class="panel-footer">
-            <span class="footer-motto">Lex dura, sed lex.</span>
-            <span class="footer-id">IN-LEX · SECURE · v4.1</span>
-        </div>
-    </aside>
-
-
-    <!-- ══════════════ RIGHT: LOGIN PANEL ══════════════ -->
-    <main class="panel-login">
-
-        <p class="login-eyebrow">Sicherer Zugang</p>
-        <h2 class="login-title">Mandantenportal</h2>
-        <p class="login-subtitle">Vertraulicher Zugang · Verschlüsselt · Protokolliert</p>
 
         <form onsubmit="return false;">
 
             <div class="form-group">
-                <label class="form-label" for="ref">Aktenzeichen / Mandats-ID</label>
+                <label class="form-label" for="ref">Aktenzeichen</label>
                 <input
                     class="form-input"
                     type="text"
@@ -780,7 +297,7 @@
             </div>
 
             <div class="form-divider">
-                <span class="form-divider-text">Zwei-Faktor-Authentifizierung</span>
+                <span>2FA</span>
             </div>
 
             <div class="token-row">
@@ -791,7 +308,7 @@
                         type="text"
                         id="token"
                         name="token"
-                        placeholder="6-stelliger Code"
+                        placeholder="000000"
                         maxlength="6"
                         autocomplete="one-time-code"
                         inputmode="numeric"
@@ -799,60 +316,29 @@
                     >
                     <div class="focus-line"></div>
                 </div>
-                <button class="token-btn" type="button">Token anfordern</button>
+                <button class="token-btn" type="button">Token</button>
             </div>
 
             <button class="btn-submit" type="submit">Zugang bestätigen</button>
 
-            <div class="login-links">
-                <a class="login-link" href="#">Zugang anfordern</a>
-                <a class="login-link" href="#">Schlüssel zurücksetzen</a>
-            </div>
-
         </form>
 
-        <div class="security-badges">
-            <div class="badge">
-                <div class="badge-dot"></div>
-                <span class="badge-text">TLS 1.3</span>
-            </div>
-            <div class="badge-separator"></div>
-            <div class="badge">
-                <div class="badge-dot"></div>
-                <span class="badge-text">End-to-End</span>
-            </div>
-            <div class="badge-separator"></div>
-            <div class="badge">
-                <div class="badge-dot"></div>
-                <span class="badge-text">Zero-Log</span>
-            </div>
-            <div class="badge-separator"></div>
-            <div class="badge">
-                <div class="badge-dot"></div>
-                <span class="badge-text">BSI-konform</span>
-            </div>
-        </div>
-
         <p class="session-info" id="session-stamp"></p>
-    </main>
+
+    </section>
 
 </div>
 
 <script>
-    // Session stamp
     const now = new Date();
     const stamp = now.toISOString().replace('T', ' · ').slice(0, 22) + ' UTC';
     document.getElementById('session-stamp').textContent =
-        'SESSION · ' + stamp + ' · ' + Math.random().toString(36).slice(2, 10).toUpperCase();
+        stamp + ' · ' + Math.random().toString(36).slice(2, 10).toUpperCase();
 
-    // Focus animation for inputs
     document.querySelectorAll('.form-input').forEach(input => {
-        input.addEventListener('focus', () => {
-            input.nextElementSibling.style.transform = 'scaleX(1)';
-        });
-        input.addEventListener('blur', () => {
-            input.nextElementSibling.style.transform = 'scaleX(0)';
-        });
+        const line = input.nextElementSibling;
+        input.addEventListener('focus', () => { line.style.transform = 'scaleX(1)'; });
+        input.addEventListener('blur',  () => { line.style.transform = 'scaleX(0)'; });
     });
 </script>
 
