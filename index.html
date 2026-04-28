@@ -3,35 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mandantenportal · Infinitum Nox</title>
+    <title>Infinitum Nox · Gesicherter Zugang</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Inter:wght@200;300;400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:        #06060a;
-            --gold:      #b8952a;
-            --gold-dim:  #7a6118;
-            --gold-pale: #d4b86a;
-            --text-dim:  #5a5244;
-            --text-head: #e8e2d0;
-            --border-hi: #2e2a1e;
+            --bg:         #040408;
+            --bg-2:       #07070d;
+            --gold:       #b8952a;
+            --gold-dim:   #6b5619;
+            --gold-pale:  #cca84e;
+            --gold-faint: #2a200a;
+            --text-dim:   #4a4438;
+            --text-mid:   #7a7060;
+            --text-head:  #e2dcc8;
+            --text-sub:   #948c78;
+            --border:     #1a1710;
+            --border-hi:  #2a2518;
+            --red-warn:   #3a1a10;
         }
 
         html, body {
             height: 100%;
             background: var(--bg);
             font-family: 'Inter', sans-serif;
-            overflow: hidden;
         }
 
+        /* Grain */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Very subtle vignette */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
             pointer-events: none;
             z-index: 0;
         }
@@ -40,22 +56,110 @@
             position: relative;
             z-index: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            padding: 24px;
+            min-height: 100vh;
+            padding: 48px 24px;
         }
 
+        /* ─── HEADER ─── */
+        .firm-header {
+            text-align: center;
+            margin-bottom: 56px;
+        }
+
+        .firm-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 1.05rem;
+            letter-spacing: 0.72em;
+            text-transform: uppercase;
+            color: var(--text-head);
+            margin-bottom: 6px;
+            padding-right: 0.72em; /* optical kerning compensation */
+        }
+
+        .firm-offices {
+            font-size: 0.44rem;
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-bottom: 18px;
+        }
+
+        .firm-rule {
+            width: 240px;
+            margin: 0 auto 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .firm-rule::before,
+        .firm-rule::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--border-hi));
+        }
+
+        .firm-rule::after {
+            background: linear-gradient(to left, transparent, var(--border-hi));
+        }
+
+        .firm-rule-diamond {
+            width: 5px;
+            height: 5px;
+            background: var(--gold-dim);
+            transform: rotate(45deg);
+            flex-shrink: 0;
+        }
+
+        .firm-est {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.62rem;
+            letter-spacing: 0.22em;
+            color: var(--text-dim);
+        }
+
+        /* ─── CONFIDENTIAL BADGE ─── */
+        .confidential-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 40px;
+        }
+
+        .confidential-bar::before,
+        .confidential-bar::after {
+            content: '';
+            width: 28px;
+            height: 1px;
+            background: var(--gold-dim);
+            opacity: 0.5;
+        }
+
+        .confidential-bar span {
+            font-size: 0.42rem;
+            letter-spacing: 0.55em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            padding-right: 0.55em;
+        }
+
+        /* ─── PORTAL CARD ─── */
         .portal {
             width: 100%;
-            max-width: 340px;
+            max-width: 360px;
         }
 
         .portal-label {
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 40px;
+            margin-bottom: 38px;
         }
 
         .portal-label::before,
@@ -68,25 +172,27 @@
 
         .portal-label span {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 0.75rem;
-            letter-spacing: 0.42em;
+            font-size: 0.78rem;
+            letter-spacing: 0.38em;
             text-transform: uppercase;
-            color: var(--gold-dim);
+            color: var(--text-sub);
             white-space: nowrap;
+            padding-right: 0.38em;
         }
 
+        /* ─── FORM ─── */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             position: relative;
         }
 
         .form-label {
             display: block;
-            font-size: 0.5rem;
-            letter-spacing: 0.28em;
+            font-size: 0.44rem;
+            letter-spacing: 0.32em;
             text-transform: uppercase;
             color: var(--text-dim);
-            margin-bottom: 9px;
+            margin-bottom: 10px;
         }
 
         .form-input {
@@ -94,19 +200,20 @@
             background: transparent;
             border: none;
             border-bottom: 1px solid var(--border-hi);
-            padding: 9px 0 9px 2px;
+            padding: 10px 0 10px 2px;
             font-family: 'Inter', sans-serif;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 300;
             color: var(--text-head);
-            letter-spacing: 0.08em;
+            letter-spacing: 0.1em;
             outline: none;
             caret-color: var(--gold);
         }
 
         .form-input::placeholder {
             color: var(--text-dim);
-            opacity: 0.4;
+            opacity: 0.35;
+            letter-spacing: 0.06em;
         }
 
         .focus-line {
@@ -115,17 +222,17 @@
             left: 0;
             width: 100%;
             height: 1px;
-            background: var(--gold);
+            background: linear-gradient(to right, var(--gold-dim), var(--gold));
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .form-divider {
             display: flex;
             align-items: center;
             gap: 14px;
-            margin: 28px 0;
+            margin: 30px 0;
         }
 
         .form-divider::before,
@@ -133,15 +240,15 @@
             content: '';
             flex: 1;
             height: 1px;
-            background: var(--border-hi);
+            background: var(--border);
         }
 
         .form-divider span {
-            font-size: 0.45rem;
-            letter-spacing: 0.28em;
+            font-size: 0.4rem;
+            letter-spacing: 0.32em;
             text-transform: uppercase;
             color: var(--text-dim);
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .token-row {
@@ -149,7 +256,7 @@
             grid-template-columns: 1fr auto;
             gap: 12px;
             align-items: end;
-            margin-bottom: 34px;
+            margin-bottom: 36px;
         }
 
         .token-btn {
@@ -157,12 +264,12 @@
             border: 1px solid var(--border-hi);
             color: var(--text-dim);
             font-family: 'Inter', sans-serif;
-            font-size: 0.5rem;
-            letter-spacing: 0.18em;
+            font-size: 0.44rem;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
-            padding: 9px 12px;
+            padding: 10px 14px;
             cursor: pointer;
-            transition: border-color 0.25s, color 0.25s;
+            transition: border-color 0.3s, color 0.3s;
             white-space: nowrap;
         }
 
@@ -177,14 +284,15 @@
             border: 1px solid var(--gold-dim);
             color: var(--gold-pale);
             font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            letter-spacing: 0.38em;
+            font-size: 0.48rem;
+            letter-spacing: 0.48em;
             text-transform: uppercase;
-            padding: 15px 24px;
+            padding: 17px 24px;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            transition: color 0.3s, letter-spacing 0.3s;
+            transition: color 0.35s, letter-spacing 0.35s;
+            padding-right: calc(24px + 0.48em);
         }
 
         .btn-submit::before {
@@ -194,28 +302,110 @@
             background: var(--gold-dim);
             transform: scaleX(0);
             transform-origin: left;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: -1;
         }
 
         .btn-submit:hover {
             color: var(--bg);
-            letter-spacing: 0.44em;
+            letter-spacing: 0.54em;
         }
 
         .btn-submit:hover::before {
             transform: scaleX(1);
         }
 
+        /* ─── SESSION INFO ─── */
+        .session-block {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 20px;
+        }
+
+        .session-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .session-key {
+            font-size: 0.38rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .session-val {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.55rem;
+            font-weight: 200;
+            color: var(--text-mid);
+            letter-spacing: 0.06em;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* ─── FOOTER ─── */
+        .page-footer {
+            margin-top: 52px;
+            text-align: center;
+            max-width: 420px;
+        }
+
+        .footer-rule {
+            width: 60px;
+            height: 1px;
+            background: var(--border-hi);
+            margin: 0 auto 20px;
+        }
+
+        .footer-notice {
+            font-size: 0.4rem;
+            line-height: 2.1;
+            letter-spacing: 0.14em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+        }
+
+        .footer-notice strong {
+            color: var(--text-mid);
+            font-weight: 400;
+        }
+
+        .footer-ref {
+            margin-top: 18px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.58rem;
+            letter-spacing: 0.12em;
+            color: var(--border-hi);
+        }
+
         @media (max-width: 600px) {
-            html, body { overflow: auto; }
-            .page { height: auto; min-height: 100vh; padding: 60px 32px; }
+            .page { padding: 56px 28px; }
+            .firm-name { font-size: 0.88rem; letter-spacing: 0.55em; }
         }
     </style>
 </head>
 <body>
 
 <div class="page">
+
+    <!-- Firm Identity -->
+    <header class="firm-header">
+        <div class="firm-name">Infinitum Nox</div>
+        <div class="firm-offices">Zürich &nbsp;·&nbsp; Frankfurt &nbsp;·&nbsp; London &nbsp;·&nbsp; Singapur</div>
+        <div class="firm-rule"><div class="firm-rule-diamond"></div></div>
+        <div class="firm-est">Est. MCMXCVIII</div>
+    </header>
+
+    <div class="confidential-bar">
+        <span>Vertraulich &nbsp;·&nbsp; Zugang beschränkt</span>
+    </div>
+
+    <!-- Portal Form -->
     <section class="portal">
 
         <div class="portal-label">
@@ -239,7 +429,7 @@
             </div>
 
             <div class="form-group">
-                <label class="form-label" for="pass">Passwort</label>
+                <label class="form-label" for="pass">Zugangskennung</label>
                 <input
                     class="form-input"
                     type="password"
@@ -252,7 +442,7 @@
             </div>
 
             <div class="form-divider">
-                <span>2FA</span>
+                <span>Zweistufige Verifikation</span>
             </div>
 
             <div class="token-row">
@@ -271,22 +461,69 @@
                     >
                     <div class="focus-line"></div>
                 </div>
-                <button class="token-btn" type="button">Token</button>
+                <button class="token-btn" type="button">Anfordern</button>
             </div>
 
             <button class="btn-submit" type="submit">Zugang bestätigen</button>
 
         </form>
 
+        <!-- Session Metadata -->
+        <div class="session-block">
+            <div class="session-item">
+                <span class="session-key">Sitzungs-ID</span>
+                <span class="session-val" id="session-id">—</span>
+            </div>
+            <div class="session-item">
+                <span class="session-key">Protokoll</span>
+                <span class="session-val">TLS 1.3 · AES-256</span>
+            </div>
+            <div class="session-item">
+                <span class="session-key">Timestamp</span>
+                <span class="session-val" id="ts">—</span>
+            </div>
+            <div class="session-item">
+                <span class="session-key">Verbindung</span>
+                <span class="session-val">Verschlüsselt · Aktiv</span>
+            </div>
+        </div>
+
     </section>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <div class="footer-rule"></div>
+        <p class="footer-notice">
+            <strong>Alle Zugriffsversuche werden vollständig protokolliert, aufgezeichnet und archiviert.</strong><br>
+            IP-Adresse, Gerätefingerabdruck, Sitzungsdaten und Zugriffszeit werden erfasst und für einen Zeitraum von zehn Jahren aufbewahrt.<br><br>
+            Unbefugter Zugang sowie jeder Versuch, unbefugten Zugang zu erlangen, wird dokumentiert und an die zuständigen Stellen weitergeleitet.
+        </p>
+        <div class="footer-ref">Infinitum Nox · Vertraulich · Alle Rechte vorbehalten</div>
+    </footer>
+
 </div>
 
 <script>
+    // Focus lines
     document.querySelectorAll('.form-input').forEach(input => {
         const line = input.nextElementSibling;
         input.addEventListener('focus', () => { line.style.transform = 'scaleX(1)'; });
         input.addEventListener('blur',  () => { line.style.transform = 'scaleX(0)'; });
     });
+
+    // Generate session ID and timestamp
+    function randomHex(n) {
+        return [...crypto.getRandomValues(new Uint8Array(n))]
+            .map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+    }
+
+    const sid = `${randomHex(3)}-${randomHex(4)}-${randomHex(3)}`;
+    document.getElementById('session-id').textContent = sid;
+
+    function pad(n) { return String(n).padStart(2, '0'); }
+    const now = new Date();
+    const ts = `${now.getUTCFullYear()}-${pad(now.getUTCMonth()+1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())} UTC`;
+    document.getElementById('ts').textContent = ts;
 </script>
 
 </body>
