@@ -5,23 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INFINITUM NOX — Mandantenportal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:        #06060a;
-            --bg-panel:  #09090e;
-            --bg-form:   #0c0c13;
+            --bg:        #05050a;
+            --bg-panel:  #07070d;
+            --bg-form:   #0a0a12;
             --gold:      #b8952a;
             --gold-dim:  #7a6118;
             --gold-pale: #d4b86a;
+            --gold-faint:#2a230e;
             --text:      #bfb49a;
-            --text-dim:  #5a5244;
+            --text-dim:  #4a4438;
+            --text-mid:  #7a7060;
             --text-head: #e8e2d0;
-            --border:    #1c1a14;
-            --border-hi: #2e2a1e;
-            --red-alert: #7a1a1a;
+            --border:    #181610;
+            --border-hi: #28240e;
+            --red-alert: #6a1414;
+            --red-pale:  rgba(106,20,20,0.07);
+            --green:     #1a4a2a;
+            --green-dim: #0f2a18;
         }
 
         html, body {
@@ -32,23 +37,182 @@
             overflow: hidden;
         }
 
-        /* Noise texture overlay */
+        /* ── NOISE ── */
         body::before {
             content: '';
             position: fixed;
             inset: 0;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-            opacity: 0.025;
+            opacity: 0.022;
             pointer-events: none;
             z-index: 0;
         }
 
+        /* ── BOOT OVERLAY ── */
+        #boot-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            transition: opacity 0.8s ease 0.2s;
+        }
+
+        #boot-overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .boot-seal {
+            width: 56px;
+            height: 56px;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: boot-seal-in 0.6s ease 0.3s forwards;
+        }
+
+        @keyframes boot-seal-in {
+            from { opacity: 0; transform: scale(0.85); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .boot-lines {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--gold-dim);
+            letter-spacing: 0.08em;
+            line-height: 2;
+            text-align: left;
+            width: 340px;
+        }
+
+        .boot-line {
+            display: flex;
+            gap: 14px;
+            opacity: 0;
+        }
+
+        .boot-line.show { animation: boot-line-in 0.2s ease forwards; }
+
+        @keyframes boot-line-in {
+            from { opacity: 0; transform: translateY(4px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .boot-prefix { color: var(--text-dim); }
+        .boot-ok     { color: #2a6a3a; margin-left: auto; }
+        .boot-active { color: var(--gold); margin-left: auto; }
+
+        .boot-bar-wrap {
+            width: 340px;
+            margin-top: 28px;
+            opacity: 0;
+            animation: boot-line-in 0.3s ease 1.4s forwards;
+        }
+
+        .boot-bar-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.52rem;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .boot-bar-track {
+            height: 1px;
+            background: var(--border-hi);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .boot-bar-fill {
+            position: absolute;
+            top: 0; left: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(to right, var(--gold-dim), var(--gold));
+            animation: boot-fill 1.4s ease 1.5s forwards;
+        }
+
+        @keyframes boot-fill {
+            0%   { width: 0; }
+            60%  { width: 72%; }
+            80%  { width: 72%; }
+            100% { width: 100%; }
+        }
+
+        /* ── SECURITY TICKER ── */
+        .ticker-wrap {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 22px;
+            background: rgba(5,5,10,0.95);
+            border-bottom: 1px solid var(--border-hi);
+            overflow: hidden;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-badge {
+            flex-shrink: 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.45rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--red-alert);
+            border-right: 1px solid var(--border-hi);
+            padding: 0 12px 0 10px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            background: rgba(106,20,20,0.12);
+        }
+
+        .ticker-track {
+            overflow: hidden;
+            flex: 1;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .ticker-inner {
+            display: flex;
+            gap: 0;
+            white-space: nowrap;
+            animation: ticker-scroll 40s linear infinite;
+        }
+
+        .ticker-item {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.44rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            padding: 0 28px;
+        }
+
+        .ticker-item.hi { color: var(--gold-dim); }
+
+        @keyframes ticker-scroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ── MAIN LAYOUT ── */
         .layout {
             position: relative;
             z-index: 1;
             display: grid;
             grid-template-columns: 1fr 420px;
             height: 100vh;
+            padding-top: 22px;
         }
 
         /* ── LEFT PANEL ── */
@@ -58,7 +222,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 52px 64px;
+            padding: 48px 60px;
             overflow-y: auto;
             position: relative;
         }
@@ -66,61 +230,106 @@
         .panel-info::after {
             content: '';
             position: absolute;
-            top: 0;
-            right: 0;
+            top: 0; right: 0;
             width: 1px;
             height: 100%;
             background: linear-gradient(to bottom, transparent, var(--gold-dim) 30%, var(--gold-dim) 70%, transparent);
-            opacity: 0.3;
+            opacity: 0.25;
         }
 
-        /* Wordmark */
-        .wordmark {
+        /* Seal + Wordmark */
+        .brand {
             display: flex;
-            align-items: baseline;
-            gap: 14px;
+            align-items: center;
+            gap: 18px;
             margin-bottom: 6px;
         }
+
+        .brand-seal {
+            width: 38px;
+            height: 38px;
+            flex-shrink: 0;
+        }
+
+        .brand-text {}
 
         .wordmark-name {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 300;
-            font-size: 1.05rem;
-            letter-spacing: 0.35em;
+            font-size: 1.0rem;
+            letter-spacing: 0.38em;
             text-transform: uppercase;
             color: var(--gold);
-        }
-
-        .wordmark-divider {
-            width: 1px;
-            height: 14px;
-            background: var(--gold-dim);
-            opacity: 0.5;
-            align-self: center;
+            display: block;
+            line-height: 1;
+            margin-bottom: 4px;
         }
 
         .wordmark-sub {
             font-family: 'Inter', sans-serif;
             font-weight: 300;
-            font-size: 0.6rem;
-            letter-spacing: 0.28em;
+            font-size: 0.52rem;
+            letter-spacing: 0.32em;
             text-transform: uppercase;
             color: var(--text-dim);
+            display: block;
         }
 
         .top-rule {
             width: 38px;
             height: 1px;
             background: var(--gold-dim);
-            margin: 28px 0 38px;
-            opacity: 0.5;
+            margin: 26px 0 34px;
+            opacity: 0.4;
+        }
+
+        /* Clearance strip */
+        .clearance-strip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 34px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-hi);
+            background: rgba(184,149,42,0.03);
+        }
+
+        .clearance-led {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--gold);
+            flex-shrink: 0;
+            animation: led-pulse 3s infinite;
+        }
+
+        @keyframes led-pulse {
+            0%, 100% { opacity: 1; box-shadow: 0 0 4px var(--gold-dim); }
+            50%       { opacity: 0.4; box-shadow: none; }
+        }
+
+        .clearance-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.2em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            flex: 1;
+        }
+
+        .clearance-level {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            color: var(--gold-pale);
+            text-transform: uppercase;
         }
 
         /* Main headline */
         .headline {
             font-family: 'Cormorant Garamond', serif;
             font-weight: 300;
-            font-size: clamp(2.4rem, 3.5vw, 3.6rem);
+            font-size: clamp(2.2rem, 3.2vw, 3.4rem);
             line-height: 1.12;
             color: var(--text-head);
             letter-spacing: -0.01em;
@@ -136,10 +345,10 @@
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
             font-weight: 300;
-            font-size: 1.05rem;
+            font-size: 1.0rem;
             color: var(--text-dim);
             letter-spacing: 0.04em;
-            margin-bottom: 52px;
+            margin-bottom: 44px;
         }
 
         /* Pillars */
@@ -148,18 +357,18 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 0;
             border: 1px solid var(--border-hi);
-            margin-bottom: 48px;
+            margin-bottom: 44px;
         }
 
         .pillar {
-            padding: 22px 20px;
+            padding: 20px 18px;
             border-right: 1px solid var(--border-hi);
         }
 
         .pillar:last-child { border-right: none; }
 
         .pillar-label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.3em;
             text-transform: uppercase;
             color: var(--gold-dim);
@@ -168,25 +377,25 @@
 
         .pillar-value {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.55rem;
+            font-size: 1.45rem;
             font-weight: 600;
             color: var(--text-head);
             line-height: 1;
         }
 
         .pillar-note {
-            font-size: 0.6rem;
-            letter-spacing: 0.1em;
+            font-size: 0.55rem;
+            letter-spacing: 0.08em;
             color: var(--text-dim);
             margin-top: 5px;
         }
 
-        /* Content sections */
+        /* Section rule */
         .section-rule {
             display: flex;
             align-items: center;
             gap: 16px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         .section-rule::before {
@@ -198,7 +407,7 @@
         }
 
         .section-label {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.3em;
             text-transform: uppercase;
             color: var(--gold-dim);
@@ -217,11 +426,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2px 24px;
-            margin-bottom: 48px;
+            margin-bottom: 44px;
         }
 
         .practice-list li {
-            font-size: 0.7rem;
+            font-size: 0.67rem;
             letter-spacing: 0.12em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -241,16 +450,16 @@
             flex-shrink: 0;
         }
 
-        /* Statement block */
+        /* Statement */
         .statement {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             line-height: 1.7;
             color: var(--text);
             border-left: 1px solid var(--gold-dim);
             padding-left: 22px;
-            margin-bottom: 48px;
+            margin-bottom: 44px;
         }
 
         /* Stats strip */
@@ -259,11 +468,11 @@
             grid-template-columns: repeat(4, 1fr);
             border-top: 1px solid var(--border-hi);
             border-bottom: 1px solid var(--border-hi);
-            margin-bottom: 48px;
+            margin-bottom: 44px;
         }
 
         .stat {
-            padding: 18px 16px;
+            padding: 16px 14px;
             border-right: 1px solid var(--border-hi);
         }
 
@@ -271,7 +480,7 @@
 
         .stat-num {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--text-head);
             display: block;
@@ -279,7 +488,7 @@
         }
 
         .stat-desc {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -287,19 +496,37 @@
             display: block;
         }
 
+        /* Cert row */
+        .cert-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 44px;
+            flex-wrap: wrap;
+        }
+
+        .cert-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.47rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            border: 1px solid var(--border-hi);
+            padding: 5px 9px;
+        }
+
         /* Warning notice */
         .access-notice {
             border: 1px solid var(--red-alert);
-            background: rgba(122, 26, 26, 0.06);
+            background: var(--red-pale);
             padding: 14px 18px;
             display: flex;
             gap: 14px;
             align-items: flex-start;
-            margin-bottom: 0;
         }
 
         .notice-icon {
-            font-size: 0.55rem;
+            font-size: 0.5rem;
             letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--red-alert);
@@ -310,35 +537,36 @@
         }
 
         .notice-text {
-            font-size: 0.62rem;
-            line-height: 1.7;
+            font-size: 0.6rem;
+            line-height: 1.75;
             color: var(--text-dim);
             letter-spacing: 0.04em;
         }
 
-        /* Bottom bar */
+        /* Panel footer */
         .panel-footer {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 28px;
+            padding-top: 26px;
             border-top: 1px solid var(--border);
-            margin-top: 28px;
+            margin-top: 26px;
         }
 
         .footer-motto {
             font-family: 'Cormorant Garamond', serif;
             font-style: italic;
-            font-size: 0.72rem;
+            font-size: 0.7rem;
             color: var(--text-dim);
         }
 
         .footer-id {
-            font-size: 0.52rem;
-            letter-spacing: 0.25em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.47rem;
+            letter-spacing: 0.22em;
             color: var(--text-dim);
             text-transform: uppercase;
-            opacity: 0.5;
+            opacity: 0.45;
         }
 
         /* ── RIGHT PANEL / LOGIN ── */
@@ -354,16 +582,41 @@
         .panel-login::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: 0; left: 0; right: 0;
             height: 2px;
             background: linear-gradient(to right, transparent, var(--gold-dim) 40%, var(--gold-dim) 60%, transparent);
-            opacity: 0.4;
+            opacity: 0.35;
+        }
+
+        /* Auth tier indicator */
+        .auth-tier {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 36px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-hi);
+        }
+
+        .auth-tier-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.48rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+        }
+
+        .auth-tier-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.48rem;
+            letter-spacing: 0.18em;
+            color: var(--gold-pale);
+            border: 1px solid var(--gold-faint);
+            padding: 3px 8px;
         }
 
         .login-eyebrow {
-            font-size: 0.52rem;
+            font-size: 0.5rem;
             letter-spacing: 0.35em;
             text-transform: uppercase;
             color: var(--gold-dim);
@@ -372,7 +625,7 @@
 
         .login-title {
             font-family: 'Cormorant Garamond', serif;
-            font-size: 1.75rem;
+            font-size: 1.7rem;
             font-weight: 300;
             color: var(--text-head);
             letter-spacing: 0.02em;
@@ -380,10 +633,10 @@
         }
 
         .login-subtitle {
-            font-size: 0.65rem;
+            font-size: 0.62rem;
             color: var(--text-dim);
             letter-spacing: 0.1em;
-            margin-bottom: 44px;
+            margin-bottom: 40px;
         }
 
         /* Form */
@@ -394,7 +647,7 @@
 
         .form-label {
             display: block;
-            font-size: 0.55rem;
+            font-size: 0.52rem;
             letter-spacing: 0.28em;
             text-transform: uppercase;
             color: var(--text-dim);
@@ -419,8 +672,10 @@
 
         .form-input::placeholder {
             color: var(--text-dim);
-            font-size: 0.75rem;
-            opacity: 0.5;
+            font-size: 0.72rem;
+            opacity: 0.45;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.1em;
         }
 
         .form-input:focus {
@@ -433,8 +688,7 @@
 
         .focus-line {
             position: absolute;
-            bottom: 0;
-            left: 0;
+            bottom: 0; left: 0;
             width: 100%;
             height: 1px;
             background: var(--gold);
@@ -447,7 +701,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin: 28px 0;
+            margin: 24px 0;
         }
 
         .form-divider::before,
@@ -459,10 +713,11 @@
         }
 
         .form-divider-text {
-            font-size: 0.5rem;
+            font-size: 0.47rem;
             letter-spacing: 0.25em;
             text-transform: uppercase;
             color: var(--text-dim);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         /* Token row */
@@ -471,18 +726,18 @@
             grid-template-columns: 1fr auto;
             gap: 12px;
             align-items: end;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
 
         .token-btn {
             background: none;
             border: 1px solid var(--border-hi);
             color: var(--text-dim);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.55rem;
-            letter-spacing: 0.18em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
-            padding: 10px 14px;
+            padding: 10px 12px;
             cursor: pointer;
             transition: all 0.25s;
             white-space: nowrap;
@@ -493,22 +748,22 @@
             color: var(--gold-pale);
         }
 
-        /* Submit button */
+        /* Submit */
         .btn-submit {
             width: 100%;
             background: none;
             border: 1px solid var(--gold-dim);
             color: var(--gold-pale);
             font-family: 'Inter', sans-serif;
-            font-size: 0.6rem;
-            letter-spacing: 0.35em;
+            font-size: 0.58rem;
+            letter-spacing: 0.38em;
             text-transform: uppercase;
             padding: 16px 24px;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .btn-submit::before {
@@ -524,7 +779,7 @@
 
         .btn-submit:hover {
             color: var(--bg);
-            letter-spacing: 0.4em;
+            letter-spacing: 0.44em;
         }
 
         .btn-submit:hover::before {
@@ -535,27 +790,25 @@
         .login-links {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 44px;
+            margin-bottom: 40px;
         }
 
         .login-link {
-            font-size: 0.58rem;
+            font-size: 0.55rem;
             letter-spacing: 0.14em;
             color: var(--text-dim);
             text-decoration: none;
             transition: color 0.2s;
         }
 
-        .login-link:hover {
-            color: var(--gold-pale);
-        }
+        .login-link:hover { color: var(--gold-pale); }
 
         /* Security badges */
         .security-badges {
             display: flex;
             align-items: center;
-            gap: 20px;
-            padding-top: 28px;
+            gap: 18px;
+            padding-top: 24px;
             border-top: 1px solid var(--border);
         }
 
@@ -566,8 +819,8 @@
         }
 
         .badge-dot {
-            width: 5px;
-            height: 5px;
+            width: 4px;
+            height: 4px;
             border-radius: 50%;
             background: var(--gold-dim);
             animation: pulse-dot 2.5s infinite;
@@ -575,12 +828,13 @@
 
         @keyframes pulse-dot {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50%       { opacity: 0.25; }
         }
 
         .badge-text {
-            font-size: 0.52rem;
-            letter-spacing: 0.2em;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.47rem;
+            letter-spacing: 0.18em;
             text-transform: uppercase;
             color: var(--text-dim);
         }
@@ -593,11 +847,12 @@
 
         /* Session info */
         .session-info {
-            margin-top: 20px;
-            font-size: 0.52rem;
-            letter-spacing: 0.15em;
+            margin-top: 18px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.47rem;
+            letter-spacing: 0.12em;
             color: var(--text-dim);
-            opacity: 0.4;
+            opacity: 0.35;
         }
 
         /* Scrollbar */
@@ -614,12 +869,12 @@
                 min-height: 100vh;
             }
             .panel-info {
-                padding: 40px 32px;
+                padding: 36px 28px;
                 border-right: none;
                 border-bottom: 1px solid var(--border-hi);
             }
             .panel-info::after { display: none; }
-            .panel-login { padding: 40px 32px; }
+            .panel-login { padding: 36px 28px; }
             .pillars { grid-template-columns: 1fr 1fr; }
             .practice-list { grid-template-columns: 1fr; }
             .stats-strip { grid-template-columns: repeat(2, 1fr); }
@@ -628,19 +883,88 @@
 </head>
 <body>
 
+<!-- ══════════════ BOOT OVERLAY ══════════════ -->
+<div id="boot-overlay">
+    <svg class="boot-seal" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" stroke="#7a6118" stroke-width="0.8" opacity="0.6"/>
+        <circle cx="50" cy="50" r="40" stroke="#7a6118" stroke-width="0.4" opacity="0.3"/>
+        <text x="50" y="57" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="26" font-weight="300" fill="#b8952a" letter-spacing="2">IN</text>
+        <path d="M 20 50 Q 50 20 80 50" stroke="#7a6118" stroke-width="0.5" fill="none" opacity="0.4"/>
+        <path d="M 20 50 Q 50 80 80 50" stroke="#7a6118" stroke-width="0.5" fill="none" opacity="0.4"/>
+    </svg>
+
+    <div class="boot-lines" id="boot-lines">
+        <div class="boot-line"><span class="boot-prefix">sys</span><span>IN-LEX Secure Gateway v4.1</span><span class="boot-ok">OK</span></div>
+        <div class="boot-line"><span class="boot-prefix">enc</span><span>TLS 1.3 · AES-256-GCM</span><span class="boot-ok">OK</span></div>
+        <div class="boot-line"><span class="boot-prefix">sec</span><span>HSM-Schlüssel laden</span><span class="boot-ok">OK</span></div>
+        <div class="boot-line"><span class="boot-prefix">iam</span><span>Zugangskontrolle initialisiert</span><span class="boot-ok">OK</span></div>
+        <div class="boot-line"><span class="boot-prefix">log</span><span>Forensik-Protokoll aktiv</span><span class="boot-active">AKTIV</span></div>
+        <div class="boot-line"><span class="boot-prefix">geo</span><span>Standortverifikation...</span><span class="boot-ok">OK</span></div>
+    </div>
+
+    <div class="boot-bar-wrap">
+        <div class="boot-bar-label">Sichere Sitzung aufbauen</div>
+        <div class="boot-bar-track">
+            <div class="boot-bar-fill" id="boot-bar-fill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════ SECURITY TICKER ══════════════ -->
+<div class="ticker-wrap">
+    <div class="ticker-badge">VERTRAULICH</div>
+    <div class="ticker-track">
+        <div class="ticker-inner">
+            <span class="ticker-item hi">Infinitum Nox Legal Partners</span>
+            <span class="ticker-item">Mandantenportal — Eingeschränkter Zugang</span>
+            <span class="ticker-item hi">Alle Verbindungen werden forensisch protokolliert</span>
+            <span class="ticker-item">Unbefugter Zugriff wird strafrechtlich verfolgt · §202a StGB</span>
+            <span class="ticker-item hi">Jurisdiktion: BRD · EU-Supranationaler Rechtsrahmen</span>
+            <span class="ticker-item">Verschlüsselung aktiv · Zero-Knowledge-Architektur</span>
+            <span class="ticker-item hi">DSGVO-konform · BSI IT-Grundschutz zertifiziert</span>
+            <span class="ticker-item">Nur für zugelassene Mandanten und autorisiertes Kanzleipersonal</span>
+            <!-- duplicate for seamless loop -->
+            <span class="ticker-item hi">Infinitum Nox Legal Partners</span>
+            <span class="ticker-item">Mandantenportal — Eingeschränkter Zugang</span>
+            <span class="ticker-item hi">Alle Verbindungen werden forensisch protokolliert</span>
+            <span class="ticker-item">Unbefugter Zugriff wird strafrechtlich verfolgt · §202a StGB</span>
+            <span class="ticker-item hi">Jurisdiktion: BRD · EU-Supranationaler Rechtsrahmen</span>
+            <span class="ticker-item">Verschlüsselung aktiv · Zero-Knowledge-Architektur</span>
+            <span class="ticker-item hi">DSGVO-konform · BSI IT-Grundschutz zertifiziert</span>
+            <span class="ticker-item">Nur für zugelassene Mandanten und autorisiertes Kanzleipersonal</span>
+        </div>
+    </div>
+</div>
+
+
 <div class="layout">
 
     <!-- ══════════════ LEFT: INFO PANEL ══════════════ -->
     <aside class="panel-info">
         <div>
 
-            <!-- Wordmark -->
-            <div class="wordmark">
-                <span class="wordmark-name">Infinitum Nox</span>
-                <div class="wordmark-divider"></div>
-                <span class="wordmark-sub">Legal Partners</span>
+            <!-- Seal + Wordmark -->
+            <div class="brand">
+                <svg class="brand-seal" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="40" r="37" stroke="#7a6118" stroke-width="0.7" opacity="0.55"/>
+                    <circle cx="40" cy="40" r="30" stroke="#7a6118" stroke-width="0.4" opacity="0.25"/>
+                    <text x="40" y="47" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-size="20" font-weight="300" fill="#b8952a" letter-spacing="1.5">IN</text>
+                    <path d="M 10 40 Q 40 16 70 40" stroke="#7a6118" stroke-width="0.5" fill="none" opacity="0.35"/>
+                    <path d="M 10 40 Q 40 64 70 40" stroke="#7a6118" stroke-width="0.5" fill="none" opacity="0.35"/>
+                </svg>
+                <div class="brand-text">
+                    <span class="wordmark-name">Infinitum Nox</span>
+                    <span class="wordmark-sub">Legal Partners · Mandantenportal</span>
+                </div>
             </div>
             <div class="top-rule"></div>
+
+            <!-- Clearance strip -->
+            <div class="clearance-strip">
+                <div class="clearance-led"></div>
+                <span class="clearance-label">Portal-Zugangsstufe</span>
+                <span class="clearance-level">Tier I — Premiere</span>
+            </div>
 
             <!-- Headline -->
             <h1 class="headline">
@@ -668,7 +992,7 @@
                 </div>
             </div>
 
-            <!-- Section: Tätigkeitsbereiche -->
+            <!-- Tätigkeitsbereiche -->
             <div class="section-rule">
                 <span class="section-label">Tätigkeitsbereiche</span>
             </div>
@@ -693,7 +1017,7 @@
                 sie beginnt dort.
             </div>
 
-            <!-- Stats strip -->
+            <!-- Kennzahlen -->
             <div class="section-rule">
                 <span class="section-label">Kennzahlen</span>
             </div>
@@ -717,7 +1041,20 @@
                 </div>
             </div>
 
-            <!-- Access notice -->
+            <!-- Zertifizierungen -->
+            <div class="section-rule">
+                <span class="section-label">Zertifizierungen</span>
+            </div>
+
+            <div class="cert-row">
+                <span class="cert-badge">ISO 27001</span>
+                <span class="cert-badge">BSI IT-GS</span>
+                <span class="cert-badge">DSGVO Art. 32</span>
+                <span class="cert-badge">BRAO § 43a</span>
+                <span class="cert-badge">SOC 2 Type II</span>
+            </div>
+
+            <!-- Zugangshinweis -->
             <div class="section-rule">
                 <span class="section-label">Zugangshinweis</span>
             </div>
@@ -727,9 +1064,9 @@
                 <p class="notice-text">
                     Dieses Portal ist ausschließlich autorisierten Mandanten und Kanzleipersonal
                     zugänglich. Jeder unbefugte Zugangsversuch wird protokolliert, forensisch
-                    gesichert und strafrechtlich verfolgt. Mit dem Aufruf dieser Seite erkennen
-                    Sie die Nutzungsbedingungen und die Jurisdiktion der Bundesrepublik Deutschland
-                    sowie anwendbarer supranationaler Rechtsnormen an.
+                    gesichert und strafrechtlich verfolgt (§202a StGB). Mit dem Aufruf dieser
+                    Seite erkennen Sie die Nutzungsbedingungen sowie die Jurisdiktion der
+                    Bundesrepublik Deutschland und anwendbarer supranationaler Rechtsnormen an.
                 </p>
             </div>
 
@@ -746,9 +1083,14 @@
     <!-- ══════════════ RIGHT: LOGIN PANEL ══════════════ -->
     <main class="panel-login">
 
+        <div class="auth-tier">
+            <span class="auth-tier-label">Authentifizierungsprotokoll</span>
+            <span class="auth-tier-value">MFA · TIER-I</span>
+        </div>
+
         <p class="login-eyebrow">Sicherer Zugang</p>
         <h2 class="login-title">Mandantenportal</h2>
-        <p class="login-subtitle">Vertraulicher Zugang · Verschlüsselt · Protokolliert</p>
+        <p class="login-subtitle">Vertraulicher Zugang · Verschlüsselt · Forensisch protokolliert</p>
 
         <form onsubmit="return false;">
 
@@ -819,7 +1161,7 @@
             <div class="badge-separator"></div>
             <div class="badge">
                 <div class="badge-dot"></div>
-                <span class="badge-text">End-to-End</span>
+                <span class="badge-text">E2E-Enc</span>
             </div>
             <div class="badge-separator"></div>
             <div class="badge">
@@ -834,18 +1176,42 @@
         </div>
 
         <p class="session-info" id="session-stamp"></p>
+
     </main>
 
 </div>
 
 <script>
+    // Boot sequence
+    (function () {
+        const lines = document.querySelectorAll('#boot-lines .boot-line');
+        const overlay = document.getElementById('boot-overlay');
+        let i = 0;
+
+        function showNext() {
+            if (i < lines.length) {
+                lines[i].classList.add('show');
+                i++;
+                setTimeout(showNext, 210 + Math.random() * 120);
+            }
+        }
+
+        showNext();
+
+        // After ~3.5s, fade out overlay
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+            setTimeout(() => overlay.remove(), 1000);
+        }, 3500);
+    })();
+
     // Session stamp
     const now = new Date();
     const stamp = now.toISOString().replace('T', ' · ').slice(0, 22) + ' UTC';
     document.getElementById('session-stamp').textContent =
         'SESSION · ' + stamp + ' · ' + Math.random().toString(36).slice(2, 10).toUpperCase();
 
-    // Focus animation for inputs
+    // Focus line animation for inputs
     document.querySelectorAll('.form-input').forEach(input => {
         input.addEventListener('focus', () => {
             input.nextElementSibling.style.transform = 'scaleX(1)';
