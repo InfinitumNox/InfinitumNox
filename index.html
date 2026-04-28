@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFINITUM NOX</title>
+    <title>Mandantenportal · Infinitum Nox</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300&family=Inter:wght@300;400&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -14,10 +14,8 @@
             --gold:      #b8952a;
             --gold-dim:  #7a6118;
             --gold-pale: #d4b86a;
-            --text:      #bfb49a;
             --text-dim:  #5a5244;
             --text-head: #e8e2d0;
-            --border:    #1c1a14;
             --border-hi: #2e2a1e;
         }
 
@@ -25,7 +23,6 @@
             height: 100%;
             background: var(--bg);
             font-family: 'Inter', sans-serif;
-            color: var(--text);
             overflow: hidden;
         }
 
@@ -43,35 +40,12 @@
             position: relative;
             z-index: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: center;
             height: 100vh;
-            padding: 60px 24px 52px;
+            padding: 24px;
         }
 
-        /* ── Wordmark ── */
-        .wordmark {
-            font-family: 'Cormorant Garamond', serif;
-            font-weight: 300;
-            font-size: 0.82rem;
-            letter-spacing: 0.55em;
-            text-transform: uppercase;
-            color: var(--gold);
-            text-align: center;
-        }
-
-        .wordmark-rule {
-            width: 28px;
-            height: 1px;
-            background: var(--gold-dim);
-            opacity: 0.45;
-            margin: 22px auto 0;
-        }
-
-        /* ── Spacer ── */
-        .spacer { flex: 1; }
-
-        /* ── Portal ── */
         .portal {
             width: 100%;
             max-width: 340px;
@@ -81,7 +55,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin-bottom: 36px;
+            margin-bottom: 40px;
         }
 
         .portal-label::before,
@@ -93,16 +67,16 @@
         }
 
         .portal-label span {
-            font-size: 0.5rem;
-            letter-spacing: 0.38em;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.75rem;
+            letter-spacing: 0.42em;
             text-transform: uppercase;
             color: var(--gold-dim);
             white-space: nowrap;
         }
 
-        /* ── Form ── */
         .form-group {
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             position: relative;
         }
 
@@ -128,7 +102,6 @@
             letter-spacing: 0.08em;
             outline: none;
             caret-color: var(--gold);
-            transition: border-color 0.3s;
         }
 
         .form-input::placeholder {
@@ -152,7 +125,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            margin: 26px 0;
+            margin: 28px 0;
         }
 
         .form-divider::before,
@@ -176,7 +149,7 @@
             grid-template-columns: 1fr auto;
             gap: 12px;
             align-items: end;
-            margin-bottom: 32px;
+            margin-bottom: 34px;
         }
 
         .token-btn {
@@ -234,33 +207,15 @@
             transform: scaleX(1);
         }
 
-        /* ── Session stamp ── */
-        .session-info {
-            margin-top: 28px;
-            font-size: 0.48rem;
-            letter-spacing: 0.2em;
-            color: var(--text-dim);
-            opacity: 0.35;
-            text-align: center;
-        }
-
         @media (max-width: 600px) {
             html, body { overflow: auto; }
-            .page { height: auto; min-height: 100vh; padding: 48px 32px 44px; }
+            .page { height: auto; min-height: 100vh; padding: 60px 32px; }
         }
     </style>
 </head>
 <body>
 
 <div class="page">
-
-    <header>
-        <div class="wordmark">Infinitum Nox</div>
-        <div class="wordmark-rule"></div>
-    </header>
-
-    <div class="spacer"></div>
-
     <section class="portal">
 
         <div class="portal-label">
@@ -323,18 +278,10 @@
 
         </form>
 
-        <p class="session-info" id="session-stamp"></p>
-
     </section>
-
 </div>
 
 <script>
-    const now = new Date();
-    const stamp = now.toISOString().replace('T', ' · ').slice(0, 22) + ' UTC';
-    document.getElementById('session-stamp').textContent =
-        stamp + ' · ' + Math.random().toString(36).slice(2, 10).toUpperCase();
-
     document.querySelectorAll('.form-input').forEach(input => {
         const line = input.nextElementSibling;
         input.addEventListener('focus', () => { line.style.transform = 'scaleX(1)'; });
