@@ -401,12 +401,6 @@
         }
         #sec-overlay.fade-out { opacity: 0; pointer-events: none; }
 
-        #sec-rain {
-            position: absolute;
-            inset: 0;
-            z-index: 0;
-        }
-
         #sec-panel {
             position: relative;
             z-index: 1;
@@ -528,10 +522,9 @@
 
 <!-- Security Init Overlay -->
 <div id="sec-overlay">
-    <canvas id="sec-rain"></canvas>
     <div id="sec-panel">
         <div class="sec-firm">Infinitum Nox</div>
-        <div class="sec-subtitle">Sicherheitsprotokoll &nbsp;·&nbsp; Initialisierung</div>
+        <div class="sec-subtitle">Browser-Verifikation &nbsp;·&nbsp; Sicherheitsprüfung</div>
         <div class="sec-rule"></div>
         <div id="sec-steps-list"></div>
         <div class="sec-bar-wrap"><div id="sec-bar"></div></div>
@@ -781,82 +774,49 @@
 
 
 <script>
-/* ─── SECURITY INIT ANIMATION ─── */
+/* ─── BROWSER CHECK ANIMATION ─── */
 (function () {
     var overlay = document.getElementById('sec-overlay');
-    var canvas  = document.getElementById('sec-rain');
-    var ctx     = canvas.getContext('2d');
     var list    = document.getElementById('sec-steps-list');
     var bar     = document.getElementById('sec-bar');
     var finalEl = document.getElementById('sec-final');
 
-    /* ── Hex rain ── */
-    var HEX = '0123456789ABCDEF';
-    var FS  = 12;
-    var cols, drops, speeds;
-
-    function initRain() {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
-        cols   = Math.floor(canvas.width / FS);
-        drops  = [];
-        speeds = [];
-        for (var i = 0; i < cols; i++) {
-            drops[i]  = -(Math.random() * (canvas.height / FS));
-            speeds[i] = 0.16 + Math.random() * 0.26;
-        }
-    }
-    initRain();
-
-    var rainTimer = setInterval(function () {
-        ctx.fillStyle = 'rgba(4,4,8,0.07)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.font = FS + 'px "Courier New", monospace';
-        for (var i = 0; i < cols; i++) {
-            var y = drops[i] * FS;
-            if (y < 0) { drops[i] += speeds[i]; continue; }
-            ctx.fillStyle = Math.random() > 0.88
-                ? 'rgba(184,149,42,0.30)'
-                : 'rgba(107,86,25,0.11)';
-            ctx.fillText(HEX[Math.floor(Math.random() * 16)], i * FS, y);
-            if (y > canvas.height) drops[i] = -(Math.random() * 30);
-            drops[i] += speeds[i];
-        }
-    }, 50);
-
-    /* ── Steps ── */
     var tzCity = Intl.DateTimeFormat().resolvedOptions().timeZone;
     var sl = tzCity.lastIndexOf('/');
     if (sl >= 0) tzCity = tzCity.slice(sl + 1).replace(/_/g, ' ');
 
+    var ua = navigator.userAgent;
+    var browserName = ua.includes('Firefox') ? 'Firefox'
+                    : ua.includes('Edg/')    ? 'Edge'
+                    : ua.includes('Chrome')  ? 'Chrome'
+                    : ua.includes('Safari')  ? 'Safari'
+                    : 'Browser';
+
     var STEPS = [
-        { lbl: 'TLS 1.3 · Handshake',
-          dtl: 'ECDHE-RSA-AES256-GCM-SHA384 · Perfect Forward Secrecy' },
-        { lbl: 'Zertifikat verifiziert',
-          dtl: 'CN=INFINITUM-NOX-CA-2025 · SHA-256 · OCSP: OK' },
-        { lbl: 'Browser-Fingerprint',
-          dtl: 'Canvas · WebGL · AudioContext · Navigator …' },
-        { lbl: 'Gerätemerkmale analysiert',
-          dtl: screen.width + '×' + screen.height + ' · '
-               + (navigator.hardwareConcurrency || '?') + ' Kerne · '
-               + tzCity },
-        { lbl: 'AES-256-GCM · Schlüssel aktiv',
-          dtl: 'Session-IV generiert · Forward Secrecy etabliert' },
-        { lbl: 'HMAC-SHA384 · Verifiziert',
-          dtl: 'Nachrichtenintegrität · Anti-Replay gesichert' },
-        { lbl: 'Zugang authentifiziert',
-          dtl: 'Vollständige Berechtigung erteilt' },
+        { lbl: 'User-Agent · Platform',
+          dtl: browserName + ' · ' + navigator.platform + ' · ' + navigator.language },
+        { lbl: 'Display · Pixeldichte',
+          dtl: screen.width + '×' + screen.height + ' · ' + (navigator.hardwareConcurrency || '?') + ' Kerne · DPR ' + (window.devicePixelRatio || 1).toFixed(1) },
+        { lbl: 'Canvas-Fingerprint',
+          dtl: 'Renderkontext wird analysiert …' },
+        { lbl: 'WebGL-Renderer',
+          dtl: 'GPU-Identifikation …' },
+        { lbl: 'AudioContext · DSP',
+          dtl: 'Frequenzcharakteristik …' },
+        { lbl: 'Zeitzone · Locale',
+          dtl: tzCity + ' · ' + navigator.language },
+        { lbl: 'SHA-256 · Digest',
+          dtl: 'Fingerprint wird berechnet …' },
     ];
 
-    var START = 250;   /* ms before first step */
-    var STEP  = 470;   /* ms between steps */
-    var CHECK = 285;   /* ms until checkmark */
+    var START = 250;
+    var STEP  = 470;
+    var CHECK = 285;
 
-    /* Fingerprint scanning phases shown during step 2 */
     var FP_PHASES = [
-        'Canvas-API analysiert …',
-        'WebGL-Renderer identifiziert …',
-        'AudioContext geprüft …',
+        'Canvas-Kontext analysiert …',
+        'WebGL-Renderer erfasst …',
+        'AudioContext gemessen …',
         'Navigator-Merkmale extrahiert …',
         'SHA-256 Digest berechnet …',
     ];
@@ -874,9 +834,8 @@
         list.appendChild(el);
 
         if (idx === 2) {
-            /* Fingerprint step: cycle through scanning phases, then show real hash */
-            var pi     = 0;
-            var dtlEl  = document.getElementById('dtl2');
+            var pi    = 0;
+            var dtlEl = document.getElementById('dtl2');
             var phTimer = setInterval(function () {
                 if (dtlEl && pi < FP_PHASES.length) dtlEl.textContent = FP_PHASES[pi++];
             }, 54);
@@ -886,10 +845,26 @@
                 setTimeout(function () {
                     var chk = document.getElementById('chk2');
                     var dtl = document.getElementById('dtl2');
-                    if (dtl) dtl.textContent =
-                        'FP: ' + fp.hash.slice(0,8) + ' … ' + fp.hash.slice(-8);
+                    if (dtl) dtl.textContent = 'FP: ' + fp.hash.slice(0,8) + ' … ' + fp.hash.slice(-8);
                     if (chk) { chk.textContent = '✓'; chk.classList.add('ok'); }
                     bar.style.width = (3 / STEPS.length * 100) + '%';
+
+                    /* update WebGL step with real GPU info */
+                    var dtl3 = document.getElementById('dtl3');
+                    if (dtl3 && fp.components && fp.components.gl) dtl3.textContent = fp.components.gl;
+
+                    /* update SHA-256 step with real hash prefix */
+                    var dtl6 = document.getElementById('dtl6');
+                    if (dtl6) dtl6.textContent = fp.hash.slice(0, 16) + ' …';
+
+                    /* persist for logout page */
+                    try {
+                        sessionStorage.setItem('inx_fp', JSON.stringify({
+                            hash: fp.hash,
+                            c: fp.components,
+                            ts: new Date().toISOString()
+                        }));
+                    } catch(e) {}
                 }, CHECK);
             });
         } else {
@@ -910,16 +885,13 @@
     var allDone = START + STEPS.length * STEP + CHECK;
 
     setTimeout(function () {
-        finalEl.textContent = 'VERBINDUNG GESICHERT';
+        finalEl.textContent = 'ANALYSE ABGESCHLOSSEN';
         finalEl.classList.add('active');
     }, allDone + 300);
 
     setTimeout(function () {
         overlay.classList.add('fade-out');
-        setTimeout(function () {
-            overlay.remove();
-            clearInterval(rainTimer);
-        }, 950);
+        setTimeout(function () { overlay.remove(); }, 950);
     }, allDone + 1050);
 }());
 </script>
