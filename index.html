@@ -624,15 +624,19 @@
             </div>
             <div class="session-item">
                 <span class="session-key">Protokoll</span>
-                <span class="session-val">TLS 1.3 · AES-256</span>
+                <span class="session-val">TLS 1.3 · AES-256-GCM</span>
             </div>
             <div class="session-item">
                 <span class="session-key">Timestamp</span>
                 <span class="session-val" id="ts">—</span>
             </div>
             <div class="session-item">
-                <span class="session-key">Verbindung</span>
-                <span class="session-val">Verschlüsselt · Aktiv</span>
+                <span class="session-key">Zeitzone</span>
+                <span class="session-val" id="tz-val">—</span>
+            </div>
+            <div class="session-item" style="grid-column:1/-1;">
+                <span class="session-key">Browser-Fingerprint</span>
+                <span class="session-val" id="fp-val" style="font-family:'Courier New',monospace;font-size:0.46rem;letter-spacing:0.05em;white-space:pre-line;line-height:2.1;">Wird analysiert…</span>
             </div>
         </div>
 
@@ -659,35 +663,136 @@
         input.addEventListener('blur',  () => { line.style.transform = 'scaleX(0)'; });
     });
 
-    // Generate session ID and timestamp
+    // Session ID
     function randomHex(n) {
         return [...crypto.getRandomValues(new Uint8Array(n))]
             .map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
     }
-
     const sid = `${randomHex(3)}-${randomHex(4)}-${randomHex(3)}`;
     document.getElementById('session-id').textContent = sid;
 
+    // Timestamp
     function pad(n) { return String(n).padStart(2, '0'); }
     const now = new Date();
     const ts = `${now.getUTCFullYear()}-${pad(now.getUTCMonth()+1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())} UTC`;
     document.getElementById('ts').textContent = ts;
+
+    // Timezone
+    document.getElementById('tz-val').textContent =
+        Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    // Browser fingerprint collection
+    async function collectFingerprint() {
+        const c = {};
+        c.ua  = navigator.userAgent;
+        c.lng = navigator.language;
+        c.hw  = navigator.hardwareConcurrency || 0;
+        c.plt = navigator.platform;
+        c.tz  = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        c.scr = `${screen.width}x${screen.height}x${screen.colorDepth}`;
+        c.pxr = Math.round((window.devicePixelRatio || 1) * 100);
+
+        // Canvas fingerprint
+        try {
+            const cv = document.createElement('canvas');
+            cv.width = 280; cv.height = 50;
+            const cx = cv.getContext('2d');
+            cx.textBaseline = 'alphabetic';
+            cx.font = '14px Arial';
+            cx.fillStyle = '#b8952a';
+            cx.fillText('InfinitumNox ∞♥ Fp', 4, 18);
+            cx.font = '11px monospace';
+            cx.fillStyle = '#6b5619';
+            cx.fillText('éàüαβ∂∑∇∫', 4, 36);
+            c.cv = cv.toDataURL().slice(-80);
+        } catch(e) { c.cv = 'n/a'; }
+
+        // WebGL renderer
+        try {
+            const glc = document.createElement('canvas');
+            const gl  = glc.getContext('webgl') || glc.getContext('experimental-webgl');
+            if (gl) {
+                const ext = gl.getExtension('WEBGL_debug_renderer_info');
+                c.gl = ext
+                    ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)
+                    : gl.getParameter(gl.RENDERER);
+            }
+        } catch(e) { c.gl = 'n/a'; }
+
+        // Audio fingerprint
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext;
+            if (AC) {
+                const ac  = new AC();
+                const osc = ac.createOscillator();
+                const ana = ac.createAnalyser();
+                const gn  = ac.createGain();
+                gn.gain.value = 0;
+                osc.connect(ana); ana.connect(gn); gn.connect(ac.destination);
+                osc.start(0);
+                const d = new Float32Array(8);
+                ana.getFloatFrequencyData(d);
+                c.au = d.join('|');
+                osc.stop(); ac.close();
+            }
+        } catch(e) { c.au = 'n/a'; }
+
+        // SHA-256 hash
+        let hash = '';
+        try {
+            const buf = await crypto.subtle.digest(
+                'SHA-256', new TextEncoder().encode(JSON.stringify(c))
+            );
+            hash = Array.from(new Uint8Array(buf))
+                .map(b => b.toString(16).padStart(2,'0'))
+                .join('').toUpperCase();
+        } catch(e) {
+            // Fallback: djb2 stretched to 64 chars
+            let h = 5381;
+            const raw = JSON.stringify(c);
+            for (let i = 0; i < raw.length; i++) h = ((h * 33) ^ raw.charCodeAt(i)) >>> 0;
+            for (let s = 0; s < 8; s++) {
+                let hh = (h ^ (s * 0xDEADBEEF)) >>> 0;
+                hh = ((hh ^ (hh >>> 16)) * 0x45D9F3B) >>> 0;
+                hh = (hh ^ (hh >>> 16)) >>> 0;
+                hash += hh.toString(16).padStart(8,'0').toUpperCase();
+            }
+        }
+
+        return { hash, components: c };
+    }
+
+    // Start immediately; promise is used by the loading animation script
+    var fpPromise = collectFingerprint().catch(() => {
+        const bytes = crypto.getRandomValues(new Uint8Array(32));
+        const h = Array.from(bytes).map(b => b.toString(16).padStart(2,'0')).join('').toUpperCase();
+        return { hash: h, components: {} };
+    });
+
+    // Populate fingerprint field once ready
+    fpPromise.then(fp => {
+        const el = document.getElementById('fp-val');
+        if (!el) return;
+        const g = [];
+        for (let i = 0; i < 8; i++) g.push(fp.hash.slice(i * 8, i * 8 + 8));
+        el.textContent = g.slice(0,4).join(' ') + '\n' + g.slice(4).join(' ');
+    });
 </script>
 
 
 <script>
-/* ─── ENCRYPTION ANIMATION ─── */
+/* ─── SECURITY INIT ANIMATION ─── */
 (function () {
-    var overlay  = document.getElementById('sec-overlay');
-    var canvas   = document.getElementById('sec-rain');
-    var ctx      = canvas.getContext('2d');
-    var list     = document.getElementById('sec-steps-list');
-    var bar      = document.getElementById('sec-bar');
-    var finalEl  = document.getElementById('sec-final');
+    var overlay = document.getElementById('sec-overlay');
+    var canvas  = document.getElementById('sec-rain');
+    var ctx     = canvas.getContext('2d');
+    var list    = document.getElementById('sec-steps-list');
+    var bar     = document.getElementById('sec-bar');
+    var finalEl = document.getElementById('sec-final');
 
     /* ── Hex rain ── */
-    var HEX    = '0123456789ABCDEF';
-    var FS     = 12;
+    var HEX = '0123456789ABCDEF';
+    var FS  = 12;
     var cols, drops, speeds;
 
     function initRain() {
@@ -698,7 +803,7 @@
         speeds = [];
         for (var i = 0; i < cols; i++) {
             drops[i]  = -(Math.random() * (canvas.height / FS));
-            speeds[i] = 0.18 + Math.random() * 0.28;
+            speeds[i] = 0.16 + Math.random() * 0.26;
         }
     }
     initRain();
@@ -707,55 +812,93 @@
         ctx.fillStyle = 'rgba(4,4,8,0.07)';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.font = FS + 'px "Courier New", monospace';
-
         for (var i = 0; i < cols; i++) {
             var y = drops[i] * FS;
             if (y < 0) { drops[i] += speeds[i]; continue; }
-
-            var ch = HEX[Math.floor(Math.random() * 16)];
-            /* head character slightly brighter */
-            ctx.fillStyle = (Math.random() > 0.88)
-                ? 'rgba(184,149,42,0.28)'
+            ctx.fillStyle = Math.random() > 0.88
+                ? 'rgba(184,149,42,0.30)'
                 : 'rgba(107,86,25,0.11)';
-            ctx.fillText(ch, i * FS, y);
-
+            ctx.fillText(HEX[Math.floor(Math.random() * 16)], i * FS, y);
             if (y > canvas.height) drops[i] = -(Math.random() * 30);
             drops[i] += speeds[i];
         }
     }, 50);
 
     /* ── Steps ── */
+    var tzCity = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    var sl = tzCity.lastIndexOf('/');
+    if (sl >= 0) tzCity = tzCity.slice(sl + 1).replace(/_/g, ' ');
+
     var STEPS = [
-        { lbl: 'TLS 1.3 · Handshake',          dtl: 'ECDHE-RSA-AES256-GCM-SHA384' },
-        { lbl: 'Zertifikat verifiziert',         dtl: 'CN=INFINITUM-NOX-CA-2024 · SHA-256' },
-        { lbl: 'AES-256-GCM · Aktiv',           dtl: 'Sitzungsschlüssel generiert' },
-        { lbl: 'Ed25519 · Signatur',             dtl: 'Kryptografische Integrität bestätigt' },
-        { lbl: 'HMAC-SHA384 · Verifiziert',      dtl: 'Kanalintegrität gesichert' },
-        { lbl: 'Zugang authentifiziert',         dtl: 'Vollständige Berechtigung erteilt' },
+        { lbl: 'TLS 1.3 · Handshake',
+          dtl: 'ECDHE-RSA-AES256-GCM-SHA384 · Perfect Forward Secrecy' },
+        { lbl: 'Zertifikat verifiziert',
+          dtl: 'CN=INFINITUM-NOX-CA-2025 · SHA-256 · OCSP: OK' },
+        { lbl: 'Browser-Fingerprint',
+          dtl: 'Canvas · WebGL · AudioContext · Navigator …' },
+        { lbl: 'Gerätemerkmale analysiert',
+          dtl: screen.width + '×' + screen.height + ' · '
+               + (navigator.hardwareConcurrency || '?') + ' Kerne · '
+               + tzCity },
+        { lbl: 'AES-256-GCM · Schlüssel aktiv',
+          dtl: 'Session-IV generiert · Forward Secrecy etabliert' },
+        { lbl: 'HMAC-SHA384 · Verifiziert',
+          dtl: 'Nachrichtenintegrität · Anti-Replay gesichert' },
+        { lbl: 'Zugang authentifiziert',
+          dtl: 'Vollständige Berechtigung erteilt' },
     ];
 
-    var START = 220;   /* ms before first step */
-    var STEP  = 430;   /* ms between steps */
-    var CHECK = 260;   /* ms within a step before checkmark */
+    var START = 250;   /* ms before first step */
+    var STEP  = 470;   /* ms between steps */
+    var CHECK = 285;   /* ms until checkmark */
+
+    /* Fingerprint scanning phases shown during step 2 */
+    var FP_PHASES = [
+        'Canvas-API analysiert …',
+        'WebGL-Renderer identifiziert …',
+        'AudioContext geprüft …',
+        'Navigator-Merkmale extrahiert …',
+        'SHA-256 Digest berechnet …',
+    ];
 
     function showStep(idx) {
-        var s   = STEPS[idx];
-        var el  = document.createElement('div');
+        var s  = STEPS[idx];
+        var el = document.createElement('div');
         el.className = 'sec-step';
         el.innerHTML =
             '<div class="sec-step-left">' +
                 '<span class="sec-step-lbl">' + s.lbl + '</span>' +
-                '<span class="sec-step-dtl">' + s.dtl + '</span>' +
+                '<span class="sec-step-dtl" id="dtl' + idx + '">' + s.dtl + '</span>' +
             '</div>' +
             '<div class="sec-check" id="chk' + idx + '">—</div>';
         list.appendChild(el);
 
-        setTimeout(function () {
-            var chk = document.getElementById('chk' + idx);
-            chk.textContent = '✓';
-            chk.classList.add('ok');
-            bar.style.width = ((idx + 1) / STEPS.length * 100) + '%';
-        }, CHECK);
+        if (idx === 2) {
+            /* Fingerprint step: cycle through scanning phases, then show real hash */
+            var pi     = 0;
+            var dtlEl  = document.getElementById('dtl2');
+            var phTimer = setInterval(function () {
+                if (dtlEl && pi < FP_PHASES.length) dtlEl.textContent = FP_PHASES[pi++];
+            }, 54);
+
+            fpPromise.then(function (fp) {
+                clearInterval(phTimer);
+                setTimeout(function () {
+                    var chk = document.getElementById('chk2');
+                    var dtl = document.getElementById('dtl2');
+                    if (dtl) dtl.textContent =
+                        'FP: ' + fp.hash.slice(0,8) + ' … ' + fp.hash.slice(-8);
+                    if (chk) { chk.textContent = '✓'; chk.classList.add('ok'); }
+                    bar.style.width = (3 / STEPS.length * 100) + '%';
+                }, CHECK);
+            });
+        } else {
+            setTimeout(function () {
+                var chk = document.getElementById('chk' + idx);
+                if (chk) { chk.textContent = '✓'; chk.classList.add('ok'); }
+                bar.style.width = ((idx + 1) / STEPS.length * 100) + '%';
+            }, CHECK);
+        }
     }
 
     for (var n = 0; n < STEPS.length; n++) {
@@ -769,7 +912,7 @@
     setTimeout(function () {
         finalEl.textContent = 'VERBINDUNG GESICHERT';
         finalEl.classList.add('active');
-    }, allDone + 280);
+    }, allDone + 300);
 
     setTimeout(function () {
         overlay.classList.add('fade-out');
@@ -777,7 +920,7 @@
             overlay.remove();
             clearInterval(rainTimer);
         }, 950);
-    }, allDone + 980);
+    }, allDone + 1050);
 }());
 </script>
 
