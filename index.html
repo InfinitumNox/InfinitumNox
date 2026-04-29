@@ -387,9 +387,157 @@
             .page { padding: 56px 28px; }
             .firm-name { font-size: 0.88rem; letter-spacing: 0.55em; }
         }
+
+        /* ─── SECURITY OVERLAY ─── */
+        #sec-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.9s ease;
+        }
+        #sec-overlay.fade-out { opacity: 0; pointer-events: none; }
+
+        #sec-rain {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        #sec-panel {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 400px;
+            padding: 0 28px;
+            animation: sec-in 0.7s ease 0.15s both;
+        }
+        @keyframes sec-in {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .sec-firm {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 300;
+            font-size: 0.72rem;
+            letter-spacing: 0.68em;
+            text-transform: uppercase;
+            color: var(--text-head);
+            text-align: center;
+            margin-bottom: 5px;
+            padding-right: 0.68em;
+        }
+        .sec-subtitle {
+            font-size: 0.37rem;
+            letter-spacing: 0.42em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            text-align: center;
+            margin-bottom: 26px;
+            padding-right: 0.42em;
+        }
+        .sec-rule {
+            width: 100%;
+            height: 1px;
+            background: var(--border-hi);
+            margin-bottom: 24px;
+        }
+
+        #sec-steps-list {
+            margin-bottom: 18px;
+            min-height: 192px;
+        }
+        .sec-step {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 7px 0;
+            border-bottom: 1px solid var(--border);
+            animation: sec-step-in 0.28s ease both;
+        }
+        @keyframes sec-step-in {
+            from { opacity: 0; transform: translateX(-5px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .sec-step-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .sec-step-lbl {
+            font-size: 0.45rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--text-sub);
+        }
+        .sec-step-dtl {
+            font-size: 0.34rem;
+            letter-spacing: 0.08em;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+        .sec-check {
+            font-size: 0.5rem;
+            color: var(--text-dim);
+            flex-shrink: 0;
+            min-width: 14px;
+            text-align: right;
+            transition: color 0.35s, text-shadow 0.35s;
+        }
+        .sec-check.ok {
+            color: var(--gold);
+            text-shadow: 0 0 8px rgba(184,149,42,0.45);
+        }
+
+        .sec-bar-wrap {
+            height: 1px;
+            background: var(--border);
+            margin-bottom: 22px;
+            overflow: hidden;
+        }
+        #sec-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, var(--gold-dim), var(--gold-pale));
+            transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+            box-shadow: 0 0 6px rgba(184,149,42,0.4);
+        }
+
+        #sec-final {
+            text-align: center;
+            font-size: 0.44rem;
+            letter-spacing: 0.52em;
+            text-transform: uppercase;
+            color: transparent;
+            padding-right: 0.52em;
+            height: 1.4em;
+            transition: color 0.6s, text-shadow 0.6s;
+        }
+        #sec-final.active {
+            color: var(--gold-pale);
+            text-shadow: 0 0 18px rgba(204,168,78,0.35);
+        }
     </style>
 </head>
 <body>
+
+<!-- Security Init Overlay -->
+<div id="sec-overlay">
+    <canvas id="sec-rain"></canvas>
+    <div id="sec-panel">
+        <div class="sec-firm">Infinitum Nox</div>
+        <div class="sec-subtitle">Sicherheitsprotokoll &nbsp;·&nbsp; Initialisierung</div>
+        <div class="sec-rule"></div>
+        <div id="sec-steps-list"></div>
+        <div class="sec-bar-wrap"><div id="sec-bar"></div></div>
+        <div id="sec-final"></div>
+    </div>
+</div>
 
 <div class="page">
 
@@ -524,6 +672,113 @@
     const now = new Date();
     const ts = `${now.getUTCFullYear()}-${pad(now.getUTCMonth()+1)}-${pad(now.getUTCDate())} ${pad(now.getUTCHours())}:${pad(now.getUTCMinutes())} UTC`;
     document.getElementById('ts').textContent = ts;
+</script>
+
+
+<script>
+/* ─── ENCRYPTION ANIMATION ─── */
+(function () {
+    var overlay  = document.getElementById('sec-overlay');
+    var canvas   = document.getElementById('sec-rain');
+    var ctx      = canvas.getContext('2d');
+    var list     = document.getElementById('sec-steps-list');
+    var bar      = document.getElementById('sec-bar');
+    var finalEl  = document.getElementById('sec-final');
+
+    /* ── Hex rain ── */
+    var HEX    = '0123456789ABCDEF';
+    var FS     = 12;
+    var cols, drops, speeds;
+
+    function initRain() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        cols   = Math.floor(canvas.width / FS);
+        drops  = [];
+        speeds = [];
+        for (var i = 0; i < cols; i++) {
+            drops[i]  = -(Math.random() * (canvas.height / FS));
+            speeds[i] = 0.18 + Math.random() * 0.28;
+        }
+    }
+    initRain();
+
+    var rainTimer = setInterval(function () {
+        ctx.fillStyle = 'rgba(4,4,8,0.07)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.font = FS + 'px "Courier New", monospace';
+
+        for (var i = 0; i < cols; i++) {
+            var y = drops[i] * FS;
+            if (y < 0) { drops[i] += speeds[i]; continue; }
+
+            var ch = HEX[Math.floor(Math.random() * 16)];
+            /* head character slightly brighter */
+            ctx.fillStyle = (Math.random() > 0.88)
+                ? 'rgba(184,149,42,0.28)'
+                : 'rgba(107,86,25,0.11)';
+            ctx.fillText(ch, i * FS, y);
+
+            if (y > canvas.height) drops[i] = -(Math.random() * 30);
+            drops[i] += speeds[i];
+        }
+    }, 50);
+
+    /* ── Steps ── */
+    var STEPS = [
+        { lbl: 'TLS 1.3 · Handshake',          dtl: 'ECDHE-RSA-AES256-GCM-SHA384' },
+        { lbl: 'Zertifikat verifiziert',         dtl: 'CN=INFINITUM-NOX-CA-2024 · SHA-256' },
+        { lbl: 'AES-256-GCM · Aktiv',           dtl: 'Sitzungsschlüssel generiert' },
+        { lbl: 'Ed25519 · Signatur',             dtl: 'Kryptografische Integrität bestätigt' },
+        { lbl: 'HMAC-SHA384 · Verifiziert',      dtl: 'Kanalintegrität gesichert' },
+        { lbl: 'Zugang authentifiziert',         dtl: 'Vollständige Berechtigung erteilt' },
+    ];
+
+    var START = 220;   /* ms before first step */
+    var STEP  = 430;   /* ms between steps */
+    var CHECK = 260;   /* ms within a step before checkmark */
+
+    function showStep(idx) {
+        var s   = STEPS[idx];
+        var el  = document.createElement('div');
+        el.className = 'sec-step';
+        el.innerHTML =
+            '<div class="sec-step-left">' +
+                '<span class="sec-step-lbl">' + s.lbl + '</span>' +
+                '<span class="sec-step-dtl">' + s.dtl + '</span>' +
+            '</div>' +
+            '<div class="sec-check" id="chk' + idx + '">—</div>';
+        list.appendChild(el);
+
+        setTimeout(function () {
+            var chk = document.getElementById('chk' + idx);
+            chk.textContent = '✓';
+            chk.classList.add('ok');
+            bar.style.width = ((idx + 1) / STEPS.length * 100) + '%';
+        }, CHECK);
+    }
+
+    for (var n = 0; n < STEPS.length; n++) {
+        (function (i) {
+            setTimeout(function () { showStep(i); }, START + i * STEP);
+        }(n));
+    }
+
+    var allDone = START + STEPS.length * STEP + CHECK;
+
+    setTimeout(function () {
+        finalEl.textContent = 'VERBINDUNG GESICHERT';
+        finalEl.classList.add('active');
+    }, allDone + 280);
+
+    setTimeout(function () {
+        overlay.classList.add('fade-out');
+        setTimeout(function () {
+            overlay.remove();
+            clearInterval(rainTimer);
+        }, 950);
+    }, allDone + 980);
+}());
 </script>
 
 </body>
