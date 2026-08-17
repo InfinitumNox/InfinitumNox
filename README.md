@@ -44,8 +44,8 @@ ein bis zwei Minuten ist die Seite da. Ab jetzt baut sich alles bei jeder
 
 ### 1.4 Editor benutzen
 
-In `public/admin/config.yml` bei `repo:` deinen GitHub-Namen eintragen, also
-zum Beispiel `maxmuster/mitwachsen`.
+`public/admin/config.yml` steht bereits auf `InfinitumNox/InfinitumNox`. Nur
+bei einer Kopie unter einem anderen Konto muss dort `repo:` angepasst werden.
 
 Dann `https://DEINNAME.github.io/mitwachsen/admin/` aufrufen. Der Login geht
 über **„Sign In Using Access Token"**. Den Token erzeugst du einmalig:
@@ -180,6 +180,7 @@ src/
 public/
   admin/config.yml     Die Felder, die sie im Editor sieht.
   admin/sveltia-cms.js Der Editor selbst, bewusst mitgeliefert.
+  bilder/              Hochgeladene Titelbilder, über den Editor befüllt.
   fonts/               Schriften, lokal ausgeliefert.
 
 .github/workflows/     Bauanleitung für die Vorschau.
@@ -226,6 +227,4 @@ VORSCHAU_GITHUB="deinname/mitwachsen" npm run build
 
 - Kontaktformular (aktuell nur eine E-Mail-Adresse)
 - Newsletter-Anmeldung mit Double-Opt-in über Brevo
-- Ein Logo — das Favicon ist ein Platzhalter
-- Bilder in den Artikeln
 - Eine Seite „Über uns"

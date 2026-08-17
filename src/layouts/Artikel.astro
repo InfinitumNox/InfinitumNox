@@ -29,6 +29,7 @@ const schema = {
   description: d.beschreibung,
   datePublished: d.veroeffentlicht.toISOString(),
   dateModified: (d.aktualisiert ?? d.veroeffentlicht).toISOString(),
+  ...(d.titelbild && { image: new URL(d.titelbild, Astro.site).href }),
   author: { '@type': 'Person', name: d.autorin },
   publisher: { '@type': 'Organization', name: 'mitwachsen' },
   inLanguage: 'de-DE',
@@ -36,7 +37,7 @@ const schema = {
 };
 ---
 
-<Basis titel={d.titel} beschreibung={d.beschreibung} bereich={bereich}>
+<Basis titel={d.titel} beschreibung={d.beschreibung} bereich={bereich} bild={d.titelbild}>
   <script
     type="application/ld+json"
     set:html={JSON.stringify(schema)}
@@ -51,6 +52,9 @@ const schema = {
     </nav>
 
     <article>
+      {d.titelbild && (
+        <img class="artikel__bild" src={d.titelbild} alt="" />
+      )}
       <header class="artikel__kopf">
         <p class="augenbraue">{b.fuerWen}</p>
         <h1>{d.titel}</h1>
@@ -93,6 +97,15 @@ const schema = {
   }
   .brotkrumen a { text-decoration: none; }
   .brotkrumen a:hover { text-decoration: underline; }
+
+  .artikel__bild {
+    display: block;
+    width: 100%;
+    max-height: 26rem;
+    object-fit: cover;
+    border-radius: 0.4rem;
+    margin-top: 2rem;
+  }
 
   .artikel__kopf {
     padding-block: 2rem 2.5rem;
