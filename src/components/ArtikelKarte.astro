@@ -1,0 +1,66 @@
+---
+interface Props {
+  url: string;
+  titel: string;
+  beschreibung: string;
+  veroeffentlicht: Date;
+  schlagworte?: string[];
+}
+const { url, titel, beschreibung, veroeffentlicht, schlagworte = [] } = Astro.props;
+
+const datumLesbar = veroeffentlicht.toLocaleDateString('de-DE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
+---
+
+<article class="karte">
+  <h3 class="karte__titel">
+    <a href={url}>{titel}</a>
+  </h3>
+  <p class="karte__text leise">{beschreibung}</p>
+  <p class="karte__meta leise">
+    <time datetime={datumMaschine}>{datumLesbar}</time>
+    {
+      schlagworte.length > 0 && (
+        <>
+          <span aria-hidden="true"> · </span>
+          <span>{schlagworte.join(', ')}</span>
+        </>
+      )
+    }
+  </p>
+</article>
+
+<style>
+  .karte {
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--haarlinie);
+  }
+
+  .karte__titel {
+    font-size: clamp(1.15rem, 2vw, 1.375rem);
+    margin: 0 0 0.5rem;
+  }
+
+  .karte__titel a {
+    text-decoration: none;
+  }
+  .karte__titel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .karte__text {
+    margin: 0 0 0.6rem;
+    max-width: var(--spalte);
+  }
+
+  .karte__meta {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+</style>

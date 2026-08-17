@@ -1,0 +1,245 @@
+/* ==========================================================================
+   Schriften - lokal eingebunden.
+   Niemals über Google Fonts CDN laden: dabei geht die IP der Besucher
+   an Google, und genau dafür ist in Deutschland schon abgemahnt worden.
+   Beide Schriften stehen unter der SIL Open Font License (siehe
+   public/fonts/OFL-*.txt).
+
+   Atkinson Hyperlegible ist vom Braille Institute für maximale
+   Lesbarkeit entwickelt - für eine Seite, deren Fachgebiet Teilhabe
+   ist, die passende Wahl.
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/fonts/AtkinsonHyperlegible-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/fonts/AtkinsonHyperlegible-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('/fonts/AtkinsonHyperlegible-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/BricolageGrotesque48pt-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Bricolage Grotesque';
+  src: url('/fonts/BricolageGrotesque48pt-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   Design-Tokens - hier wird das Aussehen der Seite gesteuert.
+   Farben nirgends sonst hart eintragen, immer diese Variablen nutzen.
+   ========================================================================== */
+
+:root {
+  /* Flächen */
+  --papier: #f4f6f3;
+  --karte: #ffffff;
+  --haarlinie: #d9dfd8;
+
+  /* Text */
+  --tinte: #17231f;
+  --tinte-leise: #57635c;
+
+  /* Bereichsfarben. Jeder Bereich hat eine eigene, damit sofort
+     erkennbar ist, für wen eine Seite geschrieben ist. */
+  --familie: #2e7259;
+  --praxis: #2f5a8f;
+  --lernen: #8a5a16;
+
+  /* Der aktive Bereich. Layouts setzen diesen Wert um, alles
+     andere (Links, Linien, Fokusrahmen) zieht sich die Farbe hier. */
+  --akzent: var(--familie);
+
+  /* Typografie */
+  --schrift-text: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont,
+    'Segoe UI', system-ui, sans-serif;
+  --schrift-display: 'Bricolage Grotesque', var(--schrift-text);
+
+  /* Maße */
+  --spalte: 68ch;
+  --breite: 76rem;
+  --rand: clamp(1.25rem, 5vw, 3rem);
+}
+
+[data-bereich='familie'] { --akzent: var(--familie); }
+[data-bereich='praxis']  { --akzent: var(--praxis); }
+[data-bereich='lernen']  { --akzent: var(--lernen); }
+
+/* ==========================================================================
+   Grundlagen
+   ========================================================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--tinte);
+  font-family: var(--schrift-text);
+  font-size: clamp(1.0625rem, 0.4vw + 1rem, 1.1875rem);
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main { flex: 1; }
+
+/* Tastatur-Fokus muss immer sichtbar sein. Nicht wegoptimieren. */
+:focus-visible {
+  outline: 3px solid var(--akzent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Sprunglink für Screenreader und Tastaturnutzung */
+.sprung-zum-inhalt {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1.25rem;
+  background: var(--tinte);
+  color: var(--papier);
+  text-decoration: none;
+}
+.sprung-zum-inhalt:focus {
+  left: 0;
+}
+
+/* ==========================================================================
+   Typografie
+   ========================================================================== */
+
+h1, h2, h3, h4 {
+  font-family: var(--schrift-display);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  margin: 0 0 0.5em;
+}
+
+h1 { font-size: clamp(2rem, 5vw, 3.25rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.125rem); margin-top: 2.5em; }
+h3 { font-size: clamp(1.2rem, 2vw, 1.4rem); margin-top: 2em; }
+
+p, ul, ol { margin: 0 0 1.25em; }
+p { text-wrap: pretty; }
+
+a {
+  color: inherit;
+  text-decoration-color: var(--akzent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.18em;
+  transition: color 0.15s ease;
+}
+a:hover { color: var(--akzent); }
+
+.augenbraue {
+  font-family: var(--schrift-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--akzent);
+  margin: 0 0 0.75rem;
+}
+
+.leise { color: var(--tinte-leise); }
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.huelle {
+  width: 100%;
+  max-width: var(--breite);
+  margin-inline: auto;
+  padding-inline: var(--rand);
+}
+
+.spalte { max-width: var(--spalte); }
+
+/* ==========================================================================
+   Artikeltext - gilt nur für vom CMS gelieferten Markdown-Inhalt
+   ========================================================================== */
+
+.artikeltext { max-width: var(--spalte); }
+.artikeltext > :first-child { margin-top: 0; }
+
+.artikeltext blockquote {
+  margin: 2rem 0;
+  padding: 0.25rem 0 0.25rem 1.5rem;
+  border-left: 3px solid var(--akzent);
+  color: var(--tinte-leise);
+  font-style: italic;
+}
+
+.artikeltext img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
+.artikeltext code {
+  background: var(--karte);
+  padding: 0.15em 0.4em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.artikeltext hr {
+  border: 0;
+  border-top: 1px solid var(--haarlinie);
+  margin: 3rem 0;
+}
+
+.artikeltext table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5em;
+}
+.artikeltext th,
+.artikeltext td {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid var(--haarlinie);
+}
+.artikeltext th { font-family: var(--schrift-display); }

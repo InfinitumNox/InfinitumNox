@@ -1,0 +1,129 @@
+---
+import Basis from './Basis.astro';
+import { bereichVon } from '../bereiche';
+import { pfad } from '../pfad';
+import type { BereichId } from '../bereiche';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  bereich: BereichId;
+  eintrag:
+    | CollectionEntry<'familie'>
+    | CollectionEntry<'praxis'>
+    | CollectionEntry<'lernen'>;
+}
+
+const { bereich, eintrag } = Astro.props;
+const b = bereichVon(bereich);
+const d = eintrag.data;
+
+const fmt = (datum: Date) =>
+  datum.toLocaleDateString('de-DE', { day: 'numeric', month: 'long', year: 'numeric' });
+
+// Strukturierte Daten: damit versteht Google, dass das ein Artikel ist,
+// wer ihn geschrieben hat und wann er zuletzt aktualisiert wurde.
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: d.titel,
+  description: d.beschreibung,
+  datePublished: d.veroeffentlicht.toISOString(),
+  dateModified: (d.aktualisiert ?? d.veroeffentlicht).toISOString(),
+  author: { '@type': 'Person', name: d.autorin },
+  publisher: { '@type': 'Organization', name: 'mitwachsen' },
+  inLanguage: 'de-DE',
+  mainEntityOfPage: new URL(Astro.url.pathname, Astro.site).href,
+};
+---
+
+<Basis titel={d.titel} beschreibung={d.beschreibung} bereich={bereich}>
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(schema)}
+    slot="head"
+  />
+
+  <div class="huelle">
+    <nav aria-label="Sie sind hier" class="brotkrumen">
+      <a href={pfad("/")}>Start</a>
+      <span aria-hidden="true">/</span>
+      <a href={pfad(b.pfad)}>{b.name}</a>
+    </nav>
+
+    <article>
+      <header class="artikel__kopf">
+        <p class="augenbraue">{b.fuerWen}</p>
+        <h1>{d.titel}</h1>
+        <p class="artikel__vorspann">{d.beschreibung}</p>
+        <p class="artikel__meta leise">
+          <span>{d.autorin}</span>
+          <span aria-hidden="true"> · </span>
+          <time datetime={d.veroeffentlicht.toISOString().slice(0, 10)}>
+            {fmt(d.veroeffentlicht)}
+          </time>
+          {
+            d.aktualisiert && (
+              <>
+                <span aria-hidden="true"> · </span>
+                <span>aktualisiert am {fmt(d.aktualisiert)}</span>
+              </>
+            )
+          }
+        </p>
+      </header>
+
+      <div class="artikeltext">
+        <slot />
+      </div>
+    </article>
+
+    <p class="artikel__zurueck">
+      <a href={pfad(b.pfad)}>Alle Texte im Bereich {b.name}</a>
+    </p>
+  </div>
+</Basis>
+
+<style>
+  .brotkrumen {
+    display: flex;
+    gap: 0.5rem;
+    padding-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--tinte-leise);
+  }
+  .brotkrumen a { text-decoration: none; }
+  .brotkrumen a:hover { text-decoration: underline; }
+
+  .artikel__kopf {
+    padding-block: 2rem 2.5rem;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--haarlinie);
+    max-width: var(--spalte);
+  }
+
+  .artikel__kopf h1 { margin-bottom: 0.5em; }
+
+  .artikel__vorspann {
+    font-size: clamp(1.1rem, 0.5vw + 1rem, 1.25rem);
+    color: var(--tinte-leise);
+    margin: 0 0 1.25rem;
+  }
+
+  .artikel__meta {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .artikel__zurueck {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 3px solid var(--akzent);
+  }
+  .artikel__zurueck a {
+    font-family: var(--schrift-display);
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--akzent);
+  }
+  .artikel__zurueck a:hover { text-decoration: underline; }
+</style>

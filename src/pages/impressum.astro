@@ -1,0 +1,106 @@
+---
+import Basis from '../layouts/Basis.astro';
+
+// ============================================================
+// AUSFÜLLEN, BEVOR DIE SEITE ONLINE GEHT.
+//
+// Pflichtangaben nach § 5 Digitale-Dienste-Gesetz (DDG).
+// Ein fehlendes oder unvollständiges Impressum ist abmahnfähig.
+//
+// Die Anschrift muss ladungsfähig sein: echte Straße und Hausnummer,
+// kein Postfach, keine c/o-Adresse ohne Zustimmung.
+// ============================================================
+
+const IMPRESSUM = {
+  // 'verein' oder 'person' - bestimmt, welche Angaben angezeigt werden
+  rechtsform: 'person' as 'verein' | 'person',
+
+  name: 'VORNAME NACHNAME',
+  strasse: 'STRASSE HAUSNUMMER',
+  ort: 'PLZ ORT',
+  land: 'Deutschland',
+
+  telefon: '+49 XXX XXXXXXX',
+  email: 'info@mitwachsen.org',
+
+  // Nur bei umsatzsteuerpflichtiger Tätigkeit. Sonst Zeile leer lassen.
+  ustId: '',
+
+  // Nur bei Rechtsform 'verein':
+  vertretungsberechtigte: 'VORSITZENDE, STELLVERTRETUNG',
+  registergericht: 'Amtsgericht ORT',
+  registernummer: 'VR XXXXX',
+
+  // Verantwortlich für journalistisch-redaktionelle Inhalte
+  // nach § 18 Abs. 2 Medienstaatsvertrag. Meist dieselbe Person.
+  redaktionVerantwortlich: 'VORNAME NACHNAME, ANSCHRIFT WIE OBEN',
+};
+
+const istVerein = IMPRESSUM.rechtsform === 'verein';
+---
+
+<Basis
+  titel="Impressum"
+  beschreibung="Anbieterkennzeichnung und Kontaktdaten nach § 5 DDG."
+>
+  <div class="huelle inhaltsseite">
+    <h1>Impressum</h1>
+
+    <h2>Angaben gemäß § 5 DDG</h2>
+    <p>
+      {IMPRESSUM.name}<br />
+      {IMPRESSUM.strasse}<br />
+      {IMPRESSUM.ort}<br />
+      {IMPRESSUM.land}
+    </p>
+
+    {
+      istVerein && (
+        <>
+          <h2>Vertreten durch</h2>
+          <p>{IMPRESSUM.vertretungsberechtigte}</p>
+
+          <h2>Registereintrag</h2>
+          <p>
+            Eingetragen im Vereinsregister<br />
+            Registergericht: {IMPRESSUM.registergericht}<br />
+            Registernummer: {IMPRESSUM.registernummer}
+          </p>
+        </>
+      )
+    }
+
+    <h2>Kontakt</h2>
+    <p>
+      Telefon: {IMPRESSUM.telefon}<br />
+      E-Mail: <a href={`mailto:${IMPRESSUM.email}`}>{IMPRESSUM.email}</a>
+    </p>
+
+    {
+      IMPRESSUM.ustId && (
+        <>
+          <h2>Umsatzsteuer-Identifikationsnummer</h2>
+          <p>Gemäß § 27 a Umsatzsteuergesetz: {IMPRESSUM.ustId}</p>
+        </>
+      )
+    }
+
+    <h2>Redaktionell verantwortlich</h2>
+    <p>{IMPRESSUM.redaktionVerantwortlich}</p>
+
+    <h2>Streitschlichtung</h2>
+    <p>
+      Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren
+      vor einer Verbraucherschlichtungsstelle teilzunehmen.
+    </p>
+  </div>
+</Basis>
+
+<style>
+  .inhaltsseite {
+    padding-block: clamp(2.5rem, 7vw, 4.5rem);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
+  }
+  .inhaltsseite h2 { font-size: 1.25rem; }
+</style>

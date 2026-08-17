@@ -1,0 +1,24 @@
+---
+// Diese Datei erzeugt eine Seite pro Markdown-Datei in
+// src/content/familie/. Der Dateiname wird zur URL:
+// meine-datei.md  ->  /familie/meine-datei/
+import { getCollection, render } from 'astro:content';
+import Artikel from '../../layouts/Artikel.astro';
+
+export async function getStaticPaths() {
+  const eintraege = await getCollection('familie', ({ data }) =>
+    import.meta.env.PROD ? !data.entwurf : true
+  );
+  return eintraege.map((eintrag) => ({
+    params: { slug: eintrag.id },
+    props: { eintrag },
+  }));
+}
+
+const { eintrag } = Astro.props;
+const { Content } = await render(eintrag);
+---
+
+<Artikel bereich="familie" eintrag={eintrag}>
+  <Content />
+</Artikel>

@@ -1,0 +1,49 @@
+# Baut die Seite bei jeder Änderung und stellt sie auf GitHub Pages.
+# Ergebnis: https://BENUTZERNAME.github.io/mitwachsen/
+#
+# Einmalig einschalten unter:
+#   Repository -> Settings -> Pages -> Source: "GitHub Actions"
+#
+# Diese Datei ist NUR für die Vorschau. Die echte Seite läuft später
+# über Cloudflare Pages und braucht keinen Arbeitsablauf hier.
+
+name: Vorschau bauen
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # erlaubt Starten per Knopfdruck auf GitHub
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dateien holen
+        uses: actions/checkout@v4
+
+      - name: Seite bauen
+        uses: withastro/action@v3
+        env:
+          # Sagt der Konfiguration, dass es die Vorschau ist.
+          # github.repository ist automatisch "benutzername/reponame".
+          VORSCHAU_GITHUB: ${{ github.repository }}
+
+  veroeffentlichen:
+    needs: bauen
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    steps:
+      - name: Auf GitHub Pages stellen
+        id: pages
+        uses: actions/deploy-pages@v4

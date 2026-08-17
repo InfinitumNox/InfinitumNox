@@ -1,0 +1,130 @@
+---
+import Basis from '../layouts/Basis.astro';
+import { BEREICHE } from '../bereiche';
+import { pfad } from '../pfad';
+import { getCollection } from 'astro:content';
+
+// Für jeden Bereich den neuesten veröffentlichten Artikel holen,
+// damit die Startseite mitwächst, sobald geschrieben wird.
+const neuestePro = await Promise.all(
+  BEREICHE.map(async (b) => {
+    const eintraege = await getCollection(b.id, ({ data }) => !data.entwurf);
+    const neueste = eintraege.sort(
+      (a, z) => z.data.veroeffentlicht.valueOf() - a.data.veroeffentlicht.valueOf()
+    )[0];
+    return { bereich: b, neueste };
+  })
+);
+---
+
+<Basis
+  titel="Wissen, das mitwächst"
+  beschreibung="Fachwissen zu Entwicklung, Erziehung und sozialer Arbeit - dreimal geschrieben: für Familien, für Fachkräfte und für Auszubildende."
+>
+  <section class="huelle held">
+    <h1 class="held__satz">
+      Dieselbe Frage klingt anders,<br />
+      je nachdem, wer sie stellt.
+    </h1>
+    <p class="held__text spalte">
+      Eine Mutter, eine Erzieherin und eine Auszubildende im dritten Lehrjahr
+      brauchen zum selben Thema drei verschiedene Antworten. Nicht einfachere
+      oder schwierigere - andere. Deshalb ist diese Seite dreimal geschrieben.
+    </p>
+  </section>
+
+  <section class="huelle" aria-label="Die drei Bereiche">
+    <ul class="strang">
+      {
+        neuestePro.map(({ bereich, neueste }) => (
+          <li class="strang__glied" data-bereich={bereich.id}>
+            <p class="augenbraue">{bereich.fuerWen}</p>
+            <h2 class="strang__titel">
+              <a href={pfad(bereich.pfad)}>{bereich.name}</a>
+            </h2>
+            <p class="strang__text">{bereich.beschreibung}</p>
+
+            {neueste ? (
+              <p class="strang__neu leise">
+                Zuletzt:{' '}
+                <a href={pfad(`${bereich.pfad}${neueste.id}/`)}>{neueste.data.titel}</a>
+              </p>
+            ) : (
+              <p class="strang__neu leise">Die ersten Texte entstehen gerade.</p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Basis>
+
+<style>
+  .held {
+    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
+  }
+
+  .held__satz {
+    max-width: 20ch;
+    letter-spacing: -0.025em;
+  }
+
+  .held__text {
+    font-size: clamp(1.1rem, 0.6vw + 1rem, 1.3rem);
+    color: var(--tinte-leise);
+    margin: 0;
+  }
+
+  /* Signaturelement: Die drei Bereiche hängen an einer durchgehenden
+     senkrechten Linie, die pro Abschnitt die Farbe wechselt. Die Linie
+     ist keine Deko - sie zeigt, dass es ein Thema ist, das sich je nach
+     Leserin unterschiedlich zeigt. */
+  .strang {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .strang__glied {
+    position: relative;
+    padding: 2.75rem 0 2.75rem clamp(1.5rem, 4vw, 3rem);
+    border-left: 3px solid var(--akzent);
+  }
+
+  .strang__glied::before {
+    content: '';
+    position: absolute;
+    left: -8px;
+    top: 2.9rem;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--papier);
+    border: 3px solid var(--akzent);
+  }
+
+  .strang__titel {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    margin: 0 0 0.4rem;
+  }
+
+  .strang__titel a {
+    text-decoration: none;
+    color: var(--akzent);
+  }
+  .strang__titel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 3px;
+    text-underline-offset: 0.16em;
+  }
+
+  .strang__text {
+    max-width: 44ch;
+    margin: 0 0 1rem;
+  }
+
+  .strang__neu {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+</style>

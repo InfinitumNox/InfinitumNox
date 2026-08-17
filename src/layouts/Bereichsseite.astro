@@ -1,0 +1,74 @@
+---
+import Basis from './Basis.astro';
+import ArtikelKarte from '../components/ArtikelKarte.astro';
+import { bereichVon } from '../bereiche';
+import { pfad } from '../pfad';
+import type { BereichId } from '../bereiche';
+import { getCollection } from 'astro:content';
+
+interface Props {
+  bereich: BereichId;
+}
+const { bereich } = Astro.props;
+const b = bereichVon(bereich);
+
+// Entwürfe erscheinen beim lokalen Arbeiten, aber nie auf der
+// fertigen Seite. import.meta.env.PROD ist beim Bauen true.
+const alle = await getCollection(bereich, ({ data }) =>
+  import.meta.env.PROD ? !data.entwurf : true
+);
+
+const artikel = alle.sort(
+  (a, z) => z.data.veroeffentlicht.valueOf() - a.data.veroeffentlicht.valueOf()
+);
+---
+
+<Basis titel={b.name} beschreibung={b.beschreibung} bereich={bereich}>
+  <div class="huelle">
+    <header class="bereich__kopf">
+      <p class="augenbraue">{b.fuerWen}</p>
+      <h1>{b.name}</h1>
+      <p class="bereich__text spalte">{b.beschreibung}</p>
+    </header>
+
+    {
+      artikel.length === 0 ? (
+        <p class="leise">
+          Hier entstehen gerade die ersten Texte. Schau in ein paar Tagen
+          wieder vorbei.
+        </p>
+      ) : (
+        <div class="bereich__liste">
+          {artikel.map((a) => (
+            <ArtikelKarte
+              url={pfad(`${b.pfad}${a.id}/`)}
+              titel={a.data.titel}
+              beschreibung={a.data.beschreibung}
+              veroeffentlicht={a.data.veroeffentlicht}
+              schlagworte={a.data.schlagworte}
+            />
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Basis>
+
+<style>
+  .bereich__kopf {
+    padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
+    border-bottom: 3px solid var(--akzent);
+    margin-bottom: 1rem;
+  }
+
+  .bereich__kopf h1 {
+    color: var(--akzent);
+    margin-bottom: 0.35em;
+  }
+
+  .bereich__text {
+    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.2rem);
+    color: var(--tinte-leise);
+    margin: 0;
+  }
+</style>

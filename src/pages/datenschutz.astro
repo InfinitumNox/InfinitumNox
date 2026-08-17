@@ -1,0 +1,153 @@
+---
+import Basis from '../layouts/Basis.astro';
+
+// ============================================================
+// ROHFASSUNG - NICHT UNGEPRÜFT ONLINE STELLEN.
+//
+// Diese Datei beschreibt genau die Dienste, die in diesem Projekt
+// tatsächlich stecken: Cloudflare als Hoster, Plausible als Statistik,
+// Brevo als Newsletter. Damit ist sie ehrlicher als jeder Generator,
+// der Standardbausteine für Dienste ausspuckt, die es hier gar nicht gibt.
+//
+// Trotzdem: einmal durch einen Generator gegenprüfen
+// (datenschutz-generator.de von Thomas Schwenke ist kostenlos und gut)
+// oder von jemandem lesen lassen, der Datenschutz beruflich macht.
+//
+// Alle PLATZHALTER in Großbuchstaben ersetzen.
+// Abschnitte zu Diensten, die du NICHT einsetzt, komplett löschen.
+// ============================================================
+
+const V = {
+  name: 'VORNAME NACHNAME oder VEREINSNAME',
+  anschrift: 'STRASSE HAUSNUMMER, PLZ ORT',
+  email: 'info@mitwachsen.org',
+  stand: '17. August 2026',
+};
+---
+
+<Basis
+  titel="Datenschutzerklärung"
+  beschreibung="Informationen zur Verarbeitung personenbezogener Daten nach Art. 13 DSGVO."
+>
+  <div class="huelle inhaltsseite">
+    <h1>Datenschutzerklärung</h1>
+    <p class="leise">Stand: {V.stand}</p>
+
+    <h2>1. Verantwortliche Stelle</h2>
+    <p>
+      {V.name}<br />
+      {V.anschrift}<br />
+      E-Mail: <a href={`mailto:${V.email}`}>{V.email}</a>
+    </p>
+
+    <h2>2. Ihre Rechte</h2>
+    <p>
+      Sie haben jederzeit das Recht auf Auskunft über die zu Ihrer Person
+      gespeicherten Daten (Art. 15 DSGVO), auf Berichtigung (Art. 16 DSGVO),
+      auf Löschung (Art. 17 DSGVO), auf Einschränkung der Verarbeitung
+      (Art. 18 DSGVO) und auf Datenübertragbarkeit (Art. 20 DSGVO). Sie können
+      einer Verarbeitung, die auf einem berechtigten Interesse beruht,
+      jederzeit widersprechen (Art. 21 DSGVO). Erteilte Einwilligungen können
+      Sie jederzeit mit Wirkung für die Zukunft widerrufen.
+    </p>
+    <p>
+      Ihnen steht außerdem ein Beschwerderecht bei einer Datenschutz-Aufsichts&shy;behörde
+      zu (Art. 77 DSGVO). Zuständig ist in der Regel die Behörde Ihres
+      Bundeslandes oder unseres Sitzes.
+    </p>
+
+    <h2>3. Hosting und Server-Logdateien</h2>
+    <p>
+      Diese Website wird bei der Cloudflare, Inc., 101 Townsend St., San
+      Francisco, CA 94107, USA, gehostet (Dienst: Cloudflare Pages). Beim
+      Aufruf der Seite verarbeitet Cloudflare technisch notwendige Daten,
+      insbesondere Ihre IP-Adresse, Datum und Uhrzeit des Zugriffs, die
+      aufgerufene Adresse, den verweisenden Link sowie Angaben zu Browser und
+      Betriebssystem.
+    </p>
+    <p>
+      Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes
+      Interesse liegt im sicheren und zuverlässigen Betrieb dieser Website
+      sowie in der Abwehr von Angriffen.
+    </p>
+    <p>
+      Cloudflare verarbeitet Daten auch in den USA. Grundlage der Übermittlung
+      sind die Standardvertragsklauseln der EU-Kommission sowie die
+      Zertifizierung von Cloudflare unter dem EU-US Data Privacy Framework.
+      Mit Cloudflare besteht ein Vertrag zur Auftragsverarbeitung nach
+      Art. 28 DSGVO.
+    </p>
+
+    <h2>4. Reichweitenmessung mit Plausible</h2>
+    <p>
+      Zur Auswertung der Nutzung dieser Website setzen wir Plausible
+      Analytics ein (Plausible Insights OÜ, Västriku tn 2, 50403 Tartu,
+      Estland). Die Daten werden auf Servern innerhalb der Europäischen Union
+      verarbeitet.
+    </p>
+    <p>
+      Plausible setzt keine Cookies und speichert keine Informationen auf
+      Ihrem Endgerät. Es werden keine personenbezogenen Profile gebildet und
+      keine Daten geräteübergreifend zusammengeführt. Ihre IP-Adresse wird
+      ausschließlich flüchtig und in gehashter Form verarbeitet und nicht
+      gespeichert.
+    </p>
+    <p>
+      Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO. Unser berechtigtes
+      Interesse besteht darin, zu verstehen, welche Inhalte gelesen werden,
+      um das Angebot zu verbessern. Da keine Informationen auf Ihrem Endgerät
+      gespeichert oder ausgelesen werden, ist keine Einwilligung nach
+      § 25 TDDDG erforderlich.
+    </p>
+
+    <h2>5. Newsletter</h2>
+    <p>
+      Für den Versand unseres Newsletters nutzen wir Brevo (Sendinblue GmbH,
+      Köpenicker Straße 126, 10179 Berlin; Muttergesellschaft: Brevo SAS,
+      Frankreich). Die Daten werden auf Servern in der Europäischen Union
+      verarbeitet. Mit dem Anbieter besteht ein Vertrag zur
+      Auftragsverarbeitung.
+    </p>
+    <p>
+      Die Anmeldung erfolgt im Double-Opt-in-Verfahren: Nach Eingabe Ihrer
+      E-Mail-Adresse erhalten Sie eine Nachricht mit einem Bestätigungslink.
+      Erst nach Ihrer Bestätigung nehmen wir Sie in den Verteiler auf. Wir
+      protokollieren Anmeldung und Bestätigung mit Zeitpunkt und IP-Adresse,
+      um die Einwilligung nachweisen zu können.
+    </p>
+    <p>
+      Rechtsgrundlage ist Ihre Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO.
+      Sie können den Newsletter jederzeit abbestellen, etwa über den Abmeldelink
+      am Ende jeder E-Mail. Nach der Abmeldung löschen wir Ihre Adresse aus
+      dem Verteiler.
+    </p>
+
+    <h2>6. Kontaktaufnahme</h2>
+    <p>
+      Wenn Sie uns per E-Mail oder über das Kontaktformular schreiben,
+      verarbeiten wir Ihre Angaben zur Bearbeitung der Anfrage und für
+      mögliche Anschlussfragen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f
+      DSGVO beziehungsweise, bei Anfragen zu einem Vertrag, Art. 6 Abs. 1
+      lit. b DSGVO. Wir löschen die Daten, sobald der Vorgang abgeschlossen
+      ist und keine gesetzlichen Aufbewahrungsfristen entgegenstehen.
+    </p>
+
+    <h2>7. Keine Einbindung externer Inhalte</h2>
+    <p>
+      Diese Website bindet keine Schriften, Karten, Videos oder sonstigen
+      Inhalte von Servern Dritter ein. Alle Schriftarten werden von unserem
+      eigenen Server ausgeliefert. Beim Aufruf der Seite werden dadurch keine
+      Verbindungen zu Google, YouTube oder vergleichbaren Anbietern
+      hergestellt.
+    </p>
+  </div>
+</Basis>
+
+<style>
+  .inhaltsseite {
+    padding-block: clamp(2.5rem, 7vw, 4.5rem);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
+  }
+  .inhaltsseite h2 { font-size: 1.25rem; }
+</style>

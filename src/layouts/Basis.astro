@@ -1,0 +1,86 @@
+---
+import '../styles/global.css';
+import Kopf from '../components/Kopf.astro';
+import Fuss from '../components/Fuss.astro';
+import type { BereichId } from '../bereiche';
+import { pfad } from '../pfad';
+
+interface Props {
+  titel: string;
+  beschreibung: string;
+  bereich?: BereichId;
+  /** Auf true setzen für Seiten, die nicht bei Google auftauchen sollen. */
+  nichtIndexieren?: boolean;
+}
+
+const { titel, beschreibung, bereich, nichtIndexieren = false } = Astro.props;
+
+// Die Vorschau auf GitHub Pages wird immer aus der Suche ausgeschlossen.
+// Sonst hätte Google denselben Text unter zwei Adressen und würde beide
+// abwerten - der Fachbegriff dafür ist "Duplicate Content".
+const ausSucheAusschliessen = nichtIndexieren || import.meta.env.IST_VORSCHAU;
+
+// Astro.site kommt aus astro.config.mjs. Daraus wird die Canonical-URL
+// gebaut - die sagt Google, welche Adresse die richtige ist.
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const seitenTitel = `${titel} · mitwachsen`;
+---
+
+<!doctype html>
+<html lang="de" data-bereich={bereich}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{seitenTitel}</title>
+    <meta name="description" content={beschreibung} />
+    <link rel="canonical" href={canonical} />
+    {ausSucheAusschliessen && <meta name="robots" content="noindex, follow" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="mitwachsen" />
+    <meta property="og:locale" content="de_DE" />
+    <meta property="og:title" content={titel} />
+    <meta property="og:description" content={beschreibung} />
+    <meta property="og:url" content={canonical} />
+
+    <link rel="sitemap" href={pfad("/sitemap-index.xml")} />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="mitwachsen"
+      href={new URL('rss.xml', Astro.site)}
+    />
+
+    <!-- Schriften vorladen, damit der Text nicht zweimal springt -->
+    <link
+      rel="preload"
+      href={pfad("/fonts/AtkinsonHyperlegible-Regular.woff2")}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href={pfad("/fonts/BricolageGrotesque48pt-SemiBold.woff2")}
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <link rel="icon" href={pfad("/favicon.svg")} type="image/svg+xml" />
+
+    <!-- Unterseiten können hier eigene Metadaten einhängen,
+         zum Beispiel strukturierte Daten für Google. -->
+    <slot name="head" />
+  </head>
+
+  <body>
+    <a class="sprung-zum-inhalt" href="#inhalt">Zum Inhalt springen</a>
+    <Kopf aktiverBereich={bereich} />
+    <main id="inhalt">
+      <slot />
+    </main>
+    <Fuss />
+  </body>
+</html>

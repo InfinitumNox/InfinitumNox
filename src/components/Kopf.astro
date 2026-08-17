@@ -1,0 +1,98 @@
+---
+import { BEREICHE } from '../bereiche';
+import type { BereichId } from '../bereiche';
+import { pfad } from '../pfad';
+
+interface Props {
+  aktiverBereich?: BereichId;
+}
+const { aktiverBereich } = Astro.props;
+---
+
+<header class="kopf">
+  <div class="huelle kopf__innen">
+    <a href={pfad("/")} class="marke" aria-label="mitwachsen, zur Startseite">
+      mitwachsen
+    </a>
+
+    <nav aria-label="Bereiche">
+      <ul class="nav">
+        {
+          BEREICHE.map((b) => (
+            <li>
+              <a
+                href={pfad(b.pfad)}
+                data-bereich={b.id}
+                class:list={['nav__link', { 'nav__link--aktiv': aktiverBereich === b.id }]}
+                aria-current={aktiverBereich === b.id ? 'page' : undefined}
+              >
+                {b.name}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .kopf {
+    border-bottom: 1px solid var(--haarlinie);
+    background: var(--papier);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .kopf__innen {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-block: 1.1rem;
+  }
+
+  .marke {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: 1.3rem;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+  }
+  .marke:hover {
+    color: var(--tinte);
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+  }
+
+  .nav {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav__link {
+    font-family: var(--schrift-display);
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    padding-bottom: 0.3rem;
+    border-bottom: 2px solid transparent;
+  }
+
+  /* Jeder Bereichslink trägt seine eigene Farbe - so ist beim
+     Hovern schon sichtbar, in welche Welt der Link führt. */
+  .nav__link[data-bereich='familie']:hover { color: var(--familie); }
+  .nav__link[data-bereich='praxis']:hover  { color: var(--praxis); }
+  .nav__link[data-bereich='lernen']:hover  { color: var(--lernen); }
+
+  .nav__link--aktiv {
+    color: var(--akzent);
+    border-bottom-color: var(--akzent);
+  }
+</style>

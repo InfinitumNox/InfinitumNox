@@ -1,0 +1,34 @@
+---
+import Basis from '../layouts/Basis.astro';
+import { BEREICHE } from '../bereiche';
+import { pfad } from '../pfad';
+---
+
+<Basis
+  titel="Seite nicht gefunden"
+  beschreibung="Diese Adresse gibt es nicht."
+  nichtIndexieren={true}
+>
+  <div class="huelle inhaltsseite">
+    <h1>Diese Seite gibt es nicht</h1>
+    <p>
+      Die Adresse stimmt nicht, oder der Text ist umgezogen. Von hier
+      kommst du weiter:
+    </p>
+    <ul>
+      {BEREICHE.map((b) => (
+        <li><a href={pfad(b.pfad)}>{b.name}</a> &ndash; {b.fuerWen.toLowerCase()}</li>
+      ))}
+      <li><a href={pfad("/")}>Zur Startseite</a></li>
+    </ul>
+  </div>
+</Basis>
+
+<style>
+  .inhaltsseite {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
+  }
+  ul { line-height: 2; }
+</style>

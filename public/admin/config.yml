@@ -1,0 +1,105 @@
+# ============================================================
+# Konfiguration des Redaktionssystems (Sveltia CMS).
+# Erreichbar unter mitwachsen.org/admin/
+#
+# Wenn hier ein Feld ergänzt wird, muss es auch in
+# src/content.config.ts eingetragen werden - sonst bricht der
+# Build ab, weil Astro das Feld nicht kennt.
+# ============================================================
+
+backend:
+  name: github
+  repo: BENUTZERNAME/mitwachsen # <- ANPASSEN: dein GitHub-Name/Repository
+  branch: main
+
+  # Für den bequemen Knopf "Sign In with GitHub" braucht es einen
+  # eigenen Login-Vermittler. Der lohnt sich erst, wenn die Seite
+  # unter der echten Domain läuft. Bis dahin geht der Login über
+  # "Sign In Using Access Token" - siehe README, Stufe 1.
+  #
+  # Später einkommentieren und Adresse anpassen:
+  # base_url: https://auth.mitwachsen.org
+
+# Medien landen hier und sind danach unter /bilder/... erreichbar
+media_folder: public/bilder
+public_folder: /bilder
+
+# Auf Deutsch, damit die Oberfläche keine Hürde ist
+locale: de
+
+# Hinweis: Der Redaktions-Workflow (Entwurf -> Freigabe über
+# Pull Requests) wird von Sveltia CMS nicht durchgängig unterstützt.
+# Stattdessen steuert das Feld "Noch nicht veröffentlichen" in jedem
+# Artikel, ob er live geht. Das reicht für ein kleines Team völlig.
+# publish_mode: editorial_workflow
+
+collections:
+  - name: familie
+    label: Familie
+    label_singular: Artikel
+    description: Texte für Eltern und Angehörige.
+    folder: src/content/familie
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    preview_path: 'familie/{{slug}}'
+    fields:
+      - {
+          name: titel,
+          label: Überschrift,
+          widget: string,
+          hint: 'Maximal 70 Zeichen, sonst kürzt Google im Suchergebnis.',
+        }
+      - {
+          name: beschreibung,
+          label: Kurzbeschreibung,
+          widget: text,
+          hint: 'Ein bis zwei Sätze. Das ist der Text, den man bei Google unter der Überschrift liest. Maximal 160 Zeichen.',
+        }
+      - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
+      - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
+      - { name: schlagworte, label: Schlagworte, widget: list, required: false, hint: 'Zum Sortieren und Wiederfinden.' }
+      - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false, hint: 'Angehakt bleibt der Text unsichtbar.' }
+      - { name: body, label: Text, widget: markdown }
+
+  - name: praxis
+    label: Praxis
+    label_singular: Artikel
+    description: Texte für Fachkräfte im Sozialbereich.
+    folder: src/content/praxis
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    preview_path: 'praxis/{{slug}}'
+    fields:
+      - { name: titel, label: Überschrift, widget: string, hint: 'Maximal 70 Zeichen.' }
+      - { name: beschreibung, label: Kurzbeschreibung, widget: text, hint: 'Maximal 160 Zeichen.' }
+      - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
+      - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
+      - { name: schlagworte, label: Schlagworte, widget: list, required: false }
+      - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false }
+      - { name: body, label: Text, widget: markdown }
+
+  - name: lernen
+    label: Lernen
+    label_singular: Artikel
+    description: Texte für Auszubildende.
+    folder: src/content/lernen
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    preview_path: 'lernen/{{slug}}'
+    fields:
+      - { name: titel, label: Überschrift, widget: string, hint: 'Maximal 70 Zeichen.' }
+      - { name: beschreibung, label: Kurzbeschreibung, widget: text, hint: 'Maximal 160 Zeichen.' }
+      - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
+      - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
+      - { name: schlagworte, label: Schlagworte, widget: list, required: false }
+      - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false }
+      - { name: body, label: Text, widget: markdown }

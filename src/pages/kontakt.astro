@@ -1,0 +1,35 @@
+---
+import Basis from '../layouts/Basis.astro';
+---
+
+<Basis
+  titel="Kontakt"
+  beschreibung="So erreichen Sie uns."
+>
+  <div class="huelle inhaltsseite">
+    <h1>Kontakt</h1>
+    <p>
+      Schreib uns gern - für Fragen, Themenwünsche oder wenn dir in einem
+      Text etwas fehlt.
+    </p>
+    <p>
+      <a href="mailto:info@mitwachsen.org">info@mitwachsen.org</a>
+    </p>
+
+    <!--
+      Später hier ein Formular einbauen. Zwei Regeln dabei:
+      1. Kein Google reCAPTCHA - stattdessen Cloudflare Turnstile
+         oder Friendly Captcha (Sitz in Deutschland).
+      2. Cloudflare Pages Functions oder Formspree/Web3Forms als
+         Empfänger. Dienst dann in die Datenschutzerklärung eintragen.
+    -->
+  </div>
+</Basis>
+
+<style>
+  .inhaltsseite {
+    padding-block: clamp(2.5rem, 7vw, 4.5rem);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
+  }
+</style>

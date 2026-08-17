@@ -1,0 +1,89 @@
+---
+import { BEREICHE } from '../bereiche';
+import { pfad } from '../pfad';
+const jahr = new Date().getFullYear();
+---
+
+<footer class="fuss">
+  <div class="huelle fuss__innen">
+    <div>
+      <p class="fuss__marke">mitwachsen</p>
+      <p class="leise fuss__zeile">
+        Wissen für Familien, Fachkräfte und Auszubildende im Sozialbereich.
+      </p>
+    </div>
+
+    <nav aria-label="Bereiche" class="fuss__block">
+      <h2 class="fuss__titel">Bereiche</h2>
+      <ul>
+        {BEREICHE.map((b) => <li><a href={pfad(b.pfad)}>{b.name}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav aria-label="Rechtliches" class="fuss__block">
+      <h2 class="fuss__titel">Rechtliches</h2>
+      <ul>
+        <!-- Beide Links MÜSSEN von jeder Seite aus mit einem Klick
+             erreichbar sein. Das ist keine Empfehlung, das ist Pflicht. -->
+        <li><a href={pfad("/impressum/")}>Impressum</a></li>
+        <li><a href={pfad("/datenschutz/")}>Datenschutz</a></li>
+        <li><a href={pfad("/kontakt/")}>Kontakt</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="huelle">
+    <p class="leise fuss__unten">© {jahr} mitwachsen</p>
+  </div>
+</footer>
+
+<style>
+  .fuss {
+    border-top: 1px solid var(--haarlinie);
+    margin-top: 6rem;
+    padding-block: 3rem 2rem;
+    font-size: 0.95rem;
+  }
+
+  .fuss__innen {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 2.5rem;
+  }
+
+  .fuss__marke {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: 1.15rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .fuss__zeile { margin: 0; max-width: 26ch; }
+
+  .fuss__titel {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--tinte-leise);
+    margin: 0 0 0.75rem;
+  }
+
+  .fuss__block ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .fuss__block a { text-decoration: none; }
+  .fuss__block a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+
+  .fuss__unten {
+    margin: 3rem 0 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--haarlinie);
+    font-size: 0.875rem;
+  }
+</style>
