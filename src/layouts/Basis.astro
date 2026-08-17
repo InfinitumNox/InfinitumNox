@@ -11,9 +11,11 @@ interface Props {
   bereich?: BereichId;
   /** Auf true setzen für Seiten, die nicht bei Google auftauchen sollen. */
   nichtIndexieren?: boolean;
+  /** Auf true setzen, damit "Start" in der Navigation als aktiv gilt. */
+  startAktiv?: boolean;
 }
 
-const { titel, beschreibung, bereich, nichtIndexieren = false } = Astro.props;
+const { titel, beschreibung, bereich, nichtIndexieren = false, startAktiv = false } = Astro.props;
 
 // Die Vorschau auf GitHub Pages wird immer aus der Suche ausgeschlossen.
 // Sonst hätte Google denselben Text unter zwei Adressen und würde beide
@@ -77,7 +79,7 @@ const seitenTitel = `${titel} · mitwachsen`;
 
   <body>
     <a class="sprung-zum-inhalt" href="#inhalt">Zum Inhalt springen</a>
-    <Kopf aktiverBereich={bereich} />
+    <Kopf aktiverBereich={bereich} startAktiv={startAktiv} />
     <main id="inhalt">
       <slot />
     </main>
