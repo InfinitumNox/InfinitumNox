@@ -1,13 +1,11 @@
 ---
-import { BEREICHE } from '../bereiche';
-import type { BereichId } from '../bereiche';
 import { pfad } from '../pfad';
 
 interface Props {
-  aktiverBereich?: BereichId;
   startAktiv?: boolean;
+  blogAktiv?: boolean;
 }
-const { aktiverBereich, startAktiv = false } = Astro.props;
+const { startAktiv = false, blogAktiv = false } = Astro.props;
 ---
 
 <header class="kopf">
@@ -31,22 +29,14 @@ const { aktiverBereich, startAktiv = false } = Astro.props;
         <li>
           <a href={`${pfad("/")}#rechner`} class="nav__link">Rechner</a>
         </li>
-        {
-          BEREICHE.map((b) => (
-            <li>
-              <a
-                href={pfad(b.pfad)}
-                data-bereich={b.id}
-                class:list={['nav__link', { 'nav__link--aktiv': aktiverBereich === b.id }]}
-                aria-current={aktiverBereich === b.id ? 'page' : undefined}
-              >
-                {b.name}
-              </a>
-            </li>
-          ))
-        }
         <li>
-          <a href={`${pfad("/")}#artikel`} class="nav__link">Guides</a>
+          <a
+            href={pfad("/blog/")}
+            class:list={['nav__link', { 'nav__link--aktiv': blogAktiv }]}
+            aria-current={blogAktiv ? 'page' : undefined}
+          >
+            Blog
+          </a>
         </li>
       </ul>
     </nav>
@@ -113,12 +103,6 @@ const { aktiverBereich, startAktiv = false } = Astro.props;
   }
 
   .nav__link:hover { color: var(--akzent); }
-
-  /* Jeder Bereichslink trägt seine eigene Farbe - so ist beim
-     Hovern schon sichtbar, in welche Welt der Link führt. */
-  .nav__link[data-bereich='familie']:hover { color: var(--familie); }
-  .nav__link[data-bereich='praxis']:hover  { color: var(--praxis); }
-  .nav__link[data-bereich='lernen']:hover  { color: var(--lernen); }
 
   .nav__link--aktiv {
     color: var(--akzent);

@@ -15,6 +15,10 @@ interface Props {
   nichtIndexieren?: boolean;
   /** Auf true setzen, damit "Start" in der Navigation als aktiv gilt. */
   startAktiv?: boolean;
+  /** Auf true setzen, damit "Blog" in der Navigation als aktiv gilt.
+   * Ist automatisch aktiv, sobald ein Bereich (Artikel- oder
+   * Bereichsseite) gesetzt ist. */
+  blogAktiv?: boolean;
 }
 
 const {
@@ -24,6 +28,7 @@ const {
   bild,
   nichtIndexieren = false,
   startAktiv = false,
+  blogAktiv = Boolean(bereich),
 } = Astro.props;
 
 // Die Vorschau auf GitHub Pages wird immer aus der Suche ausgeschlossen.
@@ -89,7 +94,7 @@ const seitenTitel = `${titel} · mitwachsen`;
 
   <body>
     <a class="sprung-zum-inhalt" href="#inhalt">Zum Inhalt springen</a>
-    <Kopf aktiverBereich={bereich} startAktiv={startAktiv} />
+    <Kopf startAktiv={startAktiv} blogAktiv={blogAktiv} />
     <main id="inhalt">
       <slot />
     </main>
