@@ -11,6 +11,7 @@ const artikelSchema = z.object({
     .max(160, 'Maximal 160 Zeichen - das ist der Text im Google-Ergebnis.'),
   veroeffentlicht: z.coerce.date(),
   aktualisiert: z.coerce.date().optional(),
+  titelbild: z.string().optional(),
   autorin: z.string().default('Redaktion'),
   schlagworte: z.array(z.string()).default([]),
   // Auf true setzen, solange der Artikel noch nicht fertig ist.
