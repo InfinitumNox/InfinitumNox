@@ -15,7 +15,7 @@ export interface Bereich {
 export const BEREICHE: Bereich[] = [
   {
     id: 'familie',
-    name: 'Eltern',
+    name: 'Familie',
     pfad: '/familie/',
     fuerWen: 'Für Eltern und Angehörige',
     beschreibung:
