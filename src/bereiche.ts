@@ -15,19 +15,11 @@ export interface Bereich {
 export const BEREICHE: Bereich[] = [
   {
     id: 'familie',
-    name: 'Familie',
+    name: 'Eltern',
     pfad: '/familie/',
     fuerWen: 'Für Eltern und Angehörige',
     beschreibung:
-      'Was im Alltag mit Kindern wirklich hilft - ohne Fachjargon, ohne erhobenen Zeigefinger.',
-  },
-  {
-    id: 'praxis',
-    name: 'Praxis',
-    pfad: '/praxis/',
-    fuerWen: 'Für Fachkräfte im Sozialbereich',
-    beschreibung:
-      'Methoden, Fallbeispiele und Werkzeuge für die tägliche Arbeit mit Kindern und Familien.',
+      'Unterstützung für den Alltag zu Hause - einfach, verständlich und praxisnah.',
   },
   {
     id: 'lernen',
@@ -35,7 +27,15 @@ export const BEREICHE: Bereich[] = [
     pfad: '/lernen/',
     fuerWen: 'Für Auszubildende',
     beschreibung:
-      'Grundlagen erklärt, Prüfungswissen sortiert, Praxisaufgaben mit Lösungswegen.',
+      'Konzepte und Grundlagen für ein besseres Verständnis kindlicher Entwicklung.',
+  },
+  {
+    id: 'praxis',
+    name: 'Praxis',
+    pfad: '/praxis/',
+    fuerWen: 'Für Fachkräfte im Sozialbereich',
+    beschreibung:
+      'Konkrete Impulse und Methoden für den Kita-Alltag und die pädagogische Arbeit.',
   },
 ];
 

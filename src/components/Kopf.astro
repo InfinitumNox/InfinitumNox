@@ -5,8 +5,9 @@ import { pfad } from '../pfad';
 
 interface Props {
   aktiverBereich?: BereichId;
+  startAktiv?: boolean;
 }
-const { aktiverBereich } = Astro.props;
+const { aktiverBereich, startAktiv = false } = Astro.props;
 ---
 
 <header class="kopf">
@@ -16,8 +17,20 @@ const { aktiverBereich } = Astro.props;
       mitwachsen
     </a>
 
-    <nav aria-label="Bereiche">
+    <nav aria-label="Hauptnavigation">
       <ul class="nav">
+        <li>
+          <a
+            href={pfad("/")}
+            class:list={['nav__link', { 'nav__link--aktiv': startAktiv }]}
+            aria-current={startAktiv ? 'page' : undefined}
+          >
+            Start
+          </a>
+        </li>
+        <li>
+          <a href={`${pfad("/")}#rechner`} class="nav__link">Rechner</a>
+        </li>
         {
           BEREICHE.map((b) => (
             <li>
@@ -32,6 +45,9 @@ const { aktiverBereich } = Astro.props;
             </li>
           ))
         }
+        <li>
+          <a href={`${pfad("/")}#artikel`} class="nav__link">Guides</a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -80,7 +96,8 @@ const { aktiverBereich } = Astro.props;
 
   .nav {
     display: flex;
-    gap: 1.75rem;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -94,6 +111,8 @@ const { aktiverBereich } = Astro.props;
     padding-bottom: 0.3rem;
     border-bottom: 2px solid transparent;
   }
+
+  .nav__link:hover { color: var(--akzent); }
 
   /* Jeder Bereichslink trägt seine eigene Farbe - so ist beim
      Hovern schon sichtbar, in welche Welt der Link führt. */
