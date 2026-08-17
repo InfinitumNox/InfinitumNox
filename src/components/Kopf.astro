@@ -12,6 +12,7 @@ const { aktiverBereich } = Astro.props;
 <header class="kopf">
   <div class="huelle kopf__innen">
     <a href={pfad("/")} class="marke" aria-label="mitwachsen, zur Startseite">
+      <img src={pfad("/logo.svg")} alt="" class="marke__logo" width="32" height="32" />
       mitwachsen
     </a>
 
@@ -55,11 +56,20 @@ const { aktiverBereich } = Astro.props;
   }
 
   .marke {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--schrift-display);
     font-weight: 600;
     font-size: 1.3rem;
     letter-spacing: -0.02em;
     text-decoration: none;
+  }
+
+  .marke__logo {
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
   }
   .marke:hover {
     color: var(--tinte);
