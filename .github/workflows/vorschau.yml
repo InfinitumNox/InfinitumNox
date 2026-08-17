@@ -1,11 +1,12 @@
 # Baut die Seite bei jeder Änderung und stellt sie auf GitHub Pages.
-# Ergebnis: https://BENUTZERNAME.github.io/mitwachsen/
+# Ergebnis: die Domain, die unten bei SITE_URL steht (aktuell zum
+# Testen infinitumnox.com, siehe auch astro.config.mjs).
 #
-# Einmalig einschalten unter:
+# Einmalig eingeschaltet unter:
 #   Repository -> Settings -> Pages -> Source: "GitHub Actions"
 #
-# Diese Datei ist NUR für die Vorschau. Die echte Seite läuft später
-# über Cloudflare Pages und braucht keinen Arbeitsablauf hier.
+# Zum Umstellen auf die echte Domain (z. B. mitwachsen.org) reicht es,
+# unten SITE_URL zu ändern und in public/CNAME die Domain anzupassen.
 
 name: Vorschau bauen
 
@@ -33,7 +34,10 @@ jobs:
       - name: Seite bauen
         uses: withastro/action@v3
         env:
-          # Sagt der Konfiguration, dass es die Vorschau ist.
+          # Domain für diesen Bau - siehe astro.config.mjs.
+          SITE_URL: https://infinitumnox.com
+          # Markiert den Bau als Testversion (siehe astro.config.mjs) -
+          # sperrt ihn für Suchmaschinen, bis die echte Domain steht.
           # github.repository ist automatisch "benutzername/reponame".
           VORSCHAU_GITHUB: ${{ github.repository }}
 
