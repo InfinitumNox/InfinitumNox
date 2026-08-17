@@ -3,6 +3,7 @@ import Basis from '../layouts/Basis.astro';
 import Symbol from '../components/Symbol.astro';
 import { BEREICHE } from '../bereiche';
 import type { BereichId } from '../bereiche';
+import { RECHNER } from '../rechner';
 import { pfad } from '../pfad';
 import { getCollection } from 'astro:content';
 
@@ -11,40 +12,6 @@ const SYMBOL_VON_BEREICH: Record<BereichId, 'eltern' | 'lernen' | 'praxis'> = {
   lernen: 'lernen',
   praxis: 'praxis',
 };
-
-// Die Rechner sind noch nicht als eigene Seiten gebaut - nur der
-// Kita-Schlaf-Rechner ist als Ziel vorgesehen (Anker weiter unten).
-// Die anderen stehen als Ankündigung, bis sie fertig sind.
-const RECHNER = [
-  {
-    id: 'kita-schlaf',
-    symbol: 'bett' as const,
-    titel: 'Kita-Schlaf',
-    text: 'Berechnen Sie empfohlene Schlafzeiten für Kita-Kinder.',
-    verfuegbar: true,
-  },
-  {
-    id: 'medienzeit',
-    symbol: 'smartphone' as const,
-    titel: 'Medienzeit',
-    text: 'Empfohlene Bildschirmzeiten nach Alter und Entwicklung.',
-    verfuegbar: false,
-  },
-  {
-    id: 'einschlafzeit',
-    symbol: 'mond' as const,
-    titel: 'Einschlafzeit',
-    text: 'Finden Sie die optimale Einschlafzeit für erholsamen Schlaf.',
-    verfuegbar: false,
-  },
-  {
-    id: 'schlafroutine',
-    symbol: 'kalender' as const,
-    titel: 'Schlafroutine',
-    text: 'Gestalten Sie wirksame Routinen für besseren Schlaf.',
-    verfuegbar: false,
-  },
-];
 
 // Für jeden Bereich den neuesten veröffentlichten Artikel holen,
 // damit die Startseite mitwächst, sobald geschrieben wird.
