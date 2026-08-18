@@ -42,13 +42,13 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
 
 <style>
   .karte {
-    padding: var(--raum-24) 0;
+    padding: 1.75rem 0;
     border-bottom: 1px solid var(--haarlinie);
   }
 
   .karte__bild-link {
     display: block;
-    margin-bottom: var(--raum-16);
+    margin-bottom: 1rem;
   }
 
   .karte__bild {
@@ -56,13 +56,12 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 0.4rem;
   }
 
   .karte__titel {
-    font-size: var(--gross-h3);
-    line-height: var(--zeile-h3);
-    margin: 0 0 var(--raum-8);
+    font-size: clamp(1.15rem, 2vw, 1.375rem);
+    margin: 0 0 0.5rem;
   }
 
   .karte__titel a {
@@ -75,13 +74,12 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   }
 
   .karte__text {
-    margin: 0 0 var(--raum-8);
+    margin: 0 0 0.6rem;
     max-width: var(--spalte);
   }
 
   .karte__meta {
     margin: 0;
-    font-size: var(--gross-klein);
-    line-height: var(--zeile-klein);
+    font-size: 0.875rem;
   }
 </style>

@@ -35,15 +35,12 @@ const { name } = Astro.props;
 }
 {
   name === 'bett' && (
-    <!-- Ein Bett von der Seite: Kopfteil links, Matratze, Kissen,
-         zwei Füße. Die frühere Fassung sah aus wie eine Aktentasche. -->
     <svg class="symbol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M3 18V7" />
-      <path d="M3 12h18a1 1 0 0 1 1 1v5" />
-      <path d="M3 15.5h19" />
-      <path d="M6.5 12V9.5h4V12" />
-      <path d="M4.5 18v1.5" />
-      <path d="M20.5 18v1.5" />
+      <path d="M3 19v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6" />
+      <path d="M3 19h18" />
+      <path d="M3 13v6" />
+      <path d="M21 13v6" />
+      <rect x="5" y="9" width="5" height="4" rx="1" />
     </svg>
   )
 }
