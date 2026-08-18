@@ -1,182 +1,132 @@
 ---
+/**
+ * Die Startseite hat genau eine Aufgabe: Eine Mutter, die abends um
+ * 21:40 Uhr sucht, soll ihr Problem sofort wiedererkennen und den
+ * Rechner benutzen können - ohne einen weiteren Klick.
+ *
+ * Deshalb steht das Werkzeug hier, nicht auf einer Unterseite. Bei
+ * einer Ein-Werkzeug-Seite ist das Werkzeug die Startseite.
+ */
 import Basis from '../layouts/Basis.astro';
-import Symbol from '../components/Symbol.astro';
+import SchlafRechner from '../components/SchlafRechner.astro';
+import Autorin from '../components/Autorin.astro';
+import Quellen from '../components/Quellen.astro';
 import { BEREICHE } from '../bereiche';
-import { SICHTBARE_RECHNER } from '../rechner';
 import { pfad } from '../pfad';
 import { getCollection } from 'astro:content';
 
-// Für jeden Bereich den neuesten veröffentlichten Artikel holen,
-// damit die Startseite mitwächst, sobald geschrieben wird. Bereiche
-// ohne Artikel fallen still weg - eine Karte mit "kommt noch" ist
-// schlechter als gar keine Karte.
-const artikelProBereich = (
+// Artikel für die Startseite.
+//
+// Vorrang haben Texte zum Schlaf - erkannt am Schlagwort "Schlaf".
+// Sobald es davon genug gibt, stehen hier ausschließlich Schlafthemen.
+// Bis dahin wird mit den neuesten übrigen Artikeln aufgefüllt, damit
+// die Seite nicht halb leer wirkt. Bereiche ohne Artikel fallen still
+// weg; eine Karte mit "kommt noch" wäre schlechter als keine Karte.
+const ANZAHL_ARTIKEL = 4;
+
+const alle = (
   await Promise.all(
-    BEREICHE.map(async (b) => {
-      const eintraege = await getCollection(b.id, ({ data }) => !data.entwurf);
-      const neueste = eintraege.sort(
-        (a, z) => z.data.veroeffentlicht.valueOf() - a.data.veroeffentlicht.valueOf()
-      )[0];
-      return { bereich: b, neueste };
+    BEREICHE.map(async (bereich) => {
+      const eintraege = await getCollection(bereich.id, ({ data }) => !data.entwurf);
+      return eintraege.map((eintrag) => ({ bereich, eintrag }));
     })
   )
-).filter((x) => x.neueste);
+).flat();
+
+const nachDatum = (a: (typeof alle)[number], z: (typeof alle)[number]) =>
+  z.eintrag.data.veroeffentlicht.valueOf() - a.eintrag.data.veroeffentlicht.valueOf();
+
+const istSchlafthema = ({ eintrag }: (typeof alle)[number]) =>
+  eintrag.data.schlagworte.some((s) => s.toLowerCase().includes('schlaf'));
+
+const schlafartikel = alle.filter(istSchlafthema).sort(nachDatum);
+const uebrige = alle.filter((a) => !istSchlafthema(a)).sort(nachDatum);
+const artikel = [...schlafartikel, ...uebrige].slice(0, ANZAHL_ARTIKEL);
 ---
 
 <Basis
-  titel="Pädagogik für alle"
-  beschreibung="Wissen, Werkzeuge und Orientierung für Kita, Familie und pädagogische Praxis."
+  titel="Wann muss mein Kita-Kind ins Bett?"
+  beschreibung="Berechnen Sie das Schlaffenster Ihres Kindes - abgestimmt auf Aufstehzeit, Alter und den Mittagsschlaf in der Kita."
   startAktiv
 >
   <section class="huelle held">
-    <img src={pfad('/logo.svg')} alt="" class="held__symbol" width="56" height="56" />
-    <h1 class="held__satz">Pädagogik für alle</h1>
+    <h1 class="held__satz">Wann muss mein Kita-Kind ins Bett?</h1>
     <p class="held__text spalte">
-      Wissen, Werkzeuge und Orientierung für Kita, Familie und pädagogische Praxis.
+      Berechnen Sie das Schlaffenster Ihres Kindes &ndash; abgestimmt auf
+      Aufstehzeit, Alter und den Mittagsschlaf in der Kita.
     </p>
-    <a href="#kita-schlaf" class="knopf">Kita-Schlaf-Rechner starten</a>
   </section>
 
-  <section class="huelle abschnitt" id="rechner" aria-label="Rechner">
-    <ul class="rechnerliste">
-      {
-        SICHTBARE_RECHNER.map((r) => (
-          <li id={r.id} class="rkarte">
-            <div class="rkarte__symbol">
-              <Symbol name={r.symbol} />
-            </div>
-            <h2 class="rkarte__titel">{r.titel}</h2>
-            <p class="rkarte__text leise">{r.text}</p>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <div class="huelle">
+    <SchlafRechner />
+  </div>
 
-  <section class="huelle abschnitt" id="artikel" aria-label="Artikel">
-    <h2 class="abschnitt__titel">Artikel</h2>
-    <ul class="artikelliste">
-      {
-        artikelProBereich.map(({ bereich, neueste }) => (
-          <li class="akarte">
-            <span class="etikett" data-bereich={bereich.id}>
-              {bereich.name.toUpperCase()}
-            </span>
-            <h3 class="akarte__titel">
-              <a href={pfad(`${bereich.pfad}${neueste!.id}/`)}>{neueste!.data.titel}</a>
-            </h3>
-            <p class="akarte__text leise">{neueste!.data.beschreibung}</p>
-          </li>
-        ))
-      }
-    </ul>
-  </section>
+  <div class="huelle vertrauen">
+    <Autorin />
+    <Quellen />
+  </div>
+
+  {
+    artikel.length > 0 && (
+      <section class="huelle abschnitt" id="artikel" aria-labelledby="artikel-titel">
+        <h2 id="artikel-titel" class="abschnitt__titel">
+          Mehr zum Schlaf von Kita-Kindern
+        </h2>
+        <ul class="artikelliste">
+          {artikel.map(({ bereich, eintrag }) => (
+            <li class="akarte">
+              <h3 class="akarte__titel">
+                <a href={pfad(`${bereich.pfad}${eintrag.id}/`)}>{eintrag.data.titel}</a>
+              </h3>
+              <p class="akarte__text leise">{eintrag.data.beschreibung}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 </Basis>
 
 <style>
-  /* ============ Held (Hero) ============ */
+  /* ============ Held (Hero) ============
+     Kein Blatt-Symbol über der Überschrift: Das Logo steht schon im
+     Kopfbereich, die Wiederholung schwächt beides. Und kein
+     zentrierter Fließtext - linksbündig liest sich besser. */
   .held {
-    padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .held__symbol {
-    display: block;
-    margin-bottom: 1.25rem;
+    padding-block: var(--raum-48) var(--raum-24);
   }
 
   .held__satz {
-    max-width: 20ch;
+    max-width: 18ch;
+    font-size: var(--gross-h1);
+    line-height: var(--zeile-h1);
     letter-spacing: -0.025em;
+    margin: 0 0 var(--raum-12);
   }
 
   .held__text {
-    font-size: clamp(1.1rem, 0.6vw + 1rem, 1.3rem);
+    font-size: var(--gross-text);
+    line-height: var(--zeile-text);
     color: var(--tinte-leise);
-    margin: 0 0 2rem;
-    margin-inline: auto;
-    text-align: center;
+    margin: 0;
   }
 
-  /* ============ Knöpfe ============ */
-  .knopf {
-    display: inline-block;
-    background: var(--akzent);
-    color: var(--karte);
-    font-family: var(--schrift-display);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 0.9rem 1.75rem;
-    border-radius: 0.6rem;
-    line-height: 1.1;
-  }
-  .knopf:hover {
-    color: var(--karte);
-    background: color-mix(in srgb, var(--akzent) 85%, black);
+  /* ============ Vertrauensbereich ============ */
+  .vertrauen {
+    display: grid;
+    gap: var(--raum-16);
+    margin-top: var(--raum-24);
   }
 
-  .knopf--klein {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 0.65rem 1rem;
-    font-size: 0.95rem;
-    border-radius: 0.5rem;
-  }
-
-  /* ============ Abschnittstitel ============ */
+  /* ============ Abschnitte ============ */
   .abschnitt {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: var(--kopf-hoehe);
   }
 
   .abschnitt__titel {
-    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
-    margin: 4rem 0 1.5rem;
-  }
-
-  /* ============ Rechner ============ */
-  .rechnerliste {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 1.5rem;
-  }
-
-  .rkarte {
-    background: var(--karte);
-    border: 1px solid var(--haarlinie);
-    border-radius: 1rem;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    scroll-margin-top: 5.5rem;
-  }
-
-  .rkarte__symbol {
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 0.6rem;
-    display: grid;
-    place-items: center;
-    margin-bottom: 1rem;
-    background: color-mix(in srgb, var(--akzent) 12%, var(--papier));
-    color: var(--akzent);
-  }
-
-  .rkarte__titel {
-    font-size: 1.1rem;
-    margin: 0 0 0.4rem;
-  }
-
-  .rkarte__text {
-    margin: 0 0 1.25rem;
-    font-size: 0.9rem;
-    flex: 1;
+    font-size: var(--gross-h2);
+    line-height: var(--zeile-h2);
+    margin: var(--raum-48) 0 var(--raum-16);
   }
 
   /* ============ Artikel ============ */
@@ -186,40 +136,21 @@ const artikelProBereich = (
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-    gap: 1.5rem;
+    gap: var(--raum-12);
   }
 
   .akarte {
     background: var(--karte);
     border: 1px solid var(--haarlinie);
-    border-radius: 1rem;
-    padding: 1.5rem;
-  }
-
-  .etikett {
-    display: inline-block;
-    font-family: var(--schrift-display);
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    padding: 0.25rem 0.65rem;
-    border-radius: 999px;
-    margin-bottom: 0.9rem;
-    color: var(--familie);
-    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
-  }
-  .etikett[data-bereich='praxis'] {
-    color: var(--praxis);
-    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
-  }
-  .etikett[data-bereich='lernen'] {
-    color: var(--lernen);
-    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
+    border-radius: var(--karte-radius);
+    box-shadow: var(--karte-schatten);
+    padding: var(--karte-innen-mobil);
   }
 
   .akarte__titel {
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem;
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    margin: 0 0 var(--raum-4);
   }
   .akarte__titel a {
     text-decoration: none;
@@ -232,6 +163,23 @@ const artikelProBereich = (
 
   .akarte__text {
     margin: 0;
-    font-size: 0.9rem;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+  }
+
+  @media (min-width: 48rem) {
+    .held {
+      padding-block: var(--raum-64) var(--raum-32);
+    }
+    .vertrauen {
+      gap: var(--raum-24);
+      margin-top: var(--raum-32);
+    }
+    .artikelliste {
+      gap: var(--raum-24);
+    }
+    .akarte {
+      padding: var(--raum-24);
+    }
   }
 </style>

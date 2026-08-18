@@ -71,10 +71,30 @@
      andere (Links, Linien, Fokusrahmen) zieht sich die Farbe hier. */
   --akzent: var(--familie);
 
-  /* Typografie */
+  /* Typografie. Die Schriftarten bleiben unverändert. */
   --schrift-text: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont,
     'Segoe UI', system-ui, sans-serif;
   --schrift-display: 'Bricolage Grotesque', var(--schrift-text);
+
+  /* --------------------------------------------------------------
+     Typografische Skala - VERBINDLICH.
+     Vier Größen plus zwei Hilfsgrößen, zwei Strichstärken (500 und
+     600 in der Displayschrift, 400 und 700 im Fließtext). Wer eine
+     fünfte Größe braucht, braucht in Wahrheit eine andere Struktur.
+
+     Die Werte hier gelten mobil. Ab 48rem Breite werden sie weiter
+     unten angehoben - aber nur diese Zeilen, nirgends sonst.
+     -------------------------------------------------------------- */
+  --gross-h1: 32px;
+  --zeile-h1: 1.15;
+  --gross-h2: 24px;
+  --zeile-h2: 1.25;
+  --gross-h3: 18px;
+  --zeile-h3: 1.35;
+  --gross-text: 17px;
+  --zeile-text: 1.55;
+  --gross-klein: 14px;
+  --zeile-klein: 1.45;
 
   /* Maße */
   --spalte: 68ch;
@@ -106,6 +126,34 @@
   --karte-radius: 16px;
   --karte-schatten: 0 1px 2px rgba(23, 35, 31, 0.04);
   --karte-schatten-aktiv: 0 8px 24px -12px rgba(23, 35, 31, 0.28);
+
+  /* Innenabstand von Karten.
+     Achtung, bewusste Ausnahme von der Abstandsskala oben: mobil sind
+     es 20px, nicht 16 oder 24. Der Wert ist so vorgegeben, weil eine
+     Karte auf dem Handy sonst entweder gedrängt oder verschwenderisch
+     wirkt. Diese eine Ausnahme ist hier festgehalten, damit sie nicht
+     als Zwischenwert quer durchs Projekt wandert. */
+  --karte-innen: 32px;
+  --karte-innen-mobil: 20px;
+
+  /* Höhe des klebenden Kopfbereichs. Hängt an zwei Stellen zusammen:
+     der Kopf ist genau so hoch, und alle Ankerziele halten genau
+     diesen Abstand nach oben frei (scroll-margin-top). Wer den Kopf
+     ändert, ändert diesen Wert mit. */
+  --kopf-hoehe: 64px;
+}
+
+/* Ab Tablet-Breite dieselbe Skala, nur größer. Nur diese Zeilen -
+   Größen werden nirgends sonst im Projekt neu erfunden. */
+@media (min-width: 48rem) {
+  :root {
+    --gross-h1: 48px;
+    --gross-h2: 32px;
+    --gross-h3: 20px;
+    --gross-text: 18px;
+    --gross-klein: 15px;
+    --kopf-hoehe: 72px;
+  }
 }
 
 [data-bereich='familie'] { --akzent: var(--familie); }

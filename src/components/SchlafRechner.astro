@@ -1,0 +1,630 @@
+---
+/**
+ * Der Kita-Schlaf-Rechner.
+ *
+ * Läuft vollständig im Browser der Besucherin: keine Serveranfrage,
+ * keine Speicherung, kein Tracking, kein Sprachmodell. Die Einschätzung
+ * kommt aus einem festen Entscheidungsbaum in
+ * src/data/schlaf-regeln.json.
+ *
+ * Ohne JavaScript bleibt alles lesbar - das Formular, die Erklärung,
+ * der Abgrenzungshinweis und die Quellen. Nur das Rechnen selbst
+ * entfällt, und darauf weist ein Hinweis hin.
+ */
+import regeln from '../data/schlaf-regeln.json';
+import autorin from '../data/autorin.json';
+import { findePlatzhalter } from '../platzhalter.mjs';
+import {
+  ALTER_OPTIONEN,
+  ANLIEGEN,
+  MITTAGSSCHLAF_MAX,
+  MITTAGSSCHLAF_MIN,
+  MITTAGSSCHLAF_SCHRITT,
+  VORGABE,
+  pruefeRegeln,
+} from '../schlaf';
+
+// Der Warnbalken. In der echten Produktion wird er nie gebraucht,
+// weil der Bau dort schon abgebrochen ist (siehe astro.config.mjs).
+const offen = [
+  ...findePlatzhalter(regeln).map((p) => `schlaf-regeln.json → ${p}`),
+  ...findePlatzhalter(autorin).map((p) => `autorin.json → ${p}`),
+];
+const fehler = pruefeRegeln(regeln);
+const zeigeWarnung = offen.length > 0 || fehler.length > 0;
+
+const abgrenzung = regeln.abgrenzung;
+const ausblick = regeln.ausblick;
+---
+
+<section class="rechner" id="kita-schlaf" aria-labelledby="rechner-titel">
+  {
+    zeigeWarnung && (
+      <div class="warnbalken" role="alert">
+        <p class="warnbalken__titel">
+          Dieser Rechner ist noch nicht fertig und darf nicht online gehen.
+        </p>
+        {offen.length > 0 && (
+          <p class="warnbalken__text">
+            In <code>src/data/</code> sind {offen.length} Einträge als
+            Platzhalter markiert. Die angezeigten Zeiten sind deshalb
+            bedeutungslos. Ein Bau der echten Seite bricht an dieser Stelle ab.
+          </p>
+        )}
+        {fehler.length > 0 && (
+          <ul class="warnbalken__liste">
+            {fehler.map((f) => (
+              <li>{f}</li>
+            ))}
+          </ul>
+        )}
+        {offen.length > 0 && (
+          <details class="warnbalken__details">
+            <summary>Offene Einträge anzeigen</summary>
+            <ul class="warnbalken__liste">
+              {offen.map((p) => (
+                <li><code>{p}</code></li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+    )
+  }
+
+  <h2 id="rechner-titel" class="rechner__titel">Das Schlaffenster berechnen</h2>
+
+  <p class="rechner__datenschutz">
+    Alle Berechnungen laufen in Ihrem Browser. Wir speichern keine Angaben
+    über Ihr Kind.
+  </p>
+
+  <form class="formular" id="schlaf-formular" novalidate>
+    <div class="feld">
+      <label for="alter">Alter des Kindes</label>
+      <select id="alter" name="alter" class="eingabe">
+        {
+          ALTER_OPTIONEN.map((jahre) => (
+            <option value={jahre} selected={jahre === VORGABE.alter}>
+              {jahre} Jahre
+            </option>
+          ))
+        }
+      </select>
+    </div>
+
+    <div class="feld">
+      <label for="aufstehzeit">Aufstehzeit</label>
+      <input
+        type="time"
+        id="aufstehzeit"
+        name="aufstehzeit"
+        class="eingabe"
+        value={VORGABE.aufstehzeit}
+        required
+      />
+    </div>
+
+    <div class="feld">
+      <label for="zubettgehzeit">Aktuelle Zubettgehzeit</label>
+      <input
+        type="time"
+        id="zubettgehzeit"
+        name="zubettgehzeit"
+        class="eingabe"
+        value={VORGABE.zubettgehzeit}
+        required
+      />
+    </div>
+
+    <fieldset class="feld feld--breit">
+      <legend>Mittagsschlaf in der Kita</legend>
+      <div class="schalter">
+        <label class="schalter__wahl">
+          <input type="radio" name="mittagsschlaf" value="ja" checked />
+          <span>Ja</span>
+        </label>
+        <label class="schalter__wahl">
+          <input type="radio" name="mittagsschlaf" value="nein" />
+          <span>Nein</span>
+        </label>
+      </div>
+    </fieldset>
+
+    <div class="feld feld--breit" id="dauer-feld">
+      <label for="dauer">
+        Dauer des Mittagsschlafs
+        <output for="dauer" id="dauer-wert" class="feld__wert">60 Minuten</output>
+      </label>
+      <input
+        type="range"
+        id="dauer"
+        name="dauer"
+        class="regler"
+        min={MITTAGSSCHLAF_MIN}
+        max={MITTAGSSCHLAF_MAX}
+        step={MITTAGSSCHLAF_SCHRITT}
+        value={VORGABE.mittagsschlafMinuten}
+      />
+      <div class="regler__skala" aria-hidden="true">
+        <span>0 Min.</span>
+        <span>{MITTAGSSCHLAF_MAX} Min.</span>
+      </div>
+    </div>
+
+    <div class="feld feld--breit">
+      <label for="anliegen">Was beschäftigt Sie?</label>
+      <select id="anliegen" name="anliegen" class="eingabe">
+        {
+          ANLIEGEN.map((a) => (
+            <option value={a.id} selected={a.id === VORGABE.anliegen}>
+              {a.text}
+            </option>
+          ))
+        }
+      </select>
+    </div>
+
+    <div class="feld feld--breit">
+      <button type="submit" class="knopf">Schlaffenster berechnen</button>
+    </div>
+  </form>
+
+  <noscript>
+    <p class="hinweis">
+      Für die Berechnung braucht dieser Rechner JavaScript. Der Grund ist
+      derselbe, aus dem wir nichts speichern: Die Rechnung läuft in Ihrem
+      Browser und nicht auf unserem Server. Wenn Sie JavaScript
+      eingeschaltet lassen möchten, erklären die Abschnitte unter dem
+      Formular trotzdem, worauf es beim Schlaf von Kita-Kindern ankommt.
+    </p>
+  </noscript>
+
+  <!-- Das Ergebnis erscheint hier, ohne dass die Seite neu lädt. -->
+  <div id="ergebnis" class="ergebnis-bereich" aria-live="polite"></div>
+
+  {
+    abgrenzung && (
+      <section class="block block--abgrenzung">
+        <h3 class="block__titel">{abgrenzung.titel}</h3>
+        <p>{abgrenzung.einleitung}</p>
+        <ul>
+          {abgrenzung.punkte.map((p: string) => (
+            <li>{p}</li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    ausblick && (
+      <section class="block block--ausblick">
+        <h3 class="block__titel">{ausblick.titel}</h3>
+        <p>{ausblick.text}</p>
+      </section>
+    )
+  }
+</section>
+
+<script>
+  import regeln from '../data/schlaf-regeln.json';
+  import {
+    ausAdresse,
+    berechne,
+    zuAdresse,
+    VORGABE,
+    type Eingaben,
+  } from '../schlaf';
+
+  const formular = document.getElementById('schlaf-formular') as HTMLFormElement | null;
+  const ergebnisBereich = document.getElementById('ergebnis');
+  const dauerFeld = document.getElementById('dauer-feld');
+  const dauerRegler = document.getElementById('dauer') as HTMLInputElement | null;
+  const dauerWert = document.getElementById('dauer-wert');
+
+  if (formular && ergebnisBereich && dauerFeld && dauerRegler && dauerWert) {
+    // -------------------------------------------------------------
+    // Kleine Helfer. Der Ergebnistext wird über textContent gesetzt
+    // und nie über innerHTML - so kann aus der Regeldatei kein
+    // Markup in die Seite geraten.
+    // -------------------------------------------------------------
+    const el = <K extends keyof HTMLElementTagNameMap>(
+      art: K,
+      klasse?: string,
+      inhalt?: string
+    ): HTMLElementTagNameMap[K] => {
+      const knoten = document.createElement(art);
+      if (klasse) knoten.className = klasse;
+      if (inhalt !== undefined) knoten.textContent = inhalt;
+      return knoten;
+    };
+
+    const gewaehltesRadio = () =>
+      formular.querySelector<HTMLInputElement>('input[name="mittagsschlaf"]:checked');
+
+    // -------------------------------------------------------------
+    // Formular lesen und schreiben
+    // -------------------------------------------------------------
+    function lese(): Eingaben {
+      const daten = new FormData(formular!);
+      return {
+        alter: Number(daten.get('alter')),
+        aufstehzeit: String(daten.get('aufstehzeit') ?? ''),
+        mittagsschlaf: daten.get('mittagsschlaf') === 'ja',
+        mittagsschlafMinuten: Number(daten.get('dauer')),
+        zubettgehzeit: String(daten.get('zubettgehzeit') ?? ''),
+        anliegen: String(daten.get('anliegen')) as Eingaben['anliegen'],
+      };
+    }
+
+    function schreibe(e: Eingaben) {
+      const setze = (name: string, wert: string) => {
+        const feld = formular!.elements.namedItem(name);
+        if (feld instanceof HTMLInputElement || feld instanceof HTMLSelectElement) {
+          feld.value = wert;
+        }
+      };
+      setze('alter', String(e.alter));
+      setze('aufstehzeit', e.aufstehzeit);
+      setze('zubettgehzeit', e.zubettgehzeit);
+      setze('dauer', String(e.mittagsschlafMinuten));
+      setze('anliegen', e.anliegen);
+
+      formular!
+        .querySelectorAll<HTMLInputElement>('input[name="mittagsschlaf"]')
+        .forEach((r) => {
+          r.checked = r.value === (e.mittagsschlaf ? 'ja' : 'nein');
+        });
+    }
+
+    // -------------------------------------------------------------
+    // Dauer-Feld: nur sichtbar, wenn es einen Mittagsschlaf gibt
+    // -------------------------------------------------------------
+    function dauerAnzeigen() {
+      const ja = gewaehltesRadio()?.value === 'ja';
+      dauerFeld!.hidden = !ja;
+    }
+
+    function dauerBeschriften() {
+      const minuten = Number(dauerRegler!.value);
+      dauerWert!.textContent = `${minuten} Minuten`;
+    }
+
+    formular
+      .querySelectorAll<HTMLInputElement>('input[name="mittagsschlaf"]')
+      .forEach((r) => r.addEventListener('change', dauerAnzeigen));
+    dauerRegler.addEventListener('input', dauerBeschriften);
+
+    // -------------------------------------------------------------
+    // Ergebnis aufbauen
+    // -------------------------------------------------------------
+    function zeige(eingaben: Eingaben) {
+      const ergebnis = berechne(eingaben, regeln);
+      ergebnisBereich!.replaceChildren();
+
+      if (!ergebnis) {
+        ergebnisBereich!.append(
+          el(
+            'p',
+            'hinweis',
+            'Diese Angaben ergeben noch kein Ergebnis. Bitte prüfen Sie Aufstehzeit und Zubettgehzeit.'
+          )
+        );
+        return;
+      }
+
+      const karte = el('div', 'ergebnis');
+
+      karte.append(el('p', 'ergebnis__augenbraue', 'Empfohlenes Schlaffenster'));
+      karte.append(
+        el('p', 'ergebnis__fenster', `${ergebnis.fensterVon} – ${ergebnis.fensterBis} Uhr`)
+      );
+
+      const empfehlung = el('p', 'ergebnis__empfehlung');
+      empfehlung.append(document.createTextNode('Empfohlene Zubettgehzeit: '));
+      empfehlung.append(el('strong', undefined, `${ergebnis.empfehlung} Uhr`));
+      karte.append(empfehlung);
+
+      karte.append(el('p', 'ergebnis__abweichung', ergebnis.abweichungSatz));
+
+      // Einschätzung aus dem Entscheidungsbaum
+      const ursache = el('section', 'ergebnis__ursache');
+      ursache.append(el('h3', 'ergebnis__untertitel', ergebnis.ursache.titel));
+      ursache.append(el('p', undefined, ergebnis.ursache.erklaerung));
+
+      if (ergebnis.ursache.schritte.length > 0) {
+        ursache.append(el('h4', 'ergebnis__schritte-titel', 'Die ersten drei Schritte'));
+        const liste = el('ol', 'ergebnis__schritte');
+        ergebnis.ursache.schritte.forEach((s) => liste.append(el('li', undefined, s)));
+        ursache.append(liste);
+      }
+      karte.append(ursache);
+
+      ergebnisBereich!.append(karte);
+    }
+
+    // -------------------------------------------------------------
+    // Adresszeile: macht ein Ergebnis teilbar. Es wandern nur die
+    // eingegebenen Werte hinein, keine personenbezogenen Angaben.
+    // -------------------------------------------------------------
+    function adresseAktualisieren(eingaben: Eingaben) {
+      const adresse = new URL(location.href);
+      adresse.search = zuAdresse(eingaben).toString();
+      adresse.hash = 'kita-schlaf';
+      history.replaceState(null, '', adresse);
+    }
+
+    function scrolleZumErgebnis() {
+      const sanft = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      ergebnisBereich!.scrollIntoView({
+        behavior: sanft ? 'smooth' : 'auto',
+        block: 'start',
+      });
+    }
+
+    formular.addEventListener('submit', (ereignis) => {
+      ereignis.preventDefault();
+      const eingaben = lese();
+      zeige(eingaben);
+      adresseAktualisieren(eingaben);
+      scrolleZumErgebnis();
+    });
+
+    // -------------------------------------------------------------
+    // Start: geteilte Adresse übernehmen, sonst nur das Formular
+    // vorbereiten. Ungefragt gerechnet wird nicht.
+    // -------------------------------------------------------------
+    const geteilt = ausAdresse(location.search);
+    if (geteilt) {
+      schreibe(geteilt);
+      dauerAnzeigen();
+      dauerBeschriften();
+      zeige(geteilt);
+    } else {
+      schreibe(VORGABE);
+      dauerAnzeigen();
+      dauerBeschriften();
+    }
+  }
+</script>
+
+<style>
+  .rechner {
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: var(--karte-radius);
+    box-shadow: var(--karte-schatten);
+    padding: var(--karte-innen);
+    scroll-margin-top: var(--kopf-hoehe);
+  }
+
+  .rechner__titel {
+    margin: 0 0 var(--raum-8);
+    font-size: var(--gross-h2);
+    line-height: var(--zeile-h2);
+  }
+
+  /* Kein Kleingedrucktes: In dieser Zielgruppe ist das ein Argument. */
+  .rechner__datenschutz {
+    margin: 0 0 var(--raum-24);
+    padding-left: var(--raum-12);
+    border-left: 3px solid var(--akzent);
+    color: var(--tinte-leise);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+  }
+
+  /* ============ Warnbalken ============ */
+  .warnbalken {
+    background: #fdecec;
+    border: 2px solid #b3261e;
+    border-radius: var(--karte-radius);
+    padding: var(--raum-16);
+    margin-bottom: var(--raum-24);
+    color: #5c1511;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+  }
+  .warnbalken__titel {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    margin: 0 0 var(--raum-8);
+  }
+  .warnbalken__text { margin: 0 0 var(--raum-8); }
+  .warnbalken__liste { margin: var(--raum-8) 0 0; padding-left: var(--raum-24); }
+  .warnbalken__details { margin-top: var(--raum-8); }
+  .warnbalken__details summary { cursor: pointer; }
+  .warnbalken code { font-size: 0.95em; }
+
+  /* ============ Formular ============ */
+  .formular {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--raum-16);
+    align-items: end;
+  }
+
+  .feld {
+    display: flex;
+    flex-direction: column;
+    gap: var(--raum-8);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+
+  .feld--breit { grid-column: 1 / -1; }
+
+  .feld label,
+  .feld legend {
+    font-family: var(--schrift-display);
+    font-weight: 500;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    padding: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: var(--raum-8);
+    align-items: baseline;
+  }
+
+  .feld__wert {
+    font-weight: 600;
+    color: var(--akzent);
+  }
+
+  .eingabe {
+    font-family: var(--schrift-text);
+    font-size: var(--gross-text);
+    color: var(--tinte);
+    background: var(--papier);
+    border: 1.5px solid var(--haarlinie);
+    border-radius: 8px;
+    padding: var(--raum-12);
+    width: 100%;
+    min-height: 48px;
+  }
+  .eingabe:hover { border-color: color-mix(in srgb, var(--akzent) 45%, var(--haarlinie)); }
+
+  /* ============ Ja/Nein ============ */
+  .schalter { display: flex; gap: var(--raum-8); }
+
+  .schalter__wahl {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--raum-8);
+    min-height: 48px;
+    padding: var(--raum-8) var(--raum-16);
+    border: 1.5px solid var(--haarlinie);
+    border-radius: 8px;
+    background: var(--papier);
+    cursor: pointer;
+    font-family: var(--schrift-text);
+    font-size: var(--gross-text);
+    font-weight: 400;
+  }
+  .schalter__wahl:has(input:checked) {
+    border-color: var(--akzent);
+    background: color-mix(in srgb, var(--akzent) 10%, var(--karte));
+    font-weight: 600;
+  }
+  .schalter__wahl input { accent-color: var(--akzent); width: 1.1rem; height: 1.1rem; }
+
+  /* ============ Schieberegler ============ */
+  .regler {
+    width: 100%;
+    accent-color: var(--akzent);
+    min-height: 44px;
+  }
+
+  .regler__skala {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--gross-klein);
+    color: var(--tinte-leise);
+  }
+
+  /* ============ Knopf ============ */
+  .knopf {
+    display: block;
+    width: 100%;
+    background: var(--akzent);
+    color: var(--karte);
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: var(--gross-text);
+    border: 0;
+    border-radius: 8px;
+    padding: var(--raum-16);
+    min-height: 52px;
+    cursor: pointer;
+  }
+  .knopf:hover { background: color-mix(in srgb, var(--akzent) 85%, black); }
+
+  /* ============ Ergebnis ============ */
+  .ergebnis-bereich:not(:empty) { margin-top: var(--raum-32); }
+
+  .ergebnis {
+    border-top: 1px solid var(--haarlinie);
+    padding-top: var(--raum-24);
+  }
+
+  .ergebnis__augenbraue {
+    font-family: var(--schrift-display);
+    font-size: var(--gross-klein);
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--akzent);
+    margin: 0 0 var(--raum-4);
+  }
+
+  .ergebnis__fenster {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: var(--gross-h1);
+    line-height: var(--zeile-h1);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--raum-8);
+  }
+
+  .ergebnis__empfehlung { margin: 0 0 var(--raum-16); }
+  .ergebnis__abweichung { margin: 0 0 var(--raum-24); }
+
+  .ergebnis__ursache { margin: 0; }
+
+  .ergebnis__untertitel {
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    margin: 0 0 var(--raum-8);
+  }
+
+  .ergebnis__schritte-titel {
+    font-family: var(--schrift-display);
+    font-size: var(--gross-klein);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinte-leise);
+    margin: var(--raum-24) 0 var(--raum-8);
+  }
+
+  .ergebnis__schritte { margin: 0; padding-left: var(--raum-24); }
+  .ergebnis__schritte li { margin-bottom: var(--raum-8); }
+
+  /* ============ Statische Blöcke unter dem Ergebnis ============ */
+  .block {
+    margin-top: var(--raum-24);
+    padding-top: var(--raum-24);
+    border-top: 1px solid var(--haarlinie);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  .block__titel {
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    color: var(--tinte);
+    margin: 0 0 var(--raum-8);
+  }
+
+  .block p { margin: 0 0 var(--raum-8); }
+  .block ul { margin: 0; padding-left: var(--raum-24); }
+  .block li { margin-bottom: var(--raum-4); }
+
+  .hinweis {
+    margin: var(--raum-16) 0 0;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  @media (max-width: 48rem) {
+    .rechner { padding: var(--karte-innen-mobil); }
+  }
+</style>
