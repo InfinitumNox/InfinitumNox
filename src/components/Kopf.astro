@@ -1,22 +1,12 @@
 ---
 import { pfad } from '../pfad';
 
-/**
- * Der Kopfbereich. Zwei Regeln:
- *
- *  1. Die Navigation bleibt einzeilig - auch auf einem schmalen Handy.
- *     Bricht sie um, frisst sie die wertvollste Fläche der Seite, die
- *     über der Falz. Deshalb höchstens drei Einträge.
- *  2. "Start" steht bewusst nicht in der Liste: Das Logo links führt
- *     schon dorthin, und weil der Rechner auf der Startseite sitzt,
- *     wäre "Start" neben "Rechner" zweimal dasselbe Ziel.
- */
 interface Props {
   startAktiv?: boolean;
   blogAktiv?: boolean;
-  ueberAktiv?: boolean;
+  guidesAktiv?: boolean;
 }
-const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.props;
+const { startAktiv = false, blogAktiv = false, guidesAktiv = false } = Astro.props;
 ---
 
 <header class="kopf">
@@ -30,11 +20,23 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
       <ul class="nav">
         <li>
           <a
-            href={startAktiv ? '#kita-schlaf' : `${pfad("/")}#kita-schlaf`}
+            href={pfad("/")}
             class:list={['nav__link', { 'nav__link--aktiv': startAktiv }]}
             aria-current={startAktiv ? 'page' : undefined}
           >
-            Rechner
+            Start
+          </a>
+        </li>
+        <li>
+          <a href={`${pfad("/")}#rechner`} class="nav__link">Rechner</a>
+        </li>
+        <li>
+          <a
+            href={pfad("/guides/")}
+            class:list={['nav__link', { 'nav__link--aktiv': guidesAktiv }]}
+            aria-current={guidesAktiv ? 'page' : undefined}
+          >
+            Guides
           </a>
         </li>
         <li>
@@ -44,15 +46,6 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
             aria-current={blogAktiv ? 'page' : undefined}
           >
             Blog
-          </a>
-        </li>
-        <li>
-          <a
-            href={pfad("/ueber/")}
-            class:list={['nav__link', { 'nav__link--aktiv': ueberAktiv }]}
-            aria-current={ueberAktiv ? 'page' : undefined}
-          >
-            Über
           </a>
         </li>
       </ul>
@@ -69,35 +62,30 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
     z-index: 10;
   }
 
-  /* Feste Höhe statt Innenabstand: So stimmt --kopf-hoehe garantiert
-     mit der tatsächlichen Höhe überein, und Ankersprünge landen nicht
-     hinter dem Kopfbereich. */
   .kopf__innen {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    gap: var(--raum-16);
-    height: var(--kopf-hoehe);
+    gap: 0.75rem 2rem;
+    padding-block: 1.1rem;
   }
 
   .marke {
     display: inline-flex;
     align-items: center;
-    gap: var(--raum-8);
+    gap: 0.5rem;
     font-family: var(--schrift-display);
     font-weight: 600;
-    font-size: 1.15rem;
+    font-size: 1.3rem;
     letter-spacing: -0.02em;
     text-decoration: none;
-    white-space: nowrap;
   }
 
   .marke__logo {
     display: block;
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
+    width: 1.7rem;
+    height: 1.7rem;
   }
   .marke:hover {
     color: var(--tinte);
@@ -106,40 +94,22 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
     text-underline-offset: 0.2em;
   }
 
-  /* nowrap ist hier die eigentliche Anforderung: Die Navigation darf
-     unter keinen Umständen in eine zweite Zeile rutschen. */
   .nav {
     display: flex;
-    flex-wrap: nowrap;
-    gap: var(--raum-16);
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
     list-style: none;
     margin: 0;
     padding: 0;
   }
 
   .nav__link {
-    position: relative;
     font-family: var(--schrift-display);
     font-weight: 500;
-    font-size: var(--gross-klein);
-    line-height: 1;
+    font-size: 1rem;
     text-decoration: none;
-    white-space: nowrap;
-    display: inline-block;
-    padding-block: var(--raum-8);
+    padding-bottom: 0.3rem;
     border-bottom: 2px solid transparent;
-  }
-
-  /* Die Trefferfläche wird auf 44px aufgezogen, ohne dass der Strich
-     unter dem aktiven Eintrag vom Text wegrutscht. Mit dem Finger
-     trifft man den Eintrag, das Auge sieht weiter die enge Zeile. */
-  .nav__link::after {
-    content: '';
-    position: absolute;
-    inset-inline: calc(-1 * var(--raum-8));
-    top: 50%;
-    height: 44px;
-    transform: translateY(-50%);
   }
 
   .nav__link:hover { color: var(--akzent); }
@@ -147,12 +117,5 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
   .nav__link--aktiv {
     color: var(--akzent);
     border-bottom-color: var(--akzent);
-  }
-
-  @media (min-width: 30rem) {
-    .marke { font-size: 1.3rem; }
-    .marke__logo { width: 28px; height: 28px; }
-    .nav { gap: var(--raum-24); }
-    .nav__link { font-size: 1rem; }
   }
 </style>

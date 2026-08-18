@@ -30,16 +30,15 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
 
 <li class="blogkarte" data-bereich={bereich.id}>
   <article>
-    {
-      /* Ohne Titelbild wird gar kein Bildbereich gerendert. Eine leere
-         Farbfläche als Ersatz sieht nach "hier fehlt etwas" aus - kein
-         Bild ist ehrlicher und ruhiger. */
-      titelbild && (
-        <a href={url} class="blogkarte__bild-link" tabindex="-1" aria-hidden="true">
+    <a href={url} class="blogkarte__bild-link">
+      {
+        titelbild ? (
           <img class="blogkarte__bild" src={titelbild} alt="" loading="lazy" />
-        </a>
-      )
-    }
+        ) : (
+          <span class="blogkarte__platzhalter" data-bereich={bereich.id} aria-hidden="true" />
+        )
+      }
+    </a>
     <div class="blogkarte__inhalt">
       <span class="etikett" data-bereich={bereich.id}>{bereich.name}</span>
       <h3 class="blogkarte__titel">
@@ -65,8 +64,7 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   .blogkarte {
     background: var(--karte);
     border: 1px solid var(--haarlinie);
-    border-radius: var(--karte-radius);
-    box-shadow: var(--karte-schatten);
+    border-radius: 1rem;
     overflow: hidden;
     transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
@@ -74,7 +72,7 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   .blogkarte:hover {
     border-color: color-mix(in srgb, var(--akzent) 45%, var(--haarlinie));
     transform: translateY(-2px);
-    box-shadow: var(--karte-schatten-aktiv);
+    box-shadow: 0 0.75rem 1.75rem -1rem rgba(23, 35, 31, 0.25);
   }
 
   .blogkarte article {
@@ -95,8 +93,21 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
     object-fit: cover;
   }
 
+  .blogkarte__platzhalter {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: color-mix(in srgb, var(--familie) 12%, var(--papier));
+  }
+  .blogkarte__platzhalter[data-bereich='praxis'] {
+    background: color-mix(in srgb, var(--praxis) 12%, var(--papier));
+  }
+  .blogkarte__platzhalter[data-bereich='lernen'] {
+    background: color-mix(in srgb, var(--lernen) 12%, var(--papier));
+  }
+
   .blogkarte__inhalt {
-    padding: var(--karte-innen-mobil);
+    padding: 1.35rem 1.5rem 1.6rem;
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -111,28 +122,22 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
     letter-spacing: 0.06em;
     padding: 0.25rem 0.65rem;
     border-radius: 999px;
-    margin-bottom: var(--raum-12);
+    margin-bottom: 0.85rem;
     color: var(--familie);
-    /* 10 Prozent auf Weiß statt 14 Prozent auf Papier: Bei der alten
-       Mischung lag der Kontrast bei 4,38 und 4,49 zu 1 und damit knapp
-       unter den geforderten 4,5. Jetzt sind es 5,0 (Familie), 6,1
-       (Praxis) und 5,2 (Lernen). Die Palette selbst bleibt unberührt -
-       geändert hat sich nur, wie stark die Farbe aufgehellt wird. */
-    background: color-mix(in srgb, var(--familie) 10%, var(--karte));
+    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
   }
   .etikett[data-bereich='praxis'] {
     color: var(--praxis);
-    background: color-mix(in srgb, var(--praxis) 10%, var(--karte));
+    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
   }
   .etikett[data-bereich='lernen'] {
     color: var(--lernen);
-    background: color-mix(in srgb, var(--lernen) 10%, var(--karte));
+    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
   }
 
   .blogkarte__titel {
-    font-size: var(--gross-h3);
-    line-height: var(--zeile-h3);
-    margin: 0 0 var(--raum-8);
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
   }
   .blogkarte__titel a {
     text-decoration: none;
@@ -144,14 +149,13 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   }
 
   .blogkarte__text {
-    margin: 0 0 var(--raum-12);
-    font-size: var(--gross-klein);
-    line-height: var(--zeile-klein);
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
     flex: 1;
   }
 
   .blogkarte__meta {
     margin: 0;
-    font-size: var(--gross-klein);
+    font-size: 0.8125rem;
   }
 </style>

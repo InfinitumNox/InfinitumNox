@@ -34,8 +34,8 @@ const artikel = alle.sort(
     {
       artikel.length === 0 ? (
         <p class="leise">
-          Hier entstehen gerade die ersten Texte. Schauen Sie in ein paar
-          Tagen wieder vorbei.
+          Hier entstehen gerade die ersten Texte. Schau in ein paar Tagen
+          wieder vorbei.
         </p>
       ) : (
         <div class="bereich__liste">
@@ -57,9 +57,9 @@ const artikel = alle.sort(
 
 <style>
   .bereich__kopf {
-    padding-block: var(--raum-48) var(--raum-24);
+    padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
     border-bottom: 3px solid var(--akzent);
-    margin-bottom: var(--raum-16);
+    margin-bottom: 1rem;
   }
 
   .bereich__kopf h1 {
@@ -68,8 +68,7 @@ const artikel = alle.sort(
   }
 
   .bereich__text {
-    font-size: var(--gross-text);
-    line-height: var(--zeile-text);
+    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.2rem);
     color: var(--tinte-leise);
     margin: 0;
   }
