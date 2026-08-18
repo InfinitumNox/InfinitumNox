@@ -1,197 +1,46 @@
 ---
 import Basis from '../../layouts/Basis.astro';
-import Symbol from '../../components/Symbol.astro';
-import { RECHNER } from '../../rechner';
-import { pfad } from '../../pfad';
 
-// Demo-Shop: Es wird noch nichts verkauft. Sobald ein Rechner online
-// ist (verfuegbar: true in rechner.ts), bekommt er hier einen echten,
-// personalisierten Guide. Kauf-Knöpfe sind bewusst deaktiviert.
-const GUIDES = RECHNER.map((r) => ({
-  ...r,
-  preis: '4,99 €',
-}));
+// ============================================================
+// Diese Seite ist bewusst nicht verlinkt und steht auf noindex.
+//
+// Solange nichts kaufbar ist, hat ein Shop auf der Seite nichts zu
+// suchen: Ein Laden mit leeren Regalen schadet mehr, als er nützt.
+// Die Adresse bleibt trotzdem bestehen, damit sie beim Start des
+// ersten Produkts nur noch gefüllt und in die Navigation gehängt
+// werden muss.
+//
+// Wieder freischalten, wenn ein Produkt wirklich verkauft wird:
+//   1. Diese Seite mit dem Produkt füllen
+//   2. nichtIndexieren unten entfernen
+//   3. Link in src/components/Kopf.astro wieder eintragen
+// ============================================================
 ---
 
 <Basis
   titel="Guides"
-  beschreibung="Personalisierte Leitfäden zu unseren Rechnern - abgestimmt auf die Werte, die Sie eingegeben haben."
-  guidesAktiv
+  beschreibung="Vertiefende Leitfäden zu den Rechnern von mitwachsen."
   nichtIndexieren
 >
-  <div class="huelle">
-    <header class="guides__kopf">
-      <p class="augenbraue">Demo-Shop</p>
-      <h1>Guides</h1>
-      <p class="guides__text spalte">
-        Zu jedem Rechner entsteht ein personalisierter Guide - ein
-        Leitfaden, der genau auf die Werte zugeschnitten ist, die Sie
-        eingegeben haben. Diese Seite zeigt, wie das aussehen wird. Der
-        Kauf funktioniert noch nicht.
-      </p>
-    </header>
-
-    <ul class="gliste">
-      {
-        GUIDES.map((g) => (
-          <li class:list={['gkarte', { 'gkarte--verfuegbar': g.verfuegbar }]}>
-            <div class="gkarte__symbol">
-              <Symbol name={g.symbol} />
-            </div>
-            <h2 class="gkarte__titel">{g.titel}-Guide</h2>
-            <p class="gkarte__text leise">
-              Persönlicher Leitfaden auf Basis Ihrer Eingaben im{' '}
-              {g.titel}-Rechner: {g.text}
-            </p>
-
-            {g.verfuegbar ? (
-              <>
-                <p class="gkarte__preis">{g.preis}</p>
-                <button type="button" class="knopf knopf--klein" disabled>
-                  In den Warenkorb
-                </button>
-                <p class="gkarte__hinweis">Demo - noch nicht kaufbar</p>
-                <a href={`${pfad('/')}#${g.id}`} class="gkarte__link">
-                  Zum {g.titel}-Rechner
-                </a>
-              </>
-            ) : (
-              <span class="abzeichen">
-                folgt, sobald der {g.titel}-Rechner online ist
-              </span>
-            )}
-          </li>
-        ))
-      }
-    </ul>
+  <div class="huelle inhaltsseite">
+    <h1>Guides</h1>
+    <p class="spalte">
+      Zu den Rechnern entstehen vertiefende Leitfäden. Der erste ist ein
+      14-Tage-Umstellungsplan zum Kita-Schlaf: ein Ablauf, der die
+      Empfehlungen des Rechners über zwei Wochen in konkrete Schritte
+      übersetzt.
+    </p>
+    <p class="spalte">
+      Sobald der Plan fertig ist, finden Sie ihn hier und unter dem
+      Ergebnis des Rechners.
+    </p>
   </div>
 </Basis>
 
 <style>
-  .guides__kopf {
-    padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
-    border-bottom: 3px solid var(--akzent);
-    margin-bottom: 2.5rem;
-  }
-
-  .guides__kopf h1 {
-    color: var(--akzent);
-    margin-bottom: 0.35em;
-  }
-
-  .guides__text {
-    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.2rem);
-    color: var(--tinte-leise);
-    margin: 0;
-  }
-
-  .gliste {
-    list-style: none;
-    margin: 0;
-    padding: 0 0 3rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-    gap: 1.5rem;
-  }
-
-  .gkarte {
-    background: var(--karte);
-    border: 1px solid var(--haarlinie);
-    border-radius: 1rem;
-    padding: 1.75rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .gkarte--verfuegbar {
-    border: 2px solid var(--akzent);
-  }
-
-  .gkarte__symbol {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 0.6rem;
-    display: grid;
-    place-items: center;
-    margin-bottom: 1.1rem;
-    background: color-mix(in srgb, var(--akzent) 12%, var(--papier));
-    color: var(--akzent);
-  }
-
-  .gkarte__titel {
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem;
-  }
-
-  .gkarte__text {
-    margin: 0 0 1.25rem;
-    font-size: 0.9rem;
-    flex: 1;
-  }
-
-  .gkarte__preis {
-    font-family: var(--schrift-display);
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin: 0 0 0.75rem;
-  }
-
-  .gkarte__hinweis {
-    margin: 0.6rem 0 0;
-    font-size: 0.8125rem;
-    color: var(--tinte-leise);
-    text-align: center;
-  }
-
-  .gkarte__link {
-    margin-top: 0.9rem;
-    font-size: 0.875rem;
-    text-align: center;
-  }
-
-  .knopf {
-    display: inline-block;
-    background: var(--akzent);
-    color: var(--karte);
-    font-family: var(--schrift-display);
-    font-weight: 600;
-    text-decoration: none;
-    padding: 0.9rem 1.75rem;
-    border: none;
-    border-radius: 0.6rem;
-    line-height: 1.1;
-  }
-  .knopf:hover {
-    color: var(--karte);
-    background: color-mix(in srgb, var(--akzent) 85%, black);
-  }
-
-  .knopf--klein {
-    display: block;
-    width: 100%;
-    text-align: center;
-    padding: 0.65rem 1rem;
-    font-size: 0.95rem;
-    border-radius: 0.5rem;
-  }
-
-  .knopf:disabled {
-    cursor: not-allowed;
-    opacity: 0.55;
-    background: var(--akzent);
-  }
-  .knopf:disabled:hover {
-    background: var(--akzent);
-  }
-
-  .abzeichen {
-    display: inline-block;
-    align-self: flex-start;
-    margin-top: auto;
-    font-size: 0.8125rem;
-    color: var(--tinte-leise);
-    border: 1px solid var(--haarlinie);
-    border-radius: 999px;
-    padding: 0.35rem 0.8rem;
+  .inhaltsseite {
+    padding-block: var(--raum-64);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
   }
 </style>

@@ -4,9 +4,8 @@ import { pfad } from '../pfad';
 interface Props {
   startAktiv?: boolean;
   blogAktiv?: boolean;
-  guidesAktiv?: boolean;
 }
-const { startAktiv = false, blogAktiv = false, guidesAktiv = false } = Astro.props;
+const { startAktiv = false, blogAktiv = false } = Astro.props;
 ---
 
 <header class="kopf">
@@ -28,16 +27,7 @@ const { startAktiv = false, blogAktiv = false, guidesAktiv = false } = Astro.pro
           </a>
         </li>
         <li>
-          <a href={`${pfad("/")}#rechner`} class="nav__link">Rechner</a>
-        </li>
-        <li>
-          <a
-            href={pfad("/guides/")}
-            class:list={['nav__link', { 'nav__link--aktiv': guidesAktiv }]}
-            aria-current={guidesAktiv ? 'page' : undefined}
-          >
-            Guides
-          </a>
+          <a href={`${pfad("/")}#kita-schlaf`} class="nav__link">Rechner</a>
         </li>
         <li>
           <a

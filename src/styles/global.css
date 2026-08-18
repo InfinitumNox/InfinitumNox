@@ -80,6 +80,32 @@
   --spalte: 68ch;
   --breite: 76rem;
   --rand: clamp(1.25rem, 5vw, 3rem);
+
+  /* --------------------------------------------------------------
+     Abstandsskala - VERBINDLICH.
+     Nur diese neun Werte, keine Zwischenwerte. Wer einen Abstand
+     braucht, nimmt den nächstgelegenen aus dieser Liste. Der Grund:
+     Eine Seite mit fünf ähnlichen, aber nicht gleichen Abständen
+     wirkt unruhig, ohne dass man sagen kann, warum.
+
+     Keine rem-Umrechnung: Die Werte sind absichtlich in Pixeln, weil
+     Abstände nicht mit der Schriftgröße mitwachsen sollen.
+     -------------------------------------------------------------- */
+  --raum-4: 4px;
+  --raum-8: 8px;
+  --raum-12: 12px;
+  --raum-16: 16px;
+  --raum-24: 24px;
+  --raum-32: 32px;
+  --raum-48: 48px;
+  --raum-64: 64px;
+  --raum-96: 96px;
+
+  /* Karten - ein Radius, ein Schatten, projektweit.
+     Wenn alles schwebt, schwebt nichts. */
+  --karte-radius: 16px;
+  --karte-schatten: 0 1px 2px rgba(23, 35, 31, 0.04);
+  --karte-schatten-aktiv: 0 8px 24px -12px rgba(23, 35, 31, 0.28);
 }
 
 [data-bereich='familie'] { --akzent: var(--familie); }
