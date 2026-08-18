@@ -9,7 +9,8 @@ const jahr = new Date().getFullYear();
     <div>
       <p class="fuss__marke">mitwachsen</p>
       <p class="leise fuss__zeile">
-        Wissen für Familien, Fachkräfte und Auszubildende im Sozialbereich.
+        Pädagogisches Wissen zum Schlaf von Kita-Kindern. Keine
+        medizinische Beratung.
       </p>
     </div>
 
@@ -23,11 +24,13 @@ const jahr = new Date().getFullYear();
     <nav aria-label="Rechtliches" class="fuss__block">
       <h2 class="fuss__titel">Rechtliches</h2>
       <ul>
-        <!-- Beide Links MÜSSEN von jeder Seite aus mit einem Klick
-             erreichbar sein. Das ist keine Empfehlung, das ist Pflicht. -->
+        <!-- Impressum und Datenschutz MÜSSEN von jeder Seite aus mit
+             einem Klick erreichbar sein. Das ist keine Empfehlung,
+             das ist Pflicht. -->
         <li><a href={pfad("/impressum/")}>Impressum</a></li>
         <li><a href={pfad("/datenschutz/")}>Datenschutz</a></li>
         <li><a href={pfad("/kontakt/")}>Kontakt</a></li>
+        <li><a href={pfad("/ueber/")}>Über mich</a></li>
       </ul>
     </nav>
   </div>

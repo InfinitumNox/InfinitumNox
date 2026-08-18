@@ -40,6 +40,28 @@ const IST_TEST = Boolean(process.env.VORSCHAU_GITHUB);
  */
 const GEPRUEFTE_DATEIEN = ['src/data/schlaf-regeln.json', 'src/data/autorin.json'];
 
+/**
+ * Dieselbe Notbremse für die Rechtsseiten. Ein Impressum mit
+ * "VORNAME NACHNAME" ist kein Impressum, sondern ein Abmahngrund.
+ * Geprüft wird auf die Platzhalter, die in den Dateien stehen.
+ */
+const RECHTSSEITEN = [
+  'src/pages/impressum.astro',
+  'src/pages/datenschutz.astro',
+];
+
+const RECHTS_PLATZHALTER = [
+  'VORNAME NACHNAME',
+  'STRASSE HAUSNUMMER',
+  'PLZ ORT',
+  'ANSCHRIFT WIE OBEN',
+  'VORSITZENDE, STELLVERTRETUNG',
+  'Amtsgericht ORT',
+  'VR XXXXX',
+  '+49 XXX XXXXXXX',
+  'VEREINSNAME',
+];
+
 const datenPruefen = {
   name: 'mitwachsen:platzhalter-pruefen',
   hooks: {
@@ -60,6 +82,26 @@ const datenPruefen = {
           );
         } else {
           meldungen.push(platzhalterMeldung(offen, datei));
+        }
+      }
+
+      for (const datei of RECHTSSEITEN) {
+        const inhalt = readFileSync(new URL(`./${datei}`, import.meta.url), 'utf8');
+        const offen = RECHTS_PLATZHALTER.filter((p) => inhalt.includes(p));
+        if (offen.length === 0) continue;
+
+        const text =
+          `Noch nicht ausgefüllt: In ${datei} stehen Platzhalter.\n\n` +
+          'Betroffen sind:\n' +
+          offen.map((p) => `  - "${p}"`).join('\n') +
+          '\n\nImpressum und Datenschutzerklärung sind Pflichtangaben.\n' +
+          'Unvollständig sind sie abmahnfähig, deshalb wird die Seite so\n' +
+          'nicht gebaut.';
+
+        if (IST_TEST) {
+          console.warn(`\n[mitwachsen] Vorschau-Bau: ${offen.length} Platzhalter in ${datei}.\n`);
+        } else {
+          meldungen.push(text);
         }
       }
 
