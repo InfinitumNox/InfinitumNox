@@ -118,6 +118,7 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
   }
 
   .nav__link {
+    position: relative;
     font-family: var(--schrift-display);
     font-weight: 500;
     font-size: var(--gross-klein);
@@ -127,6 +128,18 @@ const { startAktiv = false, blogAktiv = false, ueberAktiv = false } = Astro.prop
     display: inline-block;
     padding-block: var(--raum-8);
     border-bottom: 2px solid transparent;
+  }
+
+  /* Die Trefferfläche wird auf 44px aufgezogen, ohne dass der Strich
+     unter dem aktiven Eintrag vom Text wegrutscht. Mit dem Finger
+     trifft man den Eintrag, das Auge sieht weiter die enge Zeile. */
+  .nav__link::after {
+    content: '';
+    position: absolute;
+    inset-inline: calc(-1 * var(--raum-8));
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
   }
 
   .nav__link:hover { color: var(--akzent); }

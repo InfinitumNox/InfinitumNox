@@ -59,7 +59,11 @@
 
   /* Text */
   --tinte: #17231f;
-  --tinte-leise: #57635c;
+  /* Abgedunkelt gegenüber der Demo (#57635c): Auf dem hellen Papier
+     lag der graue Fließtext bei 5,8:1 und wirkte grenzwertig. Jetzt
+     sind es 7,2:1 auf Papier und 7,8:1 auf weißen Karten - beides
+     deutlich über der Anforderung von 4,5:1. */
+  --tinte-leise: #4a554e;
 
   /* Bereichsfarben. Jeder Bereich hat eine eigene, damit sofort
      erkennbar ist, für wen eine Seite geschrieben ist. */
@@ -171,6 +175,14 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Ankersprünge müssen unter dem klebenden Kopfbereich landen, nicht
+   dahinter. Gilt für JEDES Element mit id - sonst verschwindet die
+   Überschrift beim Aufruf von /#kita-schlaf hinter der Leiste.
+   Der Puffer von 12px hält die Überschrift von der Kante frei. */
+[id] {
+  scroll-margin-top: calc(var(--kopf-hoehe) + var(--raum-12));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -185,13 +197,17 @@ body {
   background: var(--papier);
   color: var(--tinte);
   font-family: var(--schrift-text);
-  font-size: clamp(1.0625rem, 0.4vw + 1rem, 1.1875rem);
-  line-height: 1.65;
+  font-size: var(--gross-text);
+  line-height: var(--zeile-text);
   text-rendering: optimizeLegibility;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Fließtext ist immer linksbündig, nie zentriert. Zentrierter Text
+   zwingt das Auge, den Zeilenanfang jedes Mal neu zu suchen. */
+p, li { text-align: left; }
 
 main { flex: 1; }
 
@@ -221,20 +237,22 @@ main { flex: 1; }
    Typografie
    ========================================================================== */
 
+/* Nur die vier Größen aus der Skala oben. Wer eine fünfte braucht,
+   braucht in Wahrheit eine andere Struktur. */
 h1, h2, h3, h4 {
   font-family: var(--schrift-display);
   font-weight: 600;
-  line-height: 1.15;
   letter-spacing: -0.015em;
   text-wrap: balance;
-  margin: 0 0 0.5em;
+  margin: 0 0 var(--raum-12);
 }
 
-h1 { font-size: clamp(2rem, 5vw, 3.25rem); }
-h2 { font-size: clamp(1.5rem, 3vw, 2.125rem); margin-top: 2.5em; }
-h3 { font-size: clamp(1.2rem, 2vw, 1.4rem); margin-top: 2em; }
+h1 { font-size: var(--gross-h1); line-height: var(--zeile-h1); }
+h2 { font-size: var(--gross-h2); line-height: var(--zeile-h2); margin-top: var(--raum-48); }
+h3 { font-size: var(--gross-h3); line-height: var(--zeile-h3); margin-top: var(--raum-32); }
+h4 { font-size: var(--gross-h3); line-height: var(--zeile-h3); margin-top: var(--raum-24); }
 
-p, ul, ol { margin: 0 0 1.25em; }
+p, ul, ol { margin: 0 0 var(--raum-24); }
 p { text-wrap: pretty; }
 
 a {

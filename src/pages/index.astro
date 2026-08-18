@@ -118,11 +118,10 @@ const artikel = [...schlafartikel, ...uebrige].slice(0, ANZAHL_ARTIKEL);
     margin-top: var(--raum-24);
   }
 
-  /* ============ Abschnitte ============ */
-  .abschnitt {
-    scroll-margin-top: var(--kopf-hoehe);
-  }
-
+  /* ============ Abschnitte ============
+     scroll-margin-top steht zentral in global.css für jedes Element
+     mit id - hier nichts wiederholen, sonst gewinnt der schwächere
+     Wert und der Ankersprung landet hinter dem Kopfbereich. */
   .abschnitt__titel {
     font-size: var(--gross-h2);
     line-height: var(--zeile-h2);

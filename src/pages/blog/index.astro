@@ -131,9 +131,9 @@ const gesamt = artikel.length;
 
 <style>
   .blog__kopf {
-    padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
+    padding-block: var(--raum-48) var(--raum-24);
     border-bottom: 3px solid var(--akzent);
-    margin-bottom: 2rem;
+    margin-bottom: var(--raum-32);
   }
 
   .blog__kopf h1 {
@@ -142,7 +142,8 @@ const gesamt = artikel.length;
   }
 
   .blog__text {
-    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.2rem);
+    font-size: var(--gross-text);
+    line-height: var(--zeile-text);
     color: var(--tinte-leise);
     margin: 0;
   }
@@ -151,22 +152,24 @@ const gesamt = artikel.length;
   .filter {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.6rem;
-    margin-bottom: 2.5rem;
+    gap: var(--raum-8);
+    margin-bottom: var(--raum-32);
   }
 
   .filter__knopf {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
+    gap: var(--raum-8);
     font-family: var(--schrift-display);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
     color: var(--tinte-leise);
     background: var(--karte);
     border: 1.5px solid var(--haarlinie);
     border-radius: 999px;
-    padding: 0.55rem 1.1rem;
+    padding: var(--raum-8) var(--raum-16);
+    min-height: 44px;
     cursor: pointer;
     transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
   }
@@ -177,7 +180,7 @@ const gesamt = artikel.length;
   }
 
   .filter__zahl {
-    font-size: 0.8125rem;
+    font-size: var(--gross-klein);
     font-weight: 500;
     color: inherit;
     opacity: 0.7;
@@ -211,7 +214,7 @@ const gesamt = artikel.length;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
-    gap: 1.5rem;
-    padding-bottom: 4rem;
+    gap: var(--raum-12);
+    padding-bottom: var(--raum-64);
   }
 </style>

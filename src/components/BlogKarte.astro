@@ -65,7 +65,8 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   .blogkarte {
     background: var(--karte);
     border: 1px solid var(--haarlinie);
-    border-radius: 1rem;
+    border-radius: var(--karte-radius);
+    box-shadow: var(--karte-schatten);
     overflow: hidden;
     transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
   }
@@ -73,7 +74,7 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   .blogkarte:hover {
     border-color: color-mix(in srgb, var(--akzent) 45%, var(--haarlinie));
     transform: translateY(-2px);
-    box-shadow: 0 0.75rem 1.75rem -1rem rgba(23, 35, 31, 0.25);
+    box-shadow: var(--karte-schatten-aktiv);
   }
 
   .blogkarte article {
@@ -95,7 +96,7 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   }
 
   .blogkarte__inhalt {
-    padding: 1.35rem 1.5rem 1.6rem;
+    padding: var(--karte-innen-mobil);
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -110,22 +111,28 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
     letter-spacing: 0.06em;
     padding: 0.25rem 0.65rem;
     border-radius: 999px;
-    margin-bottom: 0.85rem;
+    margin-bottom: var(--raum-12);
     color: var(--familie);
-    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
+    /* 10 Prozent auf Weiß statt 14 Prozent auf Papier: Bei der alten
+       Mischung lag der Kontrast bei 4,38 und 4,49 zu 1 und damit knapp
+       unter den geforderten 4,5. Jetzt sind es 5,0 (Familie), 6,1
+       (Praxis) und 5,2 (Lernen). Die Palette selbst bleibt unberührt -
+       geändert hat sich nur, wie stark die Farbe aufgehellt wird. */
+    background: color-mix(in srgb, var(--familie) 10%, var(--karte));
   }
   .etikett[data-bereich='praxis'] {
     color: var(--praxis);
-    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
+    background: color-mix(in srgb, var(--praxis) 10%, var(--karte));
   }
   .etikett[data-bereich='lernen'] {
     color: var(--lernen);
-    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
+    background: color-mix(in srgb, var(--lernen) 10%, var(--karte));
   }
 
   .blogkarte__titel {
-    font-size: 1.15rem;
-    margin: 0 0 0.5rem;
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    margin: 0 0 var(--raum-8);
   }
   .blogkarte__titel a {
     text-decoration: none;
@@ -137,13 +144,14 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   }
 
   .blogkarte__text {
-    margin: 0 0 0.85rem;
-    font-size: 0.95rem;
+    margin: 0 0 var(--raum-12);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
     flex: 1;
   }
 
   .blogkarte__meta {
     margin: 0;
-    font-size: 0.8125rem;
+    font-size: var(--gross-klein);
   }
 </style>

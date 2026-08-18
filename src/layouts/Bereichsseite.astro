@@ -57,9 +57,9 @@ const artikel = alle.sort(
 
 <style>
   .bereich__kopf {
-    padding-block: clamp(2.5rem, 7vw, 4.5rem) 1.5rem;
+    padding-block: var(--raum-48) var(--raum-24);
     border-bottom: 3px solid var(--akzent);
-    margin-bottom: 1rem;
+    margin-bottom: var(--raum-16);
   }
 
   .bereich__kopf h1 {
@@ -68,7 +68,8 @@ const artikel = alle.sort(
   }
 
   .bereich__text {
-    font-size: clamp(1.05rem, 0.5vw + 1rem, 1.2rem);
+    font-size: var(--gross-text);
+    line-height: var(--zeile-text);
     color: var(--tinte-leise);
     margin: 0;
   }

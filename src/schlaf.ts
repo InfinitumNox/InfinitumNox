@@ -144,7 +144,7 @@ export function zuUhrzeit(minuten: number): string {
  * 23:30 ist "später" als 19:00, obwohl beide Zahlen kleiner als
  * 1440 sind - und 00:15 ist noch später, nicht etwa früher.
  */
-function seitAufstehen(zeitpunkt: number, aufstehen: number): number {
+export function seitAufstehen(zeitpunkt: number, aufstehen: number): number {
   return (((zeitpunkt - aufstehen) % TAG) + TAG) % TAG;
 }
 
@@ -261,7 +261,13 @@ export function berechne(eingaben: Eingaben, regeln: Regeln): Ergebnis | null {
       aktuell,
       // Die Achse endet kurz nach dem spätesten dargestellten Punkt,
       // damit rechts nichts abgeschnitten wirkt.
-      achseLaenge: Math.max(sBis, sAktuell, sEmpfehlung) + 30,
+      achseLaenge:
+        Math.max(
+          sBis,
+          sAktuell,
+          sEmpfehlung,
+          zeigeMittag ? seitAufstehen(mittagBeginn! + mittagsschlafMinuten, aufstehen) : 0
+        ) + 30,
     },
   };
 }

@@ -212,8 +212,11 @@ const ausblick = regeln.ausblick;
   import {
     ausAdresse,
     berechne,
+    seitAufstehen,
     zuAdresse,
+    zuUhrzeit,
     VORGABE,
+    type Balken,
     type Eingaben,
   } from '../schlaf';
 
@@ -297,6 +300,104 @@ const ausblick = regeln.ausblick;
     dauerRegler.addEventListener('input', dauerBeschriften);
 
     // -------------------------------------------------------------
+    // Der Tagesbalken.
+    //
+    // Das eine Element, an das sich Nutzerinnen erinnern sollen: der
+    // Tag des Kindes als waagerechter Balken. Er macht auf einen Blick
+    // sichtbar, worum es hier eigentlich geht - dass der Mittagsschlaf
+    // in der Kita das Abendbett nach hinten schiebt. Andere
+    // Schlafrechner geben nur eine Stundenzahl aus.
+    //
+    // Umgesetzt mit HTML und Prozentwerten statt SVG, damit die
+    // Beschriftung auch auf einem 320 Pixel breiten Handy in echter
+    // Schriftgröße lesbar bleibt und nicht mitskaliert.
+    //
+    // Der Balken selbst ist für Screenreader ausgeblendet: Unter ihm
+    // steht dieselbe Information als Text, und die ist die bessere
+    // Vorlesefassung.
+    // -------------------------------------------------------------
+    function zeichneTagesbalken(b: Balken): HTMLElement {
+      const anteil = (zeitpunkt: number) =>
+        Math.max(0, Math.min(100, (seitAufstehen(zeitpunkt, b.aufstehen) / b.achseLaenge) * 100));
+
+      const figur = el('figure', 'balken');
+
+      // --- Beschriftung über dem Balken, nur an den beiden Enden.
+      // Alles andere würde sich auf schmalen Geräten überlagern.
+      const kopf = el('div', 'balken__enden');
+      const links = el('div', 'balken__ende');
+      links.append(el('span', 'balken__ende-titel', 'Aufstehen'));
+      links.append(el('span', 'balken__ende-zeit', `${zuUhrzeit(b.aufstehen)} Uhr`));
+      // Rechts steht die Zubettgehzeit und nicht noch einmal das
+      // Fenster: Das Fenster ist die Überschrift direkt darüber, und
+      // die Uhrzeit ist das, was heute Abend tatsächlich zu tun ist.
+      const rechts = el('div', 'balken__ende balken__ende--rechts');
+      rechts.append(el('span', 'balken__ende-titel', 'Ins Bett'));
+      rechts.append(el('span', 'balken__ende-zeit', `${zuUhrzeit(b.empfehlung)} Uhr`));
+      kopf.append(links, rechts);
+      figur.append(kopf);
+
+      // --- Die Spur selbst.
+      const spur = el('div', 'balken__spur');
+      spur.setAttribute('aria-hidden', 'true');
+
+      if (b.mittagVon !== null && b.mittagBis !== null) {
+        const mittag = el('div', 'balken__mittag');
+        mittag.style.left = `${anteil(b.mittagVon)}%`;
+        mittag.style.width = `${anteil(b.mittagBis) - anteil(b.mittagVon)}%`;
+        spur.append(mittag);
+      }
+
+      const fenster = el('div', 'balken__fenster');
+      fenster.style.left = `${anteil(b.fensterVon)}%`;
+      fenster.style.width = `${anteil(b.fensterBis) - anteil(b.fensterVon)}%`;
+      spur.append(fenster);
+
+      const marke = el('div', 'balken__marke');
+      marke.style.left = `${anteil(b.empfehlung)}%`;
+      spur.append(marke);
+
+      const heute = el('div', 'balken__heute');
+      heute.style.left = `${anteil(b.aktuell)}%`;
+      spur.append(heute);
+
+      figur.append(spur);
+
+      // --- Legende. Sie trägt die volle Information als Text und ist
+      // damit zugleich die barrierefreie Fassung des Balkens.
+      const legende = el('ul', 'balken__legende');
+      const eintrag = (art: string, text: string) => {
+        const li = el('li', 'balken__legende-eintrag');
+        li.append(el('span', `balken__muster balken__muster--${art}`));
+        li.append(el('span', undefined, text));
+        return li;
+      };
+
+      if (b.mittagVon !== null && b.mittagBis !== null) {
+        legende.append(
+          eintrag(
+            'mittag',
+            `Mittagsschlaf in der Kita: ${zuUhrzeit(b.mittagVon)} – ${zuUhrzeit(b.mittagBis)} Uhr`
+          )
+        );
+      }
+      legende.append(
+        eintrag(
+          'fenster',
+          `Empfohlenes Schlaffenster: ${zuUhrzeit(b.fensterVon)} – ${zuUhrzeit(b.fensterBis)} Uhr`
+        )
+      );
+      legende.append(eintrag('marke', `Empfohlene Zubettgehzeit: ${zuUhrzeit(b.empfehlung)} Uhr`));
+      legende.append(eintrag('heute', `Aktuelle Zubettgehzeit: ${zuUhrzeit(b.aktuell)} Uhr`));
+
+      const beschriftung = el('figcaption', 'balken__legende-huelle');
+      beschriftung.append(legende);
+      figur.append(beschriftung);
+
+      return figur;
+    }
+
+    // -------------------------------------------------------------
     // Ergebnis aufbauen
     // -------------------------------------------------------------
     function zeige(eingaben: Eingaben) {
@@ -326,6 +427,7 @@ const ausblick = regeln.ausblick;
       empfehlung.append(el('strong', undefined, `${ergebnis.empfehlung} Uhr`));
       karte.append(empfehlung);
 
+      karte.append(zeichneTagesbalken(ergebnis.balken));
       karte.append(el('p', 'ergebnis__abweichung', ergebnis.abweichungSatz));
 
       // Einschätzung aus dem Entscheidungsbaum
@@ -389,6 +491,243 @@ const ausblick = regeln.ausblick;
   }
 </script>
 
+<!-- ==================================================================
+     Achtung, das ist kein Versehen: Dieser Block ist global.
+
+     Astro schreibt seine gekapselten Stile über ein zusätzliches
+     Attribut in die Vorlage. Elemente, die das Skript erst im Browser
+     erzeugt - und das gesamte Ergebnis samt Tagesbalken entsteht so -
+     bekommen dieses Attribut nicht und werden von gekapselten Stilen
+     schlicht nicht getroffen.
+
+     Deshalb steht die Gestaltung des Ergebnisbereichs hier als
+     is:global. Jeder Selektor ist mit #ergebnis vorangestellt, damit
+     trotzdem nichts außerhalb dieses einen Bereichs berührt wird.
+     ================================================================== -->
+<style is:global>
+  /* ============ Ergebnis ============ */
+  #ergebnis.ergebnis-bereich:not(:empty) { margin-top: var(--raum-32); }
+
+  /* Auch der Hinweis bei unbrauchbaren Eingaben entsteht erst im
+     Browser und braucht deshalb eine globale Regel. */
+  #ergebnis .hinweis {
+    margin: var(--raum-16) 0 0;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  #ergebnis .ergebnis {
+    border-top: 1px solid var(--haarlinie);
+    padding-top: var(--raum-24);
+  }
+
+  #ergebnis .ergebnis__augenbraue {
+    font-family: var(--schrift-display);
+    font-size: var(--gross-klein);
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--akzent);
+    margin: 0 0 var(--raum-4);
+  }
+
+  #ergebnis .ergebnis__fenster {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: var(--gross-h1);
+    line-height: var(--zeile-h1);
+    letter-spacing: -0.02em;
+    margin: 0 0 var(--raum-8);
+  }
+
+  #ergebnis .ergebnis__empfehlung { margin: 0 0 var(--raum-24); }
+  #ergebnis .ergebnis__abweichung { margin: 0 0 var(--raum-24); }
+
+  /* ============ Tagesbalken ============
+     Die einzige Stelle, an der die Seite gestalterisch auffällig sein
+     darf. Alles andere bleibt ruhig. */
+  #ergebnis .balken {
+    margin: 0 0 var(--raum-24);
+  }
+
+  #ergebnis .balken__enden {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--raum-16);
+    margin-bottom: var(--raum-8);
+  }
+
+  #ergebnis .balken__ende {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  #ergebnis .balken__ende--rechts { text-align: right; }
+
+  #ergebnis .balken__ende-titel {
+    font-family: var(--schrift-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinte-leise);
+  }
+
+  #ergebnis .balken__ende-zeit {
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    white-space: nowrap;
+  }
+
+  #ergebnis .balken__spur {
+    position: relative;
+    height: 44px;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--haarlinie) 45%, var(--papier));
+    border: 1px solid var(--haarlinie);
+    overflow: hidden;
+  }
+
+  /* Der Mittagsschlaf: schräg schraffiert, damit er sich vom
+     Schlaffenster auch ohne Farbe unterscheidet. */
+  #ergebnis .balken__mittag {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--akzent) 38%, var(--karte)) 0 6px,
+      color-mix(in srgb, var(--akzent) 22%, var(--karte)) 6px 12px
+    );
+    border-inline: 1px solid color-mix(in srgb, var(--akzent) 55%, var(--karte));
+  }
+
+  /* Das Schlaffenster: ruhige Fläche, kräftiger als der Mittagsschlaf. */
+  #ergebnis .balken__fenster {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: color-mix(in srgb, var(--akzent) 65%, var(--karte));
+  }
+
+  /* Die empfohlene Zubettgehzeit: durchgezogener Strich. */
+  #ergebnis .balken__marke {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    margin-left: -1.5px;
+    background: var(--tinte);
+  }
+
+  /* Die aktuelle Zubettgehzeit: gestrichelt, damit klar ist, dass sie
+     der Ist-Zustand ist und nicht die Empfehlung. */
+  #ergebnis .balken__heute {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-left: 2px dashed var(--tinte-leise);
+  }
+
+  #ergebnis .balken__legende-huelle { margin: var(--raum-8) 0 0; }
+
+  #ergebnis .balken__legende {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--raum-4);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  #ergebnis .balken__legende-eintrag {
+    display: grid;
+    grid-template-columns: 18px 1fr;
+    gap: var(--raum-8);
+    align-items: center;
+  }
+
+  #ergebnis .balken__muster {
+    display: block;
+    height: 12px;
+    border-radius: 3px;
+  }
+  #ergebnis .balken__muster--mittag {
+    background: repeating-linear-gradient(
+      -45deg,
+      color-mix(in srgb, var(--akzent) 38%, var(--karte)) 0 4px,
+      color-mix(in srgb, var(--akzent) 22%, var(--karte)) 4px 8px
+    );
+    border: 1px solid color-mix(in srgb, var(--akzent) 55%, var(--karte));
+  }
+  #ergebnis .balken__muster--fenster {
+    background: color-mix(in srgb, var(--akzent) 65%, var(--karte));
+  }
+  #ergebnis .balken__muster--marke {
+    height: 14px;
+    width: 3px;
+    margin-inline: auto;
+    background: var(--tinte);
+    border-radius: 0;
+  }
+  #ergebnis .balken__muster--heute {
+    height: 14px;
+    width: 0;
+    margin-inline: auto;
+    border-left: 2px dashed var(--tinte-leise);
+    border-radius: 0;
+  }
+
+  /* Kurzer Aufbau beim ersten Erscheinen - die einzige Bewegung auf
+     der Seite. Wer Bewegung abbestellt hat, bekommt sie nicht. */
+  @media (prefers-reduced-motion: no-preference) {
+    #ergebnis .balken__mittag, #ergebnis .balken__fenster {
+      animation: balken-aufbauen 420ms ease-out both;
+      transform-origin: left center;
+    }
+    #ergebnis .balken__marke, #ergebnis .balken__heute {
+      animation: balken-einblenden 260ms ease-out 380ms both;
+    }
+  }
+
+  @keyframes balken-aufbauen {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+
+  @keyframes balken-einblenden {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  #ergebnis .ergebnis__ursache { margin: 0; }
+
+  #ergebnis .ergebnis__untertitel {
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    margin: 0 0 var(--raum-8);
+  }
+
+  #ergebnis .ergebnis__schritte-titel {
+    font-family: var(--schrift-display);
+    font-size: var(--gross-klein);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--tinte-leise);
+    margin: var(--raum-24) 0 var(--raum-8);
+  }
+
+  #ergebnis .ergebnis__schritte { margin: 0; padding-left: var(--raum-24); }
+  .ergebnis__schritte li { margin-bottom: var(--raum-8); }
+</style>
+
 <style>
   .rechner {
     background: var(--karte);
@@ -396,7 +735,10 @@ const ausblick = regeln.ausblick;
     border-radius: var(--karte-radius);
     box-shadow: var(--karte-schatten);
     padding: var(--karte-innen);
-    scroll-margin-top: var(--kopf-hoehe);
+    /* Kein eigenes scroll-margin-top hier: Das steht zentral in
+       global.css für jedes Element mit id. Eine zweite Angabe an
+       dieser Stelle würde die zentrale überschreiben und den
+       Ankersprung wieder hinter den Kopfbereich schieben. */
   }
 
   .rechner__titel {
@@ -544,57 +886,6 @@ const ausblick = regeln.ausblick;
     cursor: pointer;
   }
   .knopf:hover { background: color-mix(in srgb, var(--akzent) 85%, black); }
-
-  /* ============ Ergebnis ============ */
-  .ergebnis-bereich:not(:empty) { margin-top: var(--raum-32); }
-
-  .ergebnis {
-    border-top: 1px solid var(--haarlinie);
-    padding-top: var(--raum-24);
-  }
-
-  .ergebnis__augenbraue {
-    font-family: var(--schrift-display);
-    font-size: var(--gross-klein);
-    font-weight: 600;
-    letter-spacing: 0.09em;
-    text-transform: uppercase;
-    color: var(--akzent);
-    margin: 0 0 var(--raum-4);
-  }
-
-  .ergebnis__fenster {
-    font-family: var(--schrift-display);
-    font-weight: 600;
-    font-size: var(--gross-h1);
-    line-height: var(--zeile-h1);
-    letter-spacing: -0.02em;
-    margin: 0 0 var(--raum-8);
-  }
-
-  .ergebnis__empfehlung { margin: 0 0 var(--raum-16); }
-  .ergebnis__abweichung { margin: 0 0 var(--raum-24); }
-
-  .ergebnis__ursache { margin: 0; }
-
-  .ergebnis__untertitel {
-    font-size: var(--gross-h3);
-    line-height: var(--zeile-h3);
-    margin: 0 0 var(--raum-8);
-  }
-
-  .ergebnis__schritte-titel {
-    font-family: var(--schrift-display);
-    font-size: var(--gross-klein);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--tinte-leise);
-    margin: var(--raum-24) 0 var(--raum-8);
-  }
-
-  .ergebnis__schritte { margin: 0; padding-left: var(--raum-24); }
-  .ergebnis__schritte li { margin-bottom: var(--raum-8); }
 
   /* ============ Statische Blöcke unter dem Ergebnis ============ */
   .block {
