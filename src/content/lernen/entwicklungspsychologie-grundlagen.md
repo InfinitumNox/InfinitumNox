@@ -9,9 +9,9 @@ entwurf: false
 
 Beispieltext für den Azubi-Bereich.
 
-## Was du wirklich können musst
+## Was Sie wirklich können müssen
 
-Prüfungsfragen zielen fast immer auf dasselbe: **Kannst du ein Modell auf
+Prüfungsfragen zielen fast immer auf dasselbe: **Können Sie ein Modell auf
 einen Fall anwenden?** Auswendiglernen der Stufen reicht nicht.
 
 ## Vorgehen bei Fallaufgaben

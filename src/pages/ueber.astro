@@ -1,0 +1,85 @@
+---
+/**
+ * Wer hinter mitwachsen steht.
+ *
+ * Der Text kommt aus src/data/autorin.json (Feld "lang") und wird von
+ * der Autorin selbst gepflegt - kein Entwickler nötig.
+ */
+import Basis from '../layouts/Basis.astro';
+import Autorin from '../components/Autorin.astro';
+import autorin from '../data/autorin.json';
+import { pfad } from '../pfad';
+---
+
+<Basis
+  titel="Über mich"
+  beschreibung="Wer hinter mitwachsen steht: Kindheitspädagogin B.A., pädagogische Inhalte zum Schlaf von Kita-Kindern."
+  ueberAktiv
+>
+  <div class="huelle inhaltsseite">
+    <h1>Über mich</h1>
+
+    <Autorin ausfuehrlich ebene="h2" />
+
+    <section class="abschnitt">
+      <h2>Was diese Seite ist</h2>
+      <p>
+        mitwachsen sammelt pädagogisches Wissen für den Alltag mit Kindern.
+        Den Anfang macht ein einziges Thema: der Schlaf von Kita-Kindern
+        zwischen zwei und zehn Jahren. Der Rechner auf der Startseite
+        berechnet das Schlaffenster eines Kindes und berücksichtigt dabei
+        etwas, das sonst kaum ein Rechner tut - den Mittagsschlaf in der
+        Kita, der das Abendbett nach hinten schiebt.
+      </p>
+      <p>
+        Alle Berechnungen laufen im Browser der Besucherin. Es werden keine
+        Angaben über Kinder gespeichert, nichts an einen Server geschickt
+        und keine Zugriffe gemessen. Die Einschätzung entsteht aus einem
+        festen Entscheidungsbaum, nicht aus einer künstlichen Intelligenz.
+      </p>
+    </section>
+
+    <section class="abschnitt">
+      <h2>Was diese Seite nicht ist</h2>
+      <p>
+        {autorin.hinweis_keine_aerztin.wert} Wenn Sie sich Sorgen um den
+        Schlaf oder die Entwicklung Ihres Kindes machen, ist die
+        kinderärztliche Praxis die richtige Adresse - nicht ein Rechner
+        im Netz.
+      </p>
+      <p>
+        Die verwendeten Werte stützen sich auf die Empfehlungen von DGSM,
+        DGKJ und BZgA. Die vollständigen Quellenangaben mit Stand-Datum
+        stehen <a href={`${pfad('/')}#kita-schlaf`}>unter dem Rechner</a>.
+      </p>
+    </section>
+  </div>
+</Basis>
+
+<style>
+  .inhaltsseite {
+    padding-block: var(--raum-48);
+    max-width: calc(var(--spalte) + 2 * var(--rand));
+    margin-inline: auto;
+  }
+
+  .inhaltsseite h1 {
+    font-size: var(--gross-h1);
+    line-height: var(--zeile-h1);
+    margin: 0 0 var(--raum-24);
+  }
+
+  .abschnitt {
+    margin-top: var(--raum-48);
+  }
+
+  .abschnitt h2 {
+    font-size: var(--gross-h2);
+    line-height: var(--zeile-h2);
+    margin: 0 0 var(--raum-12);
+  }
+
+  .abschnitt p {
+    margin: 0 0 var(--raum-16);
+  }
+</style>

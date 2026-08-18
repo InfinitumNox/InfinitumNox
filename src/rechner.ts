@@ -1,13 +1,21 @@
-// Die Rechner der Seite. Ein Rechner ist "verfuegbar", sobald er als
-// eigenes Werkzeug online ist. Genau die verfügbaren Rechner bekommen
-// auf der Guides-Seite einen eigenen, personalisierten Leitfaden.
+// Die Rechner der Seite.
+//
+// "published" steuert allein, ob ein Rechner im Frontend auftaucht.
+// Ein Rechner, der hier auf false steht, wird nirgends angezeigt -
+// nicht auf der Startseite, nicht in der Navigation, nicht im Footer.
+// Die Daten bleiben trotzdem stehen, damit sie beim Freischalten nur
+// noch umgestellt werden müssen.
+//
+// Stand v1: Nur der Kita-Schlaf-Rechner ist fertig. Die anderen drei
+// sind Ideen, keine Versprechen - deshalb sieht sie niemand.
 
 export interface Rechner {
   id: string;
   symbol: 'bett' | 'smartphone' | 'mond' | 'kalender';
   titel: string;
   text: string;
-  verfuegbar: boolean;
+  /** Nur true = im Frontend sichtbar. Siehe Kommentar oben. */
+  published: boolean;
 }
 
 export const RECHNER: Rechner[] = [
@@ -16,27 +24,30 @@ export const RECHNER: Rechner[] = [
     symbol: 'bett',
     titel: 'Kita-Schlaf',
     text: 'Berechnen Sie empfohlene Schlafzeiten für Kita-Kinder.',
-    verfuegbar: true,
+    published: true,
   },
   {
     id: 'medienzeit',
     symbol: 'smartphone',
     titel: 'Medienzeit',
     text: 'Empfohlene Bildschirmzeiten nach Alter und Entwicklung.',
-    verfuegbar: false,
+    published: false,
   },
   {
     id: 'einschlafzeit',
     symbol: 'mond',
     titel: 'Einschlafzeit',
     text: 'Finden Sie die optimale Einschlafzeit für erholsamen Schlaf.',
-    verfuegbar: false,
+    published: false,
   },
   {
     id: 'schlafroutine',
     symbol: 'kalender',
     titel: 'Schlafroutine',
     text: 'Gestalten Sie wirksame Routinen für besseren Schlaf.',
-    verfuegbar: false,
+    published: false,
   },
 ];
+
+/** Genau die Rechner, die im Frontend erscheinen dürfen. */
+export const SICHTBARE_RECHNER = RECHNER.filter((r) => r.published);

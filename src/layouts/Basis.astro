@@ -19,8 +19,8 @@ interface Props {
    * Ist automatisch aktiv, sobald ein Bereich (Artikel- oder
    * Bereichsseite) gesetzt ist. */
   blogAktiv?: boolean;
-  /** Auf true setzen, damit "Guides" in der Navigation als aktiv gilt. */
-  guidesAktiv?: boolean;
+  /** Auf true setzen, damit "Über" in der Navigation als aktiv gilt. */
+  ueberAktiv?: boolean;
 }
 
 const {
@@ -31,7 +31,7 @@ const {
   nichtIndexieren = false,
   startAktiv = false,
   blogAktiv = Boolean(bereich),
-  guidesAktiv = false,
+  ueberAktiv = false,
 } = Astro.props;
 
 // Die Vorschau auf GitHub Pages wird immer aus der Suche ausgeschlossen.
@@ -97,7 +97,7 @@ const seitenTitel = `${titel} · mitwachsen`;
 
   <body>
     <a class="sprung-zum-inhalt" href="#inhalt">Zum Inhalt springen</a>
-    <Kopf startAktiv={startAktiv} blogAktiv={blogAktiv} guidesAktiv={guidesAktiv} />
+    <Kopf startAktiv={startAktiv} blogAktiv={blogAktiv} ueberAktiv={ueberAktiv} />
     <main id="inhalt">
       <slot />
     </main>

@@ -9,7 +9,8 @@ const jahr = new Date().getFullYear();
     <div>
       <p class="fuss__marke">mitwachsen</p>
       <p class="leise fuss__zeile">
-        Wissen für Familien, Fachkräfte und Auszubildende im Sozialbereich.
+        Pädagogisches Wissen zum Schlaf von Kita-Kindern. Keine
+        medizinische Beratung.
       </p>
     </div>
 
@@ -23,11 +24,13 @@ const jahr = new Date().getFullYear();
     <nav aria-label="Rechtliches" class="fuss__block">
       <h2 class="fuss__titel">Rechtliches</h2>
       <ul>
-        <!-- Beide Links MÜSSEN von jeder Seite aus mit einem Klick
-             erreichbar sein. Das ist keine Empfehlung, das ist Pflicht. -->
+        <!-- Impressum und Datenschutz MÜSSEN von jeder Seite aus mit
+             einem Klick erreichbar sein. Das ist keine Empfehlung,
+             das ist Pflicht. -->
         <li><a href={pfad("/impressum/")}>Impressum</a></li>
         <li><a href={pfad("/datenschutz/")}>Datenschutz</a></li>
         <li><a href={pfad("/kontakt/")}>Kontakt</a></li>
+        <li><a href={pfad("/ueber/")}>Über mich</a></li>
       </ul>
     </nav>
   </div>
@@ -40,22 +43,23 @@ const jahr = new Date().getFullYear();
 <style>
   .fuss {
     border-top: 1px solid var(--haarlinie);
-    margin-top: 6rem;
-    padding-block: 3rem 2rem;
-    font-size: 0.95rem;
+    margin-top: var(--raum-96);
+    padding-block: var(--raum-48) var(--raum-32);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
   }
 
   .fuss__innen {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-    gap: 2.5rem;
+    gap: var(--raum-32);
   }
 
   .fuss__marke {
     font-family: var(--schrift-display);
     font-weight: 600;
     font-size: 1.15rem;
-    margin: 0 0 0.4rem;
+    margin: 0 0 var(--raum-4);
   }
 
   .fuss__zeile { margin: 0; max-width: 26ch; }
@@ -66,7 +70,7 @@ const jahr = new Date().getFullYear();
     letter-spacing: 0.09em;
     text-transform: uppercase;
     color: var(--tinte-leise);
-    margin: 0 0 0.75rem;
+    margin: 0 0 var(--raum-12);
   }
 
   .fuss__block ul {
@@ -74,16 +78,16 @@ const jahr = new Date().getFullYear();
     margin: 0;
     padding: 0;
     display: grid;
-    gap: 0.4rem;
+    gap: var(--raum-8);
   }
 
   .fuss__block a { text-decoration: none; }
   .fuss__block a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
 
   .fuss__unten {
-    margin: 3rem 0 0;
-    padding-top: 1.5rem;
+    margin: var(--raum-48) 0 0;
+    padding-top: var(--raum-24);
     border-top: 1px solid var(--haarlinie);
-    font-size: 0.875rem;
+    font-size: var(--gross-klein);
   }
 </style>

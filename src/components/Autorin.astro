@@ -1,0 +1,134 @@
+---
+/**
+ * Wer steht hinter dieser Seite?
+ *
+ * Das war die größte Lücke der Demo: Auf der ganzen Seite stand
+ * nirgends ein Name. Alle Angaben kommen aus src/data/autorin.json und
+ * werden von der Autorin selbst gepflegt.
+ *
+ * Kein Foto vorhanden heißt: kein Bildbereich. Keine graue Fläche,
+ * kein Platzhalterbild, kein Stockfoto.
+ */
+import autorin from '../data/autorin.json';
+import { pfad } from '../pfad';
+
+interface Props {
+  /** true auf der Seite /ueber - dort steht der lange Text. */
+  ausfuehrlich?: boolean;
+  /** Überschriftenebene, damit die Seitenstruktur stimmt. */
+  ebene?: 'h2' | 'h3';
+}
+const { ausfuehrlich = false, ebene = 'h2' } = Astro.props;
+
+const Titel = ebene;
+const foto = autorin.foto.wert;
+const text = ausfuehrlich ? autorin.lang.wert : autorin.kurz.wert;
+const absaetze = text.split('\n\n').filter(Boolean);
+---
+
+<section class="autorin" aria-labelledby="autorin-titel">
+  {
+    foto && (
+      <img
+        class="autorin__foto"
+        src={pfad(foto)}
+        alt={autorin.foto_alt.wert}
+        width="96"
+        height="96"
+        loading="lazy"
+      />
+    )
+  }
+
+  <div class="autorin__inhalt">
+    <Titel id="autorin-titel" class="autorin__name">{autorin.name.wert}</Titel>
+    <p class="autorin__abschluss">{autorin.abschluss.wert}</p>
+
+    {absaetze.map((a) => <p class="autorin__text">{a}</p>)}
+
+    <p class="autorin__hinweis">{autorin.hinweis_keine_aerztin.wert}</p>
+
+    {
+      !ausfuehrlich && (
+        <p class="autorin__mehr">
+          <a href={pfad('/ueber/')}>Mehr über mich und diese Seite</a>
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .autorin {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--raum-16);
+    align-items: start;
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: var(--karte-radius);
+    box-shadow: var(--karte-schatten);
+    padding: var(--karte-innen-mobil);
+  }
+
+  /* Ohne Foto darf der Text die ganze Breite nutzen. */
+  .autorin:not(:has(.autorin__foto)) {
+    grid-template-columns: 1fr;
+  }
+
+  .autorin__foto {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .autorin__inhalt { min-width: 0; }
+
+  .autorin__name {
+    font-size: var(--gross-h3);
+    line-height: var(--zeile-h3);
+    margin: 0;
+  }
+
+  .autorin__abschluss {
+    font-family: var(--schrift-display);
+    font-weight: 500;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--akzent);
+    margin: 0 0 var(--raum-8);
+  }
+
+  .autorin__text {
+    margin: 0 0 var(--raum-8);
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  .autorin__hinweis {
+    margin: var(--raum-12) 0 0;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+    color: var(--tinte-leise);
+  }
+
+  .autorin__mehr {
+    margin: var(--raum-8) 0 0;
+    font-size: var(--gross-klein);
+    line-height: var(--zeile-klein);
+  }
+
+  @media (min-width: 48rem) {
+    .autorin {
+      gap: var(--raum-24);
+      padding: var(--raum-32);
+    }
+    .autorin__foto {
+      width: 96px;
+      height: 96px;
+    }
+  }
+</style>

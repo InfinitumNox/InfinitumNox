@@ -103,7 +103,8 @@ hinzufügen. Ein Klick, weil die Domain schon bei Cloudflare liegt.
 
 ### 2.4 Impressum und Datenschutz ausfüllen
 
-**Bevor** du die Seite irgendwo verlinkst.
+**Bevor** du die Seite irgendwo verlinkst. Der Bau bricht ohnehin ab,
+solange dort Platzhalter stehen — siehe „Was ausgefüllt werden muss".
 
 - `src/pages/impressum.astro` — Block ganz oben, alle
   GROSSBUCHSTABEN-Platzhalter ersetzen. Bei einem Verein `rechtsform` auf
@@ -164,18 +165,32 @@ nicht.
 ```
 src/
   bereiche.ts          Die drei Bereiche. Ein vierter kommt hier rein.
+  rechner.ts           Welche Rechner es gibt. published steuert die Anzeige.
+  schlaf.ts            Rechenlogik des Kita-Schlaf-Rechners. Ohne Schlafzahlen.
+  platzhalter.mjs      Findet nicht ausgefüllte Einträge in den Datendateien.
   pfad.ts              Sorgt dafür, dass Links an beiden Orten stimmen.
   content.config.ts    Welche Felder ein Artikel haben muss.
+  data/
+    schlaf-regeln.json ← AUSFÜLLEN. Alle fachlichen Werte des Rechners.
+    autorin.json       ← AUSFÜLLEN. Name, Foto, Texte über dich.
+    README.md          Erklärt jedes einzelne Feld der beiden Dateien.
   content/
     familie/           Markdown → mitwachsen.org/familie/dateiname/
     praxis/
     lernen/
   pages/
-    impressum.astro    ← ausfüllen
-    datenschutz.astro  ← ausfüllen
+    index.astro        Startseite: Überschrift, Rechner, Autorin, Artikel.
+    ueber.astro        Über mich. Text kommt aus data/autorin.json.
+    impressum.astro    ← AUSFÜLLEN
+    datenschutz.astro  ← AUSFÜLLEN
+    guides/            Nicht verlinkt, auf noindex. Wartet auf ein Produkt.
   layouts/             Der Rahmen um den Inhalt.
-  components/          Kopf, Fuß, Artikelvorschau.
-  styles/global.css    Farben und Schriften, alles über Variablen oben.
+  components/
+    SchlafRechner.astro  Formular, Ergebnis und Tagesbalken.
+    Autorin.astro        Der Vertrauensbaustein unter dem Rechner.
+    Quellen.astro        Quellenliste mit Stand-Datum.
+    Kopf.astro, Fuss.astro, BlogKarte.astro, ArtikelKarte.astro, Symbol.astro
+  styles/global.css    Farben, Schriften, Abstands- und Größenskala.
 
 public/
   admin/config.yml     Die Felder, die sie im Editor sieht.
@@ -185,6 +200,35 @@ public/
 
 .github/workflows/     Bauanleitung für die Vorschau.
 ```
+
+---
+
+## Was ausgefüllt werden muss, bevor die Seite online geht
+
+Die Seite baut sich **absichtlich nicht**, solange eine dieser Stellen
+noch Platzhalter enthält. Beim Bauen erscheint dann eine Meldung im
+Klartext, die genau sagt, welcher Eintrag fehlt.
+
+In der Vorschau (mit `VORSCHAU_GITHUB`) bricht der Bau nicht ab —
+stattdessen steht ein roter Warnbalken über dem Rechner, der alle
+offenen Stellen auflistet. So lässt sich der Zwischenstand ansehen,
+ohne dass er versehentlich live gehen kann.
+
+| Datei | Was da rein muss |
+| --- | --- |
+| `src/data/schlaf-regeln.json` | Schlafbedarf pro Altersgruppe, Einschlafdauer, Anrechnung des Mittagsschlafs, die Texte zu den Einschätzungen, der Abgrenzungshinweis und die Quellen. Jedes Feld ist in `src/data/README.md` erklärt. |
+| `src/data/autorin.json` | Name, Foto, zwei Sätze für den Baustein unter dem Rechner und der längere Text für die Seite `/ueber/`. |
+| `src/pages/impressum.astro` | Alle GROSSBUCHSTABEN-Platzhalter. |
+| `src/pages/datenschutz.astro` | Ebenso. |
+
+**So wird ein Eintrag als fertig markiert:** den echten Wert eintragen
+und im selben Eintrag die Zeile `"_platzhalter": true` löschen. Erst
+dann gilt er als geprüft.
+
+Die Schlafwerte gehören aus den Empfehlungen von DGSM, DGKJ und BZgA
+übernommen, mit Quellenangabe pro Altersgruppe. Sie sind bewusst nicht
+vorbelegt: Ein Schlafrechner mit ausgedachten Zahlen wäre schlimmer als
+kein Schlafrechner.
 
 ---
 
@@ -225,6 +269,12 @@ VORSCHAU_GITHUB="deinname/mitwachsen" npm run build
 
 ## Was noch fehlt
 
+- Die fachlichen Werte in `src/data/schlaf-regeln.json` (siehe oben)
+- Foto und Texte in `src/data/autorin.json`
+- Artikel zum Thema Schlaf. Die drei vorhandenen Texte sind
+  Beispieltexte und sollten ersetzt oder auf `entwurf: true` gesetzt
+  werden, bevor die Seite öffentlich wird.
 - Kontaktformular (aktuell nur eine E-Mail-Adresse)
 - Newsletter-Anmeldung mit Double-Opt-in über Brevo
-- Eine Seite „Über uns"
+- Das Bezahlprodukt (14-Tage-Umstellungsplan) und damit die Seite
+  `/guides/`, die so lange unverlinkt und auf noindex bleibt

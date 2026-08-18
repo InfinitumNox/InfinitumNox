@@ -59,7 +59,11 @@
 
   /* Text */
   --tinte: #17231f;
-  --tinte-leise: #57635c;
+  /* Abgedunkelt gegenüber der Demo (#57635c): Auf dem hellen Papier
+     lag der graue Fließtext bei 5,8:1 und wirkte grenzwertig. Jetzt
+     sind es 7,2:1 auf Papier und 7,8:1 auf weißen Karten - beides
+     deutlich über der Anforderung von 4,5:1. */
+  --tinte-leise: #4a554e;
 
   /* Bereichsfarben. Jeder Bereich hat eine eigene, damit sofort
      erkennbar ist, für wen eine Seite geschrieben ist. */
@@ -71,15 +75,89 @@
      andere (Links, Linien, Fokusrahmen) zieht sich die Farbe hier. */
   --akzent: var(--familie);
 
-  /* Typografie */
+  /* Typografie. Die Schriftarten bleiben unverändert. */
   --schrift-text: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont,
     'Segoe UI', system-ui, sans-serif;
   --schrift-display: 'Bricolage Grotesque', var(--schrift-text);
+
+  /* --------------------------------------------------------------
+     Typografische Skala - VERBINDLICH.
+     Vier Größen plus zwei Hilfsgrößen, zwei Strichstärken (500 und
+     600 in der Displayschrift, 400 und 700 im Fließtext). Wer eine
+     fünfte Größe braucht, braucht in Wahrheit eine andere Struktur.
+
+     Die Werte hier gelten mobil. Ab 48rem Breite werden sie weiter
+     unten angehoben - aber nur diese Zeilen, nirgends sonst.
+     -------------------------------------------------------------- */
+  --gross-h1: 32px;
+  --zeile-h1: 1.15;
+  --gross-h2: 24px;
+  --zeile-h2: 1.25;
+  --gross-h3: 18px;
+  --zeile-h3: 1.35;
+  --gross-text: 17px;
+  --zeile-text: 1.55;
+  --gross-klein: 14px;
+  --zeile-klein: 1.45;
 
   /* Maße */
   --spalte: 68ch;
   --breite: 76rem;
   --rand: clamp(1.25rem, 5vw, 3rem);
+
+  /* --------------------------------------------------------------
+     Abstandsskala - VERBINDLICH.
+     Nur diese neun Werte, keine Zwischenwerte. Wer einen Abstand
+     braucht, nimmt den nächstgelegenen aus dieser Liste. Der Grund:
+     Eine Seite mit fünf ähnlichen, aber nicht gleichen Abständen
+     wirkt unruhig, ohne dass man sagen kann, warum.
+
+     Keine rem-Umrechnung: Die Werte sind absichtlich in Pixeln, weil
+     Abstände nicht mit der Schriftgröße mitwachsen sollen.
+     -------------------------------------------------------------- */
+  --raum-4: 4px;
+  --raum-8: 8px;
+  --raum-12: 12px;
+  --raum-16: 16px;
+  --raum-24: 24px;
+  --raum-32: 32px;
+  --raum-48: 48px;
+  --raum-64: 64px;
+  --raum-96: 96px;
+
+  /* Karten - ein Radius, ein Schatten, projektweit.
+     Wenn alles schwebt, schwebt nichts. */
+  --karte-radius: 16px;
+  --karte-schatten: 0 1px 2px rgba(23, 35, 31, 0.04);
+  --karte-schatten-aktiv: 0 8px 24px -12px rgba(23, 35, 31, 0.28);
+
+  /* Innenabstand von Karten.
+     Achtung, bewusste Ausnahme von der Abstandsskala oben: mobil sind
+     es 20px, nicht 16 oder 24. Der Wert ist so vorgegeben, weil eine
+     Karte auf dem Handy sonst entweder gedrängt oder verschwenderisch
+     wirkt. Diese eine Ausnahme ist hier festgehalten, damit sie nicht
+     als Zwischenwert quer durchs Projekt wandert. */
+  --karte-innen: 32px;
+  --karte-innen-mobil: 20px;
+
+  /* Höhe des klebenden Kopfbereichs. Hängt an zwei Stellen zusammen:
+     der Kopf ist genau so hoch, und alle Ankerziele halten genau
+     diesen Abstand nach oben frei (scroll-margin-top). Wer den Kopf
+     ändert, ändert diesen Wert mit. */
+  --kopf-hoehe: 64px;
+}
+
+/* Ab Tablet-Breite dieselbe Skala, nur größer. Nur diese Zeilen -
+   Größen werden nirgends sonst im Projekt neu erfunden. */
+@media (min-width: 48rem) {
+  :root {
+    --gross-h1: 48px;
+    --gross-h2: 32px;
+    --gross-h3: 20px;
+    --gross-text: 18px;
+    --gross-klein: 15px;
+    --kopf-hoehe: 72px;
+  }
 }
 
 [data-bereich='familie'] { --akzent: var(--familie); }
@@ -97,6 +175,14 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Ankersprünge müssen unter dem klebenden Kopfbereich landen, nicht
+   dahinter. Gilt für JEDES Element mit id - sonst verschwindet die
+   Überschrift beim Aufruf von /#kita-schlaf hinter der Leiste.
+   Der Puffer von 12px hält die Überschrift von der Kante frei. */
+[id] {
+  scroll-margin-top: calc(var(--kopf-hoehe) + var(--raum-12));
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -111,13 +197,17 @@ body {
   background: var(--papier);
   color: var(--tinte);
   font-family: var(--schrift-text);
-  font-size: clamp(1.0625rem, 0.4vw + 1rem, 1.1875rem);
-  line-height: 1.65;
+  font-size: var(--gross-text);
+  line-height: var(--zeile-text);
   text-rendering: optimizeLegibility;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 }
+
+/* Fließtext ist immer linksbündig, nie zentriert. Zentrierter Text
+   zwingt das Auge, den Zeilenanfang jedes Mal neu zu suchen. */
+p, li { text-align: left; }
 
 main { flex: 1; }
 
@@ -147,20 +237,22 @@ main { flex: 1; }
    Typografie
    ========================================================================== */
 
+/* Nur die vier Größen aus der Skala oben. Wer eine fünfte braucht,
+   braucht in Wahrheit eine andere Struktur. */
 h1, h2, h3, h4 {
   font-family: var(--schrift-display);
   font-weight: 600;
-  line-height: 1.15;
   letter-spacing: -0.015em;
   text-wrap: balance;
-  margin: 0 0 0.5em;
+  margin: 0 0 var(--raum-12);
 }
 
-h1 { font-size: clamp(2rem, 5vw, 3.25rem); }
-h2 { font-size: clamp(1.5rem, 3vw, 2.125rem); margin-top: 2.5em; }
-h3 { font-size: clamp(1.2rem, 2vw, 1.4rem); margin-top: 2em; }
+h1 { font-size: var(--gross-h1); line-height: var(--zeile-h1); }
+h2 { font-size: var(--gross-h2); line-height: var(--zeile-h2); margin-top: var(--raum-48); }
+h3 { font-size: var(--gross-h3); line-height: var(--zeile-h3); margin-top: var(--raum-32); }
+h4 { font-size: var(--gross-h3); line-height: var(--zeile-h3); margin-top: var(--raum-24); }
 
-p, ul, ol { margin: 0 0 1.25em; }
+p, ul, ol { margin: 0 0 var(--raum-24); }
 p { text-wrap: pretty; }
 
 a {

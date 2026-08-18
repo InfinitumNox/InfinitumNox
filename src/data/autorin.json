@@ -1,0 +1,41 @@
+{
+  "_lies_mich": "Angaben zur Autorin. Erscheinen unter dem Rechner, auf der Seite /ueber und im Fuß der Artikel. Wie bei schlaf-regeln.json gilt: Einträge mit \"_platzhalter\": true sind nicht ausgefüllt, führen zum roten Warnbalken und verhindern den Bau der echten Seite.",
+
+  "name": {
+    "wert": "PLATZHALTER - Vor- und Nachname",
+    "_platzhalter": true
+  },
+
+  "abschluss": {
+    "wert": "B.A. Kindheitspädagogik",
+    "_erklaerung": "Steht so unter dem Namen. Bewusst der Abschluss und keine Selbstbeschreibung - er ist überprüfbar.",
+    "_platzhalter": false
+  },
+
+  "kurz": {
+    "wert": "PLATZHALTER - zwei Sätze dazu, warum Sie das machen. Kein Lebenslauf, keine Aufzählung von Stationen: Wer hier liest, sucht keinen Nachweis, sondern einen Grund zu vertrauen.",
+    "_platzhalter": true
+  },
+
+  "lang": {
+    "wert": "PLATZHALTER - Text für die Seite /ueber. Drei bis fünf Absätze: Wer Sie sind, was Sie beruflich machen, warum ausgerechnet Schlaf, und was diese Seite ausdrücklich nicht ist.",
+    "_platzhalter": true
+  },
+
+  "foto": {
+    "wert": "",
+    "_erklaerung": "Adresse des Fotos, zum Beispiel /bilder/autorin.jpg. Die Datei gehört nach public/bilder/. Solange das Feld leer ist, wird KEIN Bildbereich gerendert - lieber kein Bild als eine graue Fläche. Empfohlen: quadratisch, mindestens 400 x 400 Pixel.",
+    "_platzhalter": true
+  },
+
+  "foto_alt": {
+    "wert": "PLATZHALTER - Bildbeschreibung für Menschen, die das Foto nicht sehen können. Zum Beispiel: Porträtfoto von VORNAME NACHNAME.",
+    "_platzhalter": true
+  },
+
+  "hinweis_keine_aerztin": {
+    "wert": "Die Inhalte auf dieser Seite sind pädagogisch, nicht medizinisch. Sie ersetzen keine kinderärztliche Beratung.",
+    "_erklaerung": "Steht unter jedem Autorinnen-Baustein. Bitte nur ändern, wenn Sie sich der rechtlichen Bedeutung sicher sind.",
+    "_platzhalter": false
+  }
+}
