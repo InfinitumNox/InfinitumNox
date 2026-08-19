@@ -1,36 +1,53 @@
 ---
-import { BEREICHE } from '../bereiche';
-import type { BereichId } from '../bereiche';
 import { pfad } from '../pfad';
 
 interface Props {
-  aktiverBereich?: BereichId;
+  startAktiv?: boolean;
+  blogAktiv?: boolean;
+  guidesAktiv?: boolean;
 }
-const { aktiverBereich } = Astro.props;
+const { startAktiv = false, blogAktiv = false, guidesAktiv = false } = Astro.props;
 ---
 
 <header class="kopf">
   <div class="huelle kopf__innen">
     <a href={pfad("/")} class="marke" aria-label="mitwachsen, zur Startseite">
+      <img src={pfad("/logo.svg")} alt="" class="marke__logo" width="32" height="32" />
       mitwachsen
     </a>
 
-    <nav aria-label="Bereiche">
+    <nav aria-label="Hauptnavigation">
       <ul class="nav">
-        {
-          BEREICHE.map((b) => (
-            <li>
-              <a
-                href={pfad(b.pfad)}
-                data-bereich={b.id}
-                class:list={['nav__link', { 'nav__link--aktiv': aktiverBereich === b.id }]}
-                aria-current={aktiverBereich === b.id ? 'page' : undefined}
-              >
-                {b.name}
-              </a>
-            </li>
-          ))
-        }
+        <li>
+          <a
+            href={pfad("/")}
+            class:list={['nav__link', { 'nav__link--aktiv': startAktiv }]}
+            aria-current={startAktiv ? 'page' : undefined}
+          >
+            Start
+          </a>
+        </li>
+        <li>
+          <a href={`${pfad("/")}#rechner`} class="nav__link">Rechner</a>
+        </li>
+        <li>
+          <a
+            href={pfad("/guides/")}
+            class:list={['nav__link', { 'nav__link--aktiv': guidesAktiv }]}
+            aria-current={guidesAktiv ? 'page' : undefined}
+          >
+            Guides
+          </a>
+        </li>
+        <li>
+          <a
+            href={pfad("/blog/")}
+            class:list={['nav__link', { 'nav__link--aktiv': blogAktiv }]}
+            aria-current={blogAktiv ? 'page' : undefined}
+          >
+            Blog
+          </a>
+        </li>
       </ul>
     </nav>
   </div>
@@ -48,18 +65,27 @@ const { aktiverBereich } = Astro.props;
   .kopf__innen {
     display: flex;
     flex-wrap: wrap;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
     gap: 0.75rem 2rem;
     padding-block: 1.1rem;
   }
 
   .marke {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     font-family: var(--schrift-display);
     font-weight: 600;
     font-size: 1.3rem;
     letter-spacing: -0.02em;
     text-decoration: none;
+  }
+
+  .marke__logo {
+    display: block;
+    width: 1.7rem;
+    height: 1.7rem;
   }
   .marke:hover {
     color: var(--tinte);
@@ -70,7 +96,8 @@ const { aktiverBereich } = Astro.props;
 
   .nav {
     display: flex;
-    gap: 1.75rem;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -85,11 +112,7 @@ const { aktiverBereich } = Astro.props;
     border-bottom: 2px solid transparent;
   }
 
-  /* Jeder Bereichslink trägt seine eigene Farbe - so ist beim
-     Hovern schon sichtbar, in welche Welt der Link führt. */
-  .nav__link[data-bereich='familie']:hover { color: var(--familie); }
-  .nav__link[data-bereich='praxis']:hover  { color: var(--praxis); }
-  .nav__link[data-bereich='lernen']:hover  { color: var(--lernen); }
+  .nav__link:hover { color: var(--akzent); }
 
   .nav__link--aktiv {
     color: var(--akzent);

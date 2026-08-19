@@ -5,8 +5,9 @@ interface Props {
   beschreibung: string;
   veroeffentlicht: Date;
   schlagworte?: string[];
+  titelbild?: string;
 }
-const { url, titel, beschreibung, veroeffentlicht, schlagworte = [] } = Astro.props;
+const { url, titel, beschreibung, veroeffentlicht, schlagworte = [], titelbild } = Astro.props;
 
 const datumLesbar = veroeffentlicht.toLocaleDateString('de-DE', {
   day: 'numeric',
@@ -17,6 +18,11 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
 ---
 
 <article class="karte">
+  {titelbild && (
+    <a href={url} class="karte__bild-link" tabindex="-1" aria-hidden="true">
+      <img class="karte__bild" src={titelbild} alt="" loading="lazy" />
+    </a>
+  )}
   <h3 class="karte__titel">
     <a href={url}>{titel}</a>
   </h3>
@@ -38,6 +44,19 @@ const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
   .karte {
     padding: 1.75rem 0;
     border-bottom: 1px solid var(--haarlinie);
+  }
+
+  .karte__bild-link {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .karte__bild {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 0.4rem;
   }
 
   .karte__titel {

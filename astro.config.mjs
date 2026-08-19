@@ -3,35 +3,27 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 /**
- * Das Projekt kann an zwei Orten gebaut werden:
+ * Die Domain kommt aus SITE_URL, damit sie sich an einer einzigen
+ * Stelle umstellen lässt - siehe .github/workflows/vorschau.yml.
+ * Zum Testen zeigt sie auf infinitumnox.com, später einfach auf
+ * https://mitwachsen.org umstellen.
  *
- * 1. ECHTE SEITE (Standard)
- *    npm run build
- *    -> https://mitwachsen.org/familie/
+ * Die Seite läuft immer unter der Wurzel der jeweiligen Domain
+ * (base '/'), egal ob Test- oder echte Domain - beide werden über
+ * eine eigene Domain angesprochen, nicht über einen Unterpfad wie
+ * bei den Standard-github.io-Adressen.
  *
- * 2. VORSCHAU auf GitHub Pages
- *    Umgebungsvariable VORSCHAU_GITHUB="benutzername/mitwachsen" setzen.
- *    Der Arbeitsablauf in .github/workflows/ macht das automatisch.
- *    -> https://benutzername.github.io/mitwachsen/familie/
- *
- * Der Unterschied ist bewusst über eine Variable gelöst und nicht
- * durch Hin- und Herändern der Datei. Sonst geht irgendwann eine
- * halb umgestellte Fassung live.
+ * VORSCHAU_GITHUB markiert unabhängig davon, ob dieser Bau noch eine
+ * Testversion ist. Testversionen werden bei Google gesperrt
+ * (robots.txt, noindex) - unabhängig davon, welche Domain gerade
+ * eingestellt ist.
  */
-const VORSCHAU = process.env.VORSCHAU_GITHUB;
-
-let site = 'https://mitwachsen.org';
-let base = '/';
-
-if (VORSCHAU) {
-  const [benutzer, repo] = VORSCHAU.split('/');
-  site = `https://${benutzer.toLowerCase()}.github.io`;
-  base = `/${repo}/`;
-}
+const site = process.env.SITE_URL ?? 'https://mitwachsen.org';
+const IST_TEST = Boolean(process.env.VORSCHAU_GITHUB);
 
 export default defineConfig({
   site,
-  base,
+  base: '/',
 
   // Alle URLs enden mit Schrägstrich: /familie/thema/
   // Einmal festlegen, nie wieder ändern - sonst gibt es zwei
@@ -51,7 +43,7 @@ export default defineConfig({
   vite: {
     define: {
       // Damit die Seiten wissen, ob sie gerade als Vorschau gebaut werden
-      'import.meta.env.IST_VORSCHAU': JSON.stringify(Boolean(VORSCHAU)),
+      'import.meta.env.IST_VORSCHAU': JSON.stringify(IST_TEST),
     },
   },
 });

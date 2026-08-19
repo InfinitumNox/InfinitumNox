@@ -1,0 +1,161 @@
+---
+import type { Bereich } from '../bereiche';
+
+interface Props {
+  url: string;
+  bereich: Bereich;
+  titel: string;
+  beschreibung: string;
+  veroeffentlicht: Date;
+  schlagworte?: string[];
+  titelbild?: string;
+}
+const {
+  url,
+  bereich,
+  titel,
+  beschreibung,
+  veroeffentlicht,
+  schlagworte = [],
+  titelbild,
+} = Astro.props;
+
+const datumLesbar = veroeffentlicht.toLocaleDateString('de-DE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+const datumMaschine = veroeffentlicht.toISOString().slice(0, 10);
+---
+
+<li class="blogkarte" data-bereich={bereich.id}>
+  <article>
+    <a href={url} class="blogkarte__bild-link">
+      {
+        titelbild ? (
+          <img class="blogkarte__bild" src={titelbild} alt="" loading="lazy" />
+        ) : (
+          <span class="blogkarte__platzhalter" data-bereich={bereich.id} aria-hidden="true" />
+        )
+      }
+    </a>
+    <div class="blogkarte__inhalt">
+      <span class="etikett" data-bereich={bereich.id}>{bereich.name}</span>
+      <h3 class="blogkarte__titel">
+        <a href={url}>{titel}</a>
+      </h3>
+      <p class="blogkarte__text leise">{beschreibung}</p>
+      <p class="blogkarte__meta leise">
+        <time datetime={datumMaschine}>{datumLesbar}</time>
+        {
+          schlagworte.length > 0 && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <span>{schlagworte.join(', ')}</span>
+            </>
+          )
+        }
+      </p>
+    </div>
+  </article>
+</li>
+
+<style>
+  .blogkarte {
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .blogkarte:hover {
+    border-color: color-mix(in srgb, var(--akzent) 45%, var(--haarlinie));
+    transform: translateY(-2px);
+    box-shadow: 0 0.75rem 1.75rem -1rem rgba(23, 35, 31, 0.25);
+  }
+
+  .blogkarte article {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .blogkarte__bild-link {
+    display: block;
+    line-height: 0;
+  }
+
+  .blogkarte__bild {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .blogkarte__platzhalter {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: color-mix(in srgb, var(--familie) 12%, var(--papier));
+  }
+  .blogkarte__platzhalter[data-bereich='praxis'] {
+    background: color-mix(in srgb, var(--praxis) 12%, var(--papier));
+  }
+  .blogkarte__platzhalter[data-bereich='lernen'] {
+    background: color-mix(in srgb, var(--lernen) 12%, var(--papier));
+  }
+
+  .blogkarte__inhalt {
+    padding: 1.35rem 1.5rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .etikett {
+    display: inline-block;
+    align-self: flex-start;
+    font-family: var(--schrift-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.85rem;
+    color: var(--familie);
+    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
+  }
+  .etikett[data-bereich='praxis'] {
+    color: var(--praxis);
+    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
+  }
+  .etikett[data-bereich='lernen'] {
+    color: var(--lernen);
+    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
+  }
+
+  .blogkarte__titel {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+  }
+  .blogkarte__titel a {
+    text-decoration: none;
+  }
+  .blogkarte__titel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .blogkarte__text {
+    margin: 0 0 0.85rem;
+    font-size: 0.95rem;
+    flex: 1;
+  }
+
+  .blogkarte__meta {
+    margin: 0;
+    font-size: 0.8125rem;
+  }
+</style>

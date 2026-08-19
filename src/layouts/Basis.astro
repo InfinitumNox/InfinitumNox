@@ -9,11 +9,30 @@ interface Props {
   titel: string;
   beschreibung: string;
   bereich?: BereichId;
+  /** Vorschaubild beim Teilen, z. B. das Titelbild eines Artikels. */
+  bild?: string;
   /** Auf true setzen für Seiten, die nicht bei Google auftauchen sollen. */
   nichtIndexieren?: boolean;
+  /** Auf true setzen, damit "Start" in der Navigation als aktiv gilt. */
+  startAktiv?: boolean;
+  /** Auf true setzen, damit "Blog" in der Navigation als aktiv gilt.
+   * Ist automatisch aktiv, sobald ein Bereich (Artikel- oder
+   * Bereichsseite) gesetzt ist. */
+  blogAktiv?: boolean;
+  /** Auf true setzen, damit "Guides" in der Navigation als aktiv gilt. */
+  guidesAktiv?: boolean;
 }
 
-const { titel, beschreibung, bereich, nichtIndexieren = false } = Astro.props;
+const {
+  titel,
+  beschreibung,
+  bereich,
+  bild,
+  nichtIndexieren = false,
+  startAktiv = false,
+  blogAktiv = Boolean(bereich),
+  guidesAktiv = false,
+} = Astro.props;
 
 // Die Vorschau auf GitHub Pages wird immer aus der Suche ausgeschlossen.
 // Sonst hätte Google denselben Text unter zwei Adressen und würde beide
@@ -43,6 +62,7 @@ const seitenTitel = `${titel} · mitwachsen`;
     <meta property="og:title" content={titel} />
     <meta property="og:description" content={beschreibung} />
     <meta property="og:url" content={canonical} />
+    {bild && <meta property="og:image" content={new URL(bild, Astro.site)} />}
 
     <link rel="sitemap" href={pfad("/sitemap-index.xml")} />
     <link
@@ -77,7 +97,7 @@ const seitenTitel = `${titel} · mitwachsen`;
 
   <body>
     <a class="sprung-zum-inhalt" href="#inhalt">Zum Inhalt springen</a>
-    <Kopf aktiverBereich={bereich} />
+    <Kopf startAktiv={startAktiv} blogAktiv={blogAktiv} guidesAktiv={guidesAktiv} />
     <main id="inhalt">
       <slot />
     </main>

@@ -9,7 +9,7 @@
 
 backend:
   name: github
-  repo: BENUTZERNAME/mitwachsen # <- ANPASSEN: dein GitHub-Name/Repository
+  repo: InfinitumNox/InfinitumNox
   branch: main
 
   # Für den bequemen Knopf "Sign In with GitHub" braucht es einen
@@ -59,6 +59,7 @@ collections:
         }
       - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
       - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: titelbild, label: Titelbild, widget: image, required: false, hint: 'Erscheint als Vorschaubild und beim Teilen in sozialen Netzwerken.' }
       - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
       - { name: schlagworte, label: Schlagworte, widget: list, required: false, hint: 'Zum Sortieren und Wiederfinden.' }
       - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false, hint: 'Angehakt bleibt der Text unsichtbar.' }
@@ -79,6 +80,7 @@ collections:
       - { name: beschreibung, label: Kurzbeschreibung, widget: text, hint: 'Maximal 160 Zeichen.' }
       - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
       - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: titelbild, label: Titelbild, widget: image, required: false, hint: 'Erscheint als Vorschaubild und beim Teilen in sozialen Netzwerken.' }
       - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
       - { name: schlagworte, label: Schlagworte, widget: list, required: false }
       - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false }
@@ -99,6 +101,7 @@ collections:
       - { name: beschreibung, label: Kurzbeschreibung, widget: text, hint: 'Maximal 160 Zeichen.' }
       - { name: veroeffentlicht, label: Veröffentlicht am, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false }
       - { name: aktualisiert, label: Zuletzt aktualisiert, widget: datetime, format: 'YYYY-MM-DD', date_format: 'DD.MM.YYYY', time_format: false, required: false }
+      - { name: titelbild, label: Titelbild, widget: image, required: false, hint: 'Erscheint als Vorschaubild und beim Teilen in sozialen Netzwerken.' }
       - { name: autorin, label: Verfasst von, widget: string, default: 'Redaktion' }
       - { name: schlagworte, label: Schlagworte, widget: list, required: false }
       - { name: entwurf, label: Noch nicht veröffentlichen, widget: boolean, default: false }

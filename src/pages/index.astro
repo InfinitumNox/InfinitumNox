@@ -1,12 +1,21 @@
 ---
 import Basis from '../layouts/Basis.astro';
+import Symbol from '../components/Symbol.astro';
 import { BEREICHE } from '../bereiche';
+import type { BereichId } from '../bereiche';
+import { RECHNER } from '../rechner';
 import { pfad } from '../pfad';
 import { getCollection } from 'astro:content';
 
+const SYMBOL_VON_BEREICH: Record<BereichId, 'eltern' | 'lernen' | 'praxis'> = {
+  familie: 'eltern',
+  lernen: 'lernen',
+  praxis: 'praxis',
+};
+
 // Für jeden Bereich den neuesten veröffentlichten Artikel holen,
 // damit die Startseite mitwächst, sobald geschrieben wird.
-const neuestePro = await Promise.all(
+const artikelProBereich = await Promise.all(
   BEREICHE.map(async (b) => {
     const eintraege = await getCollection(b.id, ({ data }) => !data.entwurf);
     const neueste = eintraege.sort(
@@ -18,39 +27,83 @@ const neuestePro = await Promise.all(
 ---
 
 <Basis
-  titel="Wissen, das mitwächst"
-  beschreibung="Fachwissen zu Entwicklung, Erziehung und sozialer Arbeit - dreimal geschrieben: für Familien, für Fachkräfte und für Auszubildende."
+  titel="Pädagogik für alle"
+  beschreibung="Wissen, Werkzeuge und Orientierung für Kita, Familie und pädagogische Praxis."
+  startAktiv
 >
   <section class="huelle held">
-    <h1 class="held__satz">
-      Dieselbe Frage klingt anders,<br />
-      je nachdem, wer sie stellt.
-    </h1>
+    <img src={pfad('/logo.svg')} alt="" class="held__symbol" width="56" height="56" />
+    <h1 class="held__satz">Pädagogik für alle</h1>
     <p class="held__text spalte">
-      Eine Mutter, eine Erzieherin und eine Auszubildende im dritten Lehrjahr
-      brauchen zum selben Thema drei verschiedene Antworten. Nicht einfachere
-      oder schwierigere - andere. Deshalb ist diese Seite dreimal geschrieben.
+      Wissen, Werkzeuge und Orientierung für Kita, Familie und pädagogische Praxis.
     </p>
+    <a href="#kita-schlaf" class="knopf">Kita-Schlaf-Rechner starten</a>
   </section>
 
   <section class="huelle" aria-label="Die drei Bereiche">
-    <ul class="strang">
+    <ul class="bereiche">
       {
-        neuestePro.map(({ bereich, neueste }) => (
-          <li class="strang__glied" data-bereich={bereich.id}>
-            <p class="augenbraue">{bereich.fuerWen}</p>
-            <h2 class="strang__titel">
-              <a href={pfad(bereich.pfad)}>{bereich.name}</a>
+        BEREICHE.map((b) => (
+          <li class="bkarte">
+            <div class="bkarte__symbol" data-bereich={b.id}>
+              <Symbol name={SYMBOL_VON_BEREICH[b.id]} />
+            </div>
+            <h2 class="bkarte__titel">
+              <a href={pfad(b.pfad)}>{b.name}</a>
             </h2>
-            <p class="strang__text">{bereich.beschreibung}</p>
+            <p class="bkarte__text leise">{b.beschreibung}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
 
-            {neueste ? (
-              <p class="strang__neu leise">
-                Zuletzt:{' '}
-                <a href={pfad(`${bereich.pfad}${neueste.id}/`)}>{neueste.data.titel}</a>
-              </p>
+  <section class="huelle abschnitt" id="rechner" aria-label="Rechner">
+    <h2 class="abschnitt__titel">Rechner</h2>
+    <ul class="rechnerliste">
+      {
+        RECHNER.map((r) => (
+          <li
+            id={r.id}
+            class:list={['rkarte', { 'rkarte--verfuegbar': r.verfuegbar }]}
+          >
+            <div class="rkarte__symbol">
+              <Symbol name={r.symbol} />
+            </div>
+            <h3 class="rkarte__titel">{r.titel}</h3>
+            <p class="rkarte__text leise">{r.text}</p>
+            {r.verfuegbar ? (
+              <a href={`#${r.id}`} class="knopf knopf--klein">Starten</a>
             ) : (
-              <p class="strang__neu leise">Die ersten Texte entstehen gerade.</p>
+              <span class="abzeichen">bald verfügbar</span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="huelle abschnitt" id="artikel" aria-label="Artikel">
+    <h2 class="abschnitt__titel">Artikel</h2>
+    <ul class="artikelliste">
+      {
+        artikelProBereich.map(({ bereich, neueste }) => (
+          <li class="akarte">
+            <span class="etikett" data-bereich={bereich.id}>
+              {bereich.name.toUpperCase()}
+            </span>
+            {neueste ? (
+              <>
+                <h3 class="akarte__titel">
+                  <a href={pfad(`${bereich.pfad}${neueste.id}/`)}>{neueste.data.titel}</a>
+                </h3>
+                <p class="akarte__text leise">{neueste.data.beschreibung}</p>
+              </>
+            ) : (
+              <>
+                <h3 class="akarte__titel">{bereich.name}</h3>
+                <p class="akarte__text leise">Die ersten Texte entstehen gerade.</p>
+              </>
             )}
           </li>
         ))
@@ -60,8 +113,18 @@ const neuestePro = await Promise.all(
 </Basis>
 
 <style>
+  /* ============ Held (Hero) ============ */
   .held {
-    padding-block: clamp(3.5rem, 9vw, 7rem) clamp(2.5rem, 6vw, 4.5rem);
+    padding-block: clamp(3rem, 8vw, 5.5rem) clamp(2.5rem, 6vw, 4rem);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .held__symbol {
+    display: block;
+    margin-bottom: 1.25rem;
   }
 
   .held__satz {
@@ -72,59 +135,210 @@ const neuestePro = await Promise.all(
   .held__text {
     font-size: clamp(1.1rem, 0.6vw + 1rem, 1.3rem);
     color: var(--tinte-leise);
-    margin: 0;
+    margin: 0 0 2rem;
+    margin-inline: auto;
+    text-align: center;
   }
 
-  /* Signaturelement: Die drei Bereiche hängen an einer durchgehenden
-     senkrechten Linie, die pro Abschnitt die Farbe wechselt. Die Linie
-     ist keine Deko - sie zeigt, dass es ein Thema ist, das sich je nach
-     Leserin unterschiedlich zeigt. */
-  .strang {
+  /* ============ Knöpfe ============ */
+  .knopf {
+    display: inline-block;
+    background: var(--akzent);
+    color: var(--karte);
+    font-family: var(--schrift-display);
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.9rem 1.75rem;
+    border-radius: 0.6rem;
+    line-height: 1.1;
+  }
+  .knopf:hover {
+    color: var(--karte);
+    background: color-mix(in srgb, var(--akzent) 85%, black);
+  }
+
+  .knopf--klein {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    border-radius: 0.5rem;
+  }
+
+  /* ============ Bereiche ============ */
+  .bereiche {
     list-style: none;
     margin: 0;
     padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1.5rem;
   }
 
-  .strang__glied {
-    position: relative;
-    padding: 2.75rem 0 2.75rem clamp(1.5rem, 4vw, 3rem);
-    border-left: 3px solid var(--akzent);
+  .bkarte {
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: 1rem;
+    padding: 1.75rem;
   }
 
-  .strang__glied::before {
-    content: '';
-    position: absolute;
-    left: -8px;
-    top: 2.9rem;
-    width: 13px;
-    height: 13px;
+  .bkarte__symbol {
+    width: 3.25rem;
+    height: 3.25rem;
     border-radius: 50%;
-    background: var(--papier);
-    border: 3px solid var(--akzent);
+    display: grid;
+    place-items: center;
+    margin-bottom: 1.1rem;
+    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
+    color: var(--familie);
+  }
+  .bkarte__symbol[data-bereich='praxis'] {
+    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
+    color: var(--praxis);
+  }
+  .bkarte__symbol[data-bereich='lernen'] {
+    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
+    color: var(--lernen);
   }
 
-  .strang__titel {
-    font-size: clamp(1.75rem, 4vw, 2.5rem);
+  .bkarte__titel {
+    font-size: 1.375rem;
+    margin: 0 0 0.5rem;
+  }
+  .bkarte__titel a {
+    text-decoration: none;
+  }
+  .bkarte__titel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .bkarte__text {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  /* ============ Abschnittstitel ============ */
+  .abschnitt {
+    scroll-margin-top: 5.5rem;
+  }
+
+  .abschnitt__titel {
+    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+    margin: 4rem 0 1.5rem;
+  }
+
+  /* ============ Rechner ============ */
+  .rechnerliste {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .rkarte {
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    scroll-margin-top: 5.5rem;
+  }
+
+  .rkarte--verfuegbar {
+    border: 2px solid var(--akzent);
+  }
+
+  .rkarte__symbol {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.6rem;
+    display: grid;
+    place-items: center;
+    margin-bottom: 1rem;
+    background: color-mix(in srgb, var(--akzent) 12%, var(--papier));
+    color: var(--akzent);
+  }
+
+  .rkarte__titel {
+    font-size: 1.1rem;
     margin: 0 0 0.4rem;
   }
 
-  .strang__titel a {
-    text-decoration: none;
-    color: var(--akzent);
-  }
-  .strang__titel a:hover {
-    text-decoration: underline;
-    text-decoration-thickness: 3px;
-    text-underline-offset: 0.16em;
+  .rkarte__text {
+    margin: 0 0 1.25rem;
+    font-size: 0.9rem;
+    flex: 1;
   }
 
-  .strang__text {
-    max-width: 44ch;
-    margin: 0 0 1rem;
+  .abzeichen {
+    display: inline-block;
+    align-self: flex-start;
+    font-size: 0.8125rem;
+    color: var(--tinte-leise);
+    border: 1px solid var(--haarlinie);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
   }
 
-  .strang__neu {
+  /* ============ Artikel ============ */
+  .artikelliste {
+    list-style: none;
     margin: 0;
-    font-size: 0.95rem;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.5rem;
+  }
+
+  .akarte {
+    background: var(--karte);
+    border: 1px solid var(--haarlinie);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+
+  .etikett {
+    display: inline-block;
+    font-family: var(--schrift-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.9rem;
+    color: var(--familie);
+    background: color-mix(in srgb, var(--familie) 14%, var(--papier));
+  }
+  .etikett[data-bereich='praxis'] {
+    color: var(--praxis);
+    background: color-mix(in srgb, var(--praxis) 14%, var(--papier));
+  }
+  .etikett[data-bereich='lernen'] {
+    color: var(--lernen);
+    background: color-mix(in srgb, var(--lernen) 14%, var(--papier));
+  }
+
+  .akarte__titel {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+  }
+  .akarte__titel a {
+    text-decoration: none;
+  }
+  .akarte__titel a:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.18em;
+  }
+
+  .akarte__text {
+    margin: 0;
+    font-size: 0.9rem;
   }
 </style>
